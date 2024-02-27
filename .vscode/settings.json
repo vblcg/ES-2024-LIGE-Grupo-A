@@ -1,4 +1,5 @@
 {
     "vsintellicode.typescript.completionsEnabled": true,
-    "vsintellicode.java.completionsEnabled": true
+    "vsintellicode.java.completionsEnabled": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }
