@@ -14,7 +14,7 @@ public class App
     public static void main( String[] args ) throws TwitterException
     {
         Twitter twitter = Twitter.getInstance();
-        Query query = Query.of("source:twitter4j yusukey");
+        Query query = Query.of("source:twitter");
         QueryResult result = twitter.v1().search().search(query);
         for (Status status : result.getTweets()) {
             System.out.println("@" + status.getUser().getScreenName() + ":" + status.getText());
