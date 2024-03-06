@@ -1,5 +1,4 @@
 package iscte;
-
 import java.io.File;
 
 public class App {
@@ -7,7 +6,7 @@ public class App {
         File[] fileHolder = new File[1];
         String jsonFile = "output.json";
         userUploadFile.getFileFromUser((selectedFile) -> {fileHolder[0] = new File(selectedFile.getAbsolutePath()); });
-        csvToJson ctj = new csvToJson(fileHolder, jsonFile);
-        ctj.extract();
+        csvToJson extractorCsvToJson = new csvToJson(fileHolder, jsonFile);
+        extractorCsvToJson.extract();
     }
 }
