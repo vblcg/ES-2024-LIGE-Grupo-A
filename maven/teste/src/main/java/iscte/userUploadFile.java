@@ -5,6 +5,10 @@ import java.io.File;
 
 public class userUploadFile {
     
+    
+    /** 
+     * @param callback
+     */
     public static void getFileFromUser(FileCallback callback) {
         JFileChooser fileChooser = new JFileChooser();
 
