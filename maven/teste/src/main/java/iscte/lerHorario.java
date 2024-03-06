@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 public class lerHorario {
 
+    String csvFile = "yourfile.csv";
+
     static String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
 
