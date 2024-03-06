@@ -3,8 +3,10 @@ package iscte;
 import javax.swing.*;
 import java.io.File;
 
-public class userUploadFile {
+public class UserInputExample {
+
     
+
     public static void getFileFromUser(FileCallback callback) {
         JFileChooser fileChooser = new JFileChooser();
 
