@@ -14,7 +14,7 @@
 
     var colunas = ["Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"];
 
-    var table = new Tabulator("#horario-table", {
+    var table = new Tabulator("#table-horario", {
             height: "311px",
             columns: colunas.map(column => ({ title: column, field: column })),
             // Add other Tabulator options as needed
