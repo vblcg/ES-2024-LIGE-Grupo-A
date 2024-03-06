@@ -13,12 +13,12 @@ import java.util.ArrayList;
 public class lerHorario {
     private DefaultTableModel tableModel;
 
+    static String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
-    String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
-    
-    tableModel = new DefaultTableModel(colunas);
-    
-    
+    public static String[] getStringArray() {
+        return colunas;
+    }
+
     public static void main(String[] args) {
 
     }
