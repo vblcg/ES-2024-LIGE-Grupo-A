@@ -15,10 +15,15 @@
     var colunas = ["Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"];
 
     var table = new Tabulator("#table-horario", {
-            height: "311px",
-            columns: colunas.map(column => ({ title: column, field: column })),
-            // Add other Tabulator options as needed
-        });
+        height:"311px",
+        layout:"fitColumns",
+        columns = colunas.map(title => {
+            return {
+                title: title,
+                field: title.toLowerCase().replace(/ /g, '_'), // Passar tudo para leytra minuscula e trocar os espaços por "_"
+                // Add other properties as needed
+            };
+});
         
     </script>
     </div>
