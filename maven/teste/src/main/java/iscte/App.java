@@ -12,6 +12,5 @@ public class App {
       String jsonFile = "output.json";
       userUploadFile.getFileFromUser((selectedFile) -> {fileHolder[0] = new File(selectedFile.getAbsolutePath()); });
       extract extractorCsvToJson = new extract(fileHolder, jsonFile);
-      extractorCsvToJson.extract();
     }
   }
