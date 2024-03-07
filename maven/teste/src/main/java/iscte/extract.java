@@ -1,5 +1,6 @@
 package iscte;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -28,8 +29,9 @@ public class extract{
             try (CSVReader reader = new CSVReader(new FileReader(this.holder[0]))) {
                 List<String[]> csvData = reader.readAll();
 
-                List<Map<String, String>> jsonData = createJsonData(csvData);
+                BufferedReader reader = new BufferedReader(new FileReader())
 
+                List<Map<String, String>> jsonData = createJsonData(csvData);
 
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 FileWriter writer = new FileWriter(outputFile);
@@ -43,44 +45,4 @@ public class extract{
             System.out.println("No file selected.");
         }
     }
-
-    private List<Map<String, String>> createJsonData(List<String[]> csvData) {
-        List<Map<String, String>> jsonData = new ArrayList<>();
-
-        if (!csvData.isEmpty()) {
-            String[] headers = csvData.remove(0);
-
-        // Create a list to store the headers
-        List<Map<String, String>> headerList = new ArrayList<>();
-        Map<String, String> headerMap = new HashMap<>();
-        for (String header : headers) {
-            headerMap.put(header, header);
-        }
-        headerList.add(headerMap);
-        jsonData.add((Map<String, String>) headerList);
-
-        // Create a list to store the rows
-        List<Map<String, String>> rowList = new ArrayList<>();
-
-        for (String[] row : csvData) {
-            // Create a map to represent each row with header-value pairs
-            Map<String, String> rowMap = new HashMap<>();
-
-            for (int i = 0; i < headers.length; i++) {
-                String header = headers[i];
-                String value = (i < row.length) ? row[i] : ""; // Use an empty string if no value is present
-
-                rowMap.put(header, value);
-            }
-
-            // Add each map to the rowList
-            rowList.add(rowMap);
-        }
-
-        // Add the rowList to the jsonData
-        jsonData.add((Map<String, String>) rowList);
-    }
-
-    return jsonData;
-}
 }
