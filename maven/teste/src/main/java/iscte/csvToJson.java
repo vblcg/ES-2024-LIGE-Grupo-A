@@ -25,16 +25,25 @@ public class csvToJson{
         if (this.holder[0] != null) {
             try (CSVReader reader = new CSVReader(new FileReader(this.holder[0]))) {
                 List<String[]> csvData = reader.readAll();
-                //ArrayList<String[]> csvDataToWrite = new ArrayList<>();
-                //for (int i =0; i< csvData.size(); i++){
-                //    csvDataToWrite.get(i).add(csvData.get(i)[0].split(";"));
-                //}
+                List<String[]> newData = new ArrayList<>();
 
-                String[] headers = csvData.remove(0);
-                String [] splitedHeaders = headers[0].split(";");
+                for(int line = 0; line < csvData.size(); line++) {
+                    String[] columns = csvData.get(line)[0].split(";");
+                    newData.add(columns);
+                }
+                
+                String[] columnsValues = newData.remove(0);
+                List<String[]> jsonFormat = new ArrayList<String[]>();
+
+                for(int newLines = 0; newLines < newData.size(); newLines++) {
+                    jsonFormat.
+                }
+
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 FileWriter writer = new FileWriter(outputFile);
-                gson.toJson(csvData.get(0)[0], writer);
+                gson.toJson(newData, writer);
+
+
                 
                 writer.close();
             } catch (IOException | CsvException e) {
