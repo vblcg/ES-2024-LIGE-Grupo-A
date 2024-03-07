@@ -44,11 +44,13 @@ public class extract{
             writer.write("[\n");
 
             line = reader.readLine();
+            boolean isLastRecord = false;
 
             while((line = reader.readLine()) != null){
+                isLastRecord = !reader.ready(); // Check if there is no next line
                 
                 String[] infoAula = line.split(";");
-                 Map<String, Object> jsonMap = new LinkedHashMap<>();
+                Map<String, Object> jsonMap = new LinkedHashMap<>();
 
                 for (int i = 0; i < colunas.length; i++) {
                     String value = (i < infoAula.length) ? infoAula[i] : ""; // Replace null with empty string
@@ -66,12 +68,16 @@ public class extract{
                 }
     
 
-                String gson = new GsonBuilder().setPrettyPrinting().create().toJson(jsonMap);
+                String gson =(new GsonBuilder().setPrettyPrinting().create().toJson(jsonMap));
 
-                writer.write("  " + gson + ",\n");
+                if (isLastRecord) {
+                    writer.write(gson + "\n");
+                } else {
+                    writer.write(gson + ",\n");
+                }
             }
 
-            writer.write("]}\n");
+            writer.write("]\n");
         
 
         } catch (IOException e) {
