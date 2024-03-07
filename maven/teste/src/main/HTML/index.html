@@ -34,6 +34,14 @@
         ],
     });
 
+    fetch('output.json')
+            .then(response => response.json())
+            .then(data => {
+                // Assuming the JSON structure is an array of objects
+                table.setData(data);
+            })
+            .catch(error => console.error('Error fetching JSON:', error));
+
         
     </script>
     </div>
