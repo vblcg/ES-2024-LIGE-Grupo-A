@@ -14,9 +14,24 @@
 
     var colunas = ["Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"];
 
-    var table = new Tabulator("#table-horario", {
+    const pathJson = 'output.json';
+
+    fetch(pathJson)
+    .then(response => {
+        // Check if the request was successful
+        if (!response.ok) {
+        throw new Error(`Failed to fetch ${pathJson}: ${response.statusText}`);
+        }
+
+        // Parse the JSON data
+        return response.json();
+    })
+    .then(data => {
+        // 'data' is now an array containing the parsed JSON content
+        var table = new Tabulator("#table-horario", {
         height:"311px",
         layout:"fitColumns",
+        data: data,
         columns: [
             {title: "Curso", field:"curso", headerFilter: "input"},
             {title: "UC", field:"uc", headerFilter:"input"},
@@ -34,13 +49,19 @@
         ],
     });
 
-    fetch('output.json')
-            .then(response => response.json())
-            .then(data => {
-                // Assuming the JSON structure is an array of objects
-                table.setData(data);
-            })
-            .catch(error => console.error('Error fetching JSON:', error));
+        
+    })
+    .catch(error => {
+        console.error(`Error loading ${pathJson}:`, error);
+    });
+
+    
+
+    
+
+    
+
+            
 
         
     </script>
