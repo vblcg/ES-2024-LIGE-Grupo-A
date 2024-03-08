@@ -97,15 +97,16 @@ public class userUploadFile extends JFrame implements FileCallback{
     //Escolher ficheiro no github
     private void openGitHubFileChooser(String input) {
         String githubFileUrl = input;
-        if (input != null && input.toLowerCase().contains("https://raw.githubusercontent.com") && input.toLowerCase().endsWith(".csv")) {
-            File selectedFile = downloadFileFromGitHub(githubFileUrl);
+        File selectedFile = downloadFileFromGitHub(githubFileUrl);
+
+        if (selectedFile != null && input.toLowerCase().startsWith("https://raw.githubusercontent") && input.toLowerCase().endsWith(".csv")) {
             callback.onFileSelected(selectedFile);
-        } else if(!input.toLowerCase().endsWith(".csv")) {
+        } else if(!selectedFile.getName().toLowerCase().endsWith(".csv")) {
             JOptionPane.showMessageDialog(panel,
                         "O arquivo selecionado não é um arquivo CSV.",
                         "Erro",
                         JOptionPane.ERROR_MESSAGE);
-        } else if(!input.toLowerCase().contains("https://raw.githubusercontent")){
+        } else if(!input.toLowerCase().startsWith("https://raw.githubusercontent")){
             JOptionPane.showMessageDialog(panel,
                         "O arquivo selecionado não é um ficheiro do GitHub.",
                         "Erro",
@@ -126,7 +127,13 @@ public class userUploadFile extends JFrame implements FileCallback{
                 String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
                 String destinationFilePath = fileName;
                 File downloadedFile = new File(destinationFilePath);
-                return downloadedFile;
+
+                try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
+                    outputStream.write(response.body().bytes());
+                    return downloadedFile;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

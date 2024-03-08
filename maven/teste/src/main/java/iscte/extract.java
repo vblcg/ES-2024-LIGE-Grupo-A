@@ -19,16 +19,14 @@ public class extract{
         this.holder = holder;
     }
 
+    
     /** 
      * @return String
      */
     public String getOutputFile() {
         return outputFile;
     }
-    
-    /** 
-     * @return File[]
-     */
+
     public File[] getHolder() {
         return holder;
     }
