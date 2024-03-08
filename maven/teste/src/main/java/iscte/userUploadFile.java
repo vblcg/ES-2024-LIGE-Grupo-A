@@ -11,22 +11,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class userUploadFile extends JFrame implements FileCallback{
+public class UserUploadFile extends JFrame implements FileCallback{
 
     private FileCallback callback;
     private File[] fileholder;
     JPanel panel;
 
-    public File[] getFileholder() {
-        return fileholder;
-    }
-
-    public userUploadFile(File[] fileholder, String jsonFile) {
+    public UserUploadFile(File[] fileholder, String jsonFile) {
         this.fileholder =  fileholder;
         this.callback = new FileCallback() {
             public void onFileSelected(File selectedFile) {
                 fileholder[0] = selectedFile;
-                extract extractorCsvToJson = new extract(fileholder, jsonFile);
+                Extract extractorCsvToJson = new Extract(fileholder, jsonFile);
                 extractorCsvToJson.readCsvUsingBufferReader();
                 return;
             }
@@ -77,8 +73,12 @@ public class userUploadFile extends JFrame implements FileCallback{
         add(panel);
     }
 
+    public File[] getFileholder() {
+        return fileholder;
+    }
+
     //Escolher ficheiro localmente
-    private void openFileChooser() {
+    public void openFileChooser() {
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
 
@@ -95,7 +95,7 @@ public class userUploadFile extends JFrame implements FileCallback{
     }
 
     //Escolher ficheiro no github
-    private void openGitHubFileChooser(String input) {
+    public void openGitHubFileChooser(String input) {
         String githubFileUrl = input;
         File selectedFile = downloadFileFromGitHub(githubFileUrl);
 
@@ -115,7 +115,7 @@ public class userUploadFile extends JFrame implements FileCallback{
     }
 
     //Descarregar ficheiro github 
-    private File downloadFileFromGitHub(String githubFileUrl) {
+    public File downloadFileFromGitHub(String githubFileUrl) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()

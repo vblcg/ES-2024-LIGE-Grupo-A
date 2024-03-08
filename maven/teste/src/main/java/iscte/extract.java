@@ -10,15 +10,14 @@ import java.util.Map;
 import com.google.gson.GsonBuilder;
 
 
-public class extract{
+public class Extract{
     private String outputFile;
     private File[] holder;
 
-    public extract(File[] holder, String outputFile) {
+    public Extract(File[] holder, String outputFile) {
         this.outputFile = outputFile;
         this.holder = holder;
     }
-
     
     /** 
      * @return String
