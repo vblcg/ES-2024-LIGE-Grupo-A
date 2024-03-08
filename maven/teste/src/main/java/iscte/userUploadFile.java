@@ -96,20 +96,19 @@ public class userUploadFile extends JFrame implements FileCallback{
         String githubFileUrl = input;
         File selectedFile = downloadFileFromGitHub(githubFileUrl);
 
-        if (selectedFile != null && selectedFile.getName().toLowerCase().startsWith("https://raw.githubusercontent")) {
+        if (selectedFile != null && selectedFile.getName().toLowerCase().startsWith("https://raw.githubusercontent") && selectedFile.getName().toLowerCase().endsWith(".csv")) {
             callback.onFileSelected(selectedFile);
-        } else {
-             JOptionPane.showMessageDialog(panel,
-                        "O arquivo selecionado não é um ficheiro do GitHub.",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE);
-        }
-        if (!selectedFile.getName().toLowerCase().endsWith(".csv")) {
+        } else if(!selectedFile.getName().toLowerCase().endsWith(".csv")) {
             JOptionPane.showMessageDialog(panel,
                         "O arquivo selecionado não é um arquivo CSV.",
                         "Erro",
                         JOptionPane.ERROR_MESSAGE);
-            }
+        } else if(!selectedFile.getName().toLowerCase().startsWith("https://raw.githubusercontent")){
+            JOptionPane.showMessageDialog(panel,
+                        "O arquivo selecionado não é um ficheiro do GitHub.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private File downloadFileFromGitHub(String githubFileUrl) {
