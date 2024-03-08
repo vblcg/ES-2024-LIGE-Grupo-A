@@ -8,14 +8,5 @@ public class App {
         String jsonFile = "output.json";
         userUploadFile uploadFile = new userUploadFile(fileHolder, jsonFile); 
         uploadFile.setVisible(true); 
-
-        while (fileHolder[0] == null) {
-            try {
-                Thread.sleep(1000); 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        fileHolder[0] = uploadFile.getFileholder()[0];
     }
 }

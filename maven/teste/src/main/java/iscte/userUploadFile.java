@@ -37,7 +37,7 @@ public class userUploadFile extends JFrame implements FileCallback{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //Botão carregamento ficheiro local
-        JButton button = new JButton("Carregar Ficheiro Local");
+        JButton button = new JButton("Carregar Horário Localmente");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 openFileChooser();
@@ -45,11 +45,14 @@ public class userUploadFile extends JFrame implements FileCallback{
         });
 
         //Botão carregamento a partir do github
-        JButton buttonGitHub = new JButton("Carregar Ficheiro GitHub");
+        JButton buttonGitHub = new JButton("Carregar Horário GitHub");
         buttonGitHub.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String input = JOptionPane.showInputDialog(panel, "Colar Link:");
-                openGitHubFileChooser(input);
+                if(input == null)  
+                    JOptionPane.showMessageDialog(panel,"Não colocou nenhum endereço", "Erro", JOptionPane.INFORMATION_MESSAGE);
+                else
+                    openGitHubFileChooser(input);
             }
         });
 
@@ -84,10 +87,7 @@ public class userUploadFile extends JFrame implements FileCallback{
             if (selectedFile.getName().toLowerCase().endsWith(".csv")) {
                 callback.onFileSelected(selectedFile);
             } else {
-                 JOptionPane.showMessageDialog(panel,
-                        "O arquivo selecionado não é um arquivo CSV.",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             System.out.println("No file selected.");
