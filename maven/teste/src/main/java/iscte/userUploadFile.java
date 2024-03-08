@@ -11,7 +11,6 @@ public class userUploadFile extends JFrame implements FileCallback{
 
     public userUploadFile(File[] fileholder, String jsonFile) {
         this.fileholder =  fileholder;
-
         this.callback = new FileCallback() {
             public void onFileSelected(File selectedFile) {
                 fileholder[0] = selectedFile;
@@ -54,7 +53,6 @@ public class userUploadFile extends JFrame implements FileCallback{
     public void onFileSelected(File selectedFile) {
         this.fileholder[0] = selectedFile;
     }
-
 }
 
 

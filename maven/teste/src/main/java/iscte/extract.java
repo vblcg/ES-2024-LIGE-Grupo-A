@@ -38,7 +38,6 @@ public class extract{
             FileWriter writer = new FileWriter(new File(getOutputFile()))) {
 
             writer.write("[\n");
-
             line = reader.readLine();
             boolean isLastRecord = false;
 
@@ -49,13 +48,12 @@ public class extract{
                 Map<String, Object> jsonMap = new LinkedHashMap<>();
 
                 for (int i = 0; i < colunas.length; i++) {
-                    String value = (i < infoAula.length) ? infoAula[i] : ""; // Replace null with empty string
+                    String value = (i < infoAula.length) ? infoAula[i] : ""; 
                     if ("Inscritos no Turno".equals(colunas[i])) {
                         try {
                             int numero = Integer.parseInt(value);
                             jsonMap.put(colunas[i], numero);
                         } catch (NumberFormatException e) {
-                            // Handle parsing error
                             jsonMap.put(colunas[i], null);
                         }
                     } else {
@@ -71,10 +69,8 @@ public class extract{
                     writer.write(gson + ",\n");
                 }
             }
-
             writer.write("]\n");
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
