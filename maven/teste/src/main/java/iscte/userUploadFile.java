@@ -36,6 +36,7 @@ public class userUploadFile extends JFrame implements FileCallback{
         setSize(400, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        //Botão carregamento ficheiro local
         JButton button = new JButton("Carregar Ficheiro Local");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -43,6 +44,7 @@ public class userUploadFile extends JFrame implements FileCallback{
             }
         });
 
+        //Botão carregamento a partir do github
         JButton buttonGitHub = new JButton("Carregar Ficheiro GitHub");
         buttonGitHub.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -51,9 +53,9 @@ public class userUploadFile extends JFrame implements FileCallback{
             }
         });
 
-        JButton buttonWebBrowser = new JButton("Mostrar Salas no Browser Web");  
+        //Botão ver salas no browser
+        JButton buttonWebBrowser = new JButton("Mostrar Salas no Browser");  
 	    button.setBounds(20,20,250,50);  
-	    
 	    buttonWebBrowser.addActionListener(new ActionListener(){  	
 			public void actionPerformed(ActionEvent e){  
 				Desktop desk = Desktop.getDesktop(); 
@@ -72,6 +74,7 @@ public class userUploadFile extends JFrame implements FileCallback{
         add(panel);
     }
 
+    //Escolher ficheiro localmente
     private void openFileChooser() {
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
@@ -79,7 +82,6 @@ public class userUploadFile extends JFrame implements FileCallback{
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             if (selectedFile.getName().toLowerCase().endsWith(".csv")) {
-                System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                 callback.onFileSelected(selectedFile);
             } else {
                  JOptionPane.showMessageDialog(panel,
@@ -92,12 +94,11 @@ public class userUploadFile extends JFrame implements FileCallback{
         }
     }
 
+    //Escolher ficheiro no github
     private void openGitHubFileChooser(String input) {
         String githubFileUrl = input;
-        System.out.println(githubFileUrl);
         if (input != null && input.toLowerCase().contains("https://raw.githubusercontent.com") && input.toLowerCase().endsWith(".csv")) {
             File selectedFile = downloadFileFromGitHub(githubFileUrl);
-            System.out.println("entrou 1");
             callback.onFileSelected(selectedFile);
         } else if(!input.toLowerCase().endsWith(".csv")) {
             JOptionPane.showMessageDialog(panel,
@@ -105,7 +106,6 @@ public class userUploadFile extends JFrame implements FileCallback{
                         "Erro",
                         JOptionPane.ERROR_MESSAGE);
         } else if(!input.toLowerCase().contains("https://raw.githubusercontent")){
-            System.out.println("entrou 2");
             JOptionPane.showMessageDialog(panel,
                         "O arquivo selecionado não é um ficheiro do GitHub.",
                         "Erro",
@@ -113,6 +113,7 @@ public class userUploadFile extends JFrame implements FileCallback{
         }
     }
 
+    //Descarregar ficheiro github 
     private File downloadFileFromGitHub(String githubFileUrl) {
         OkHttpClient client = new OkHttpClient();
 
@@ -125,13 +126,7 @@ public class userUploadFile extends JFrame implements FileCallback{
                 String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
                 String destinationFilePath = fileName;
                 File downloadedFile = new File(destinationFilePath);
-
-                try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
-                    outputStream.write(response.body().bytes());
-                    return downloadedFile;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                return downloadedFile;
             }
         } catch (Exception e) {
             e.printStackTrace();
