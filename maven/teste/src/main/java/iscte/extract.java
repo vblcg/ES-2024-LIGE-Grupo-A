@@ -19,6 +19,10 @@ public class extract{
         this.holder = holder;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getOutputFile() {
         return outputFile;
     }
@@ -36,7 +40,7 @@ public class extract{
 
         try (BufferedReader reader = new BufferedReader(new FileReader(getHolder()[0])); 
             FileWriter writer = new FileWriter(new File(getOutputFile()))) {
-
+            
             writer.write("[\n");
             line = reader.readLine();
             boolean isLastRecord = false;

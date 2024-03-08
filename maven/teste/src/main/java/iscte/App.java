@@ -16,5 +16,6 @@ public class App {
                 e.printStackTrace();
             }
         }
+        fileHolder[0] = uploadFile.getFileholder()[0];
     }
 }
