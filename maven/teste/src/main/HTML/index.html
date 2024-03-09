@@ -16,6 +16,92 @@
 
     const pathJson = '../../../../../output.json';
 
+    var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
+
+        var end;
+
+        var container = document.createElement("span");
+
+        //create and style inputs
+        var start = document.createElement("input");
+        start.setAttribute("type", "number");
+        start.setAttribute("placeholder", "Min");
+        start.setAttribute("min", 0);
+        start.setAttribute("max", 300);
+        start.style.padding = "4px";
+        start.style.width = "50%";
+        start.style.boxSizing = "border-box";
+
+        start.value = cell.getValue();
+
+        function buildValues(){
+        success({
+            start:start.value,
+            end:end.value,
+        });
+        }
+
+        function keypress(e){
+        if(e.keyCode == 13){
+            buildValues();
+        }
+
+        if(e.keyCode == 27){
+            cancel();
+        }
+        }
+
+        end = start.cloneNode();
+        end.setAttribute("placeholder", "Max");
+
+        start.addEventListener("change", buildValues);
+        start.addEventListener("blur", buildValues);
+        start.addEventListener("keydown", keypress);
+
+        end.addEventListener("change", buildValues);
+        end.addEventListener("blur", buildValues);
+        end.addEventListener("keydown", keypress);
+
+
+        container.appendChild(start);
+        container.appendChild(end);
+
+        return container;
+    }
+    
+    
+    var minMaxFilterFunction = function (headerValue, rowValue, rowData, filterParams) {
+        if (rowValue !== null && rowValue !== undefined) {
+            if (headerValue.start !== "") {
+                if (headerValue.end !== "") {
+                    return rowValue >= parseFloat(headerValue.start) && rowValue <= parseFloat(headerValue.end);
+                } else {
+                    return rowValue >= parseFloat(headerValue.start);
+                }
+            } else {
+                if (headerValue.end !== "") {
+                    return rowValue <= parseFloat(headerValue.end);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    //Função que recebe uma string com a data e calcula o valor da semana do ano
+    function getWeekNumber(date){
+        var parts = date.split("/");
+        var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
+        console.log(dateFormat);
+
+        startDate = new Date(dateFormat.getFullYear(), 0, 1);
+        let days = Math.floor((dateFormat - startDate) / (24 * 60 * 60 * 1000));
+        
+        let weekNumber = Math.ceil(days / 7);
+        return weekNumber;
+    }
+
+
     fetch(pathJson)
     .then(response => {
         // Check if the request was successful
@@ -37,13 +123,24 @@
             {title: "UC", field:"UC", headerFilter:"input"},
             {title: "Turno", field:"Turno", headerFilter:"input", sorter:"alphanum"},
             {title: "Turma", field:"Turma", headerFilter:"input"},
-            {title: "Inscritos no Turno", field:"Inscritos no Turno", headerFilter:"input", sorter:"number"},
-            {title: "Dia da Semana", field:"Dia da Semana", editor:"list", headerFilter:true, headerFilterParams:{values:{"segunda_feira":"Segunda-feira", "terca_feira":"Terça-feira", "quarta_feira":"Quarta-feira", "quinta_feira":"Quinta-feira" ,"sexta_feira":"Sexta-feira", "sabado":"Sábado", "domingo":"Domingo"}}},
-            {title: "Hora Início da Aula", field:"Hora Início da Aula", sorter:"time",editor:"list", headerFilter:true, headerFilterParams:{values:{"08:00":"08:00", "09:30":"09:30", "11:00":"11:00","13:00":"13:00", "14:30":"14:30", "16:00":"16:00"}}},
-            {title: "Hora Fim da Aula", field:"Hora Fim da Aula", headerFilter:"input", sorter:"time"},
-            {title: "Data da aula", field:"Data da aula", headerFilter:"input", sorter:"date"},
+            {title: "Inscritos no Turno", field:"Inscritos no Turno", headerFilter:"input", sorter:"number",headerFilter:minMaxFilterEditor, headerFilterFunc:minMaxFilterFunction, headerFilterLiveFilter:false},
+            {title: "Dia da Semana", field:"Dia da Semana", editor:"list", width:100 ,headerFilter:true, headerFilterParams:{values:{"Seg":"Segunda-feira", "Ter":"Terça-feira", "Qua":"Quarta-feira", "Qui":"Quinta-feira" ,"Sex":"Sexta-feira", "Sab":"Sábado", "Dom":"Domingo"}}},
+            {title: "Hora Início da Aula", field:"Hora Início da Aula",editor:"list", headerFilter:true, headerFilterParams:{values:{"08:00":"08:00", "09:30":"09:30", "11:00":"11:00","13:00":"13:00", "14:00":"14:00", "14:30":"14:30", "16:00":"16:00", "17:30":"17:30", "18:00":"18:00", "19:00":"19:00","19:30":"19:30","20:00":"20:00", "20:30":"20:30","21:00":"21:00", "21:30":"21:30"}}},
+            {title: "Hora Fim da Aula", field:"Hora Fim da Aula", headerFilter:"input"},
+            {title: "Data da aula", field:"Data da aula", headerFilter:"input"},
             {title: "Caracteristicas da sala pedida para a aula", field:"Caracteristicas da sala pedida para a aula", headerFilter:"input"},
             {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
+            {title: "Semana do ano", field:"Data da aula", headerFilter: "input",
+                formatter: function(cell, formatterParams, onRendered) {
+                    var dateValue = cell.getValue();
+                    console.log(dateValue)
+                    if (dateValue) {
+                        var wn = getWeekNumber(dateValue);
+                        return wn;
+                    }
+                    return "";
+                }},
+            {title: "Semana do semestre"}
         ],
     });
 
