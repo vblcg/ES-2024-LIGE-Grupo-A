@@ -9,27 +9,54 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import com.google.gson.GsonBuilder;
 
+/**
+ * A classe Extract é responsável por ler informações de um arquivo CSV, processá-las e criar um ficheiro JSON.
+ * Usa um BufferedReader para ler o arquivo CSV, processa os dados e escreve o JSON num ficheiro.
+ * O ficheiro CSV é deve conter informações sobre cursos, turmas, horários e detalhes relacionados.
+ *
+ * @version 1.0
+ */
+
 
 public class Extract{
     private String outputFile;
     private File[] holder;
+
+    /**
+     * Constrói um objeto Extract com o array especificado de objetos File e o nome do arquivo de saída para armazenar os dados processados no formato JSON.
+     *
+     * @param holder      Um array de objetos File representando os arquivos CSV de entrada.
+     * @param outputFile  O nome do arquivo de saída para armazenar os dados em JSON.
+     */
 
     public Extract(File[] holder, String outputFile) {
         this.outputFile = outputFile;
         this.holder = holder;
     }
     
-    /** 
-     * @return String
+    /**
+     * Obtém o nome do ficheiro json.
+     *
+     * @return O nome do ficheiro json.
      */
     public String getOutputFile() {
         return outputFile;
     }
 
+    /**
+     * Obtém o array de objetos File representando os arquivos CSV de entrada.
+     *
+     * @return Um array de objetos File representando os arquivos CSV de entrada.
+     */
+
     public File[] getHolder() {
         return holder;
     }
 
+
+    /**
+     * Lê o arquivo CSV usando BufferedReader, processa os dados e gera um arquivo JSON como saída.
+     */
     public void readCsvUsingBufferReader(){
 
         String line = "";
