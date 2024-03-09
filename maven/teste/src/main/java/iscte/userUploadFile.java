@@ -96,7 +96,8 @@ public class UserUploadFile extends JFrame implements FileCallback{
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            checkCsvStructure(selectedFile);
+            String git = "";
+            checkCsvStructure(selectedFile, git);
         } else {
             JOptionPane.showMessageDialog(panel,"Não Selecionou Nenhum Ficheiro", "", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -160,6 +161,9 @@ public class UserUploadFile extends JFrame implements FileCallback{
                     callback.onFileSelected(file);
                 } else {
                     JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+                if ((git != "") && (!git.toLowerCase().startsWith("https://raw.githubusercontent"))) {
+                    JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um ficheiro do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
