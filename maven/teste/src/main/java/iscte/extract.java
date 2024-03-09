@@ -44,7 +44,7 @@ public class Extract{
             line = reader.readLine();
             boolean isLastRecord = false;
 
-            while((line = reader.readLine()) != null){
+            while((line = reader.readLine()) != null){ 
                 isLastRecord = !reader.ready(); // Check if there is no next line
                 
                 String[] infoAula = line.split(";");

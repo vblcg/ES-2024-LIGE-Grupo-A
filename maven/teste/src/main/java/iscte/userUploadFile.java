@@ -125,7 +125,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
                 String destinationFilePath = fileName;
                 File downloadedFile = new File(destinationFilePath);
-                checkCsvStructureGit(downloadedFile, githubFileUrl);
+                checkCsvStructure(downloadedFile, githubFileUrl);
                 try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
                     outputStream.write(response.body().bytes());
                     return downloadedFile;
@@ -137,6 +137,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
             System.out.println("ERRO");
             JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+            return null;
         }
         return null;
     }
@@ -175,40 +176,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
         reader.close();
     }
 
-
-    public void checkCsvStructureGit(File file, String input) throws IOException {
-        System.out.println(input);
-        System.out.println(input.toLowerCase().endsWith(".csv"));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-        String[] columns = reader.readLine().split(";");
-        String[] expected = {"Curso", "Unidade Curricular", "Turno", "Turma", "Inscritos no turno", "Dia da semana", "Hora início da aula", "Hora fim da aula", "Data da aula", "Características da sala pedida para a aula", "Sala atribuída à aula"};
-        if (file != null && input.toLowerCase().startsWith("https://raw.githubusercontent") && input.toLowerCase().endsWith(".csv")) {
-            if (columns.length == expected.length) {
-                boolean structureCorrect = true;
-                for (int i = 0; i < columns.length; i++) {
-                    String normalizedString1 = Normalizer.normalize(columns[i].toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-                    String normalizedString2 = Normalizer.normalize(expected[i].toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-                    if (!normalizedString1.equals(normalizedString2)) {
-                        structureCorrect = false;
-                        break;
-                    }
-                }
-                if (structureCorrect) {
-                    JOptionPane.showMessageDialog(panel, "Horário Carregado!", "Sucesso", JOptionPane.PLAIN_MESSAGE);
-                    callback.onFileSelected(file);
-                } else {
-                    JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(panel, "A estrutura do horário está errada.", "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        }else if (file == null) {
-            JOptionPane.showMessageDialog(panel, "O arquivo selecionado é inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
-        }else if (!input.toLowerCase().startsWith("https://raw.githubusercontent")) {
-            JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um ficheiro do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-        reader.close();
-    }
     @Override
     public void onFileSelected(File selectedFile) {
         this.fileholder[0] = selectedFile;
