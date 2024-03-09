@@ -1,15 +1,12 @@
 package iscte;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-      for(int ii = 0; ii < 1000; ii++) {
-        System.out.println(ii);
-      }  
+import java.io.File;
+
+public class App {
+    public static void main(String[] args) {
+        File[] fileHolder = new File[1]; 
+        String jsonFile = "output.json";
+        UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile); 
+        uploadFile.setVisible(true); 
     }
 }
