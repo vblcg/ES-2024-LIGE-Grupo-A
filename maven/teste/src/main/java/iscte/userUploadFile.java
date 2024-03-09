@@ -104,7 +104,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                  JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            System.out.println("No file selected.");
+            JOptionPane.showMessageDialog(panel,"Não Selecionou Nenhum Ficheiro", "", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -114,6 +114,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
         File selectedFile = downloadFileFromGitHub(githubFileUrl);
         checkCsvStructure(selectedFile);
         if (selectedFile != null && input.toLowerCase().startsWith("https://raw.githubusercontent") && input.toLowerCase().endsWith(".csv")) {
+            JOptionPane.showMessageDialog(panel, "Horário Carregado!", "Sucesso", JOptionPane.PLAIN_MESSAGE);
             callback.onFileSelected(selectedFile);
         } else if(!selectedFile.getName().toLowerCase().endsWith(".csv")) {
             JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -157,11 +158,8 @@ public class UserUploadFile extends JFrame implements FileCallback{
             for(int i = 0; i < columns.length; i++) {
                 String normalizedString1 = Normalizer.normalize(columns[i].toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
                 String normalizedString2 = Normalizer.normalize(expected[i].toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-                if(!normalizedString1.equals(normalizedString2)){
+                if(!normalizedString1.equals(normalizedString2))
                     JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-                System.out.println(columns[i]);
-                System.out.println(expected[i]);
             }
         } else {
             JOptionPane.showMessageDialog(panel, "A estrutura do horário está errada.", "Erro", JOptionPane.ERROR_MESSAGE);
