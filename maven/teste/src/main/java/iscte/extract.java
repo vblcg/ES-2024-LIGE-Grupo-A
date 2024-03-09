@@ -23,10 +23,10 @@ public class Extract{
     private File[] holder;
 
     /**
-     * Constrói um objeto Extract com o array especificado de objetos File e o nome do arquivo de saída para armazenar os dados processados no formato JSON.
+     * Constrói um objeto Extract 
      *
-     * @param holder      Um array de objetos File representando os arquivos CSV de entrada.
-     * @param outputFile  O nome do arquivo de saída para armazenar os dados em JSON.
+     * @param holder      Um array de objetos File com os arquivos CSV de entrada.
+     * @param outputFile  O nome do ficheiro para armazenar os dados em JSON.
      */
 
     public Extract(File[] holder, String outputFile) {

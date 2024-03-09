@@ -16,12 +16,22 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Classe para permitir o carregamento de arquivos pelo usuário.
+ * Estende JFrame e implementa FileCallback.
+ */
 public class UserUploadFile extends JFrame implements FileCallback{
 
     private FileCallback callback;
     private File[] fileholder;
     JPanel panel;
 
+    /**
+     * Construtor da classe UserUploadFile.
+     *
+     * @param fileholder Array de arquivos para armazenar o arquivo selecionado pelo usuário.
+     * @param jsonFile    Nome do arquivo JSON.
+     */
     public UserUploadFile(File[] fileholder, String jsonFile) {
         this.fileholder =  fileholder;
         this.callback = new FileCallback() {
@@ -54,14 +64,11 @@ public class UserUploadFile extends JFrame implements FileCallback{
         buttonGitHub.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String input = JOptionPane.showInputDialog(panel, "Colar Link:");
-                if(input == null)  
+                if(input == null)  {
                     JOptionPane.showMessageDialog(panel,"Não colocou nenhum endereço", "Erro", JOptionPane.INFORMATION_MESSAGE);
-                else
-                    try {
-                        openGitHubFileChooser(input);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                } else {
+                    checkLinkStructure(input);  //Verifica se o link tem uma estrutura que possibilita o descarregamento
+                }
             }
         });
 
@@ -86,11 +93,11 @@ public class UserUploadFile extends JFrame implements FileCallback{
         add(panel);
     }
 
-    public File[] getFileholder() {
-        return fileholder;
-    }
-
-    //Escolher ficheiro localmente
+    /**
+     * Abre o seletor de arquivos localmente.
+     *
+     * @throws IOException
+     */
     public void openFileChooser() throws IOException {
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
@@ -103,19 +110,36 @@ public class UserUploadFile extends JFrame implements FileCallback{
         }
     }
 
-    //Escolher ficheiro no github
-    public void openGitHubFileChooser(String input) throws IOException {
-        String githubFileUrl = input;
-        downloadFileFromGitHub(githubFileUrl);
-    }
-
-    //Descarregar ficheiro github 
-    public File downloadFileFromGitHub(String githubFileUrl) {
+    
+    /** 
+     * Verifica se o link vem do github.
+     * Verifica se o link tem http:// ou https://.
+     * Verifica se o link tem .csv
+     * 
+     * @param githubFileUrl
+     */
+    public void checkLinkStructure(String githubFileUrl) {
         if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://") && !githubFileUrl.toLowerCase().endsWith(githubFileUrl)) {
             JOptionPane.showMessageDialog(panel, "URL inválida. Certifique-se de incluir 'http://' ou 'https://'.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return null;
+            return;
+        } else if ((githubFileUrl != "") && (!githubFileUrl.toLowerCase().startsWith("https://raw.githubusercontent"))) {
+            JOptionPane.showMessageDialog(panel, "O ficheiro selecionado não é um  do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }  else if(!githubFileUrl.toLowerCase().endsWith(".csv")) {
+            JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+            downloadFileFromGitHub(githubFileUrl);
         }
+        return;
+    }
 
+    /**
+     * Descarrega o ficheiro do GitHub.
+     * Verifica a estrutura do ficheiro.
+     * 
+     * @param githubFileUrl URL do arquivo no GitHub.
+     * @return O ficheiro descarregado.
+     */
+    public File downloadFileFromGitHub(String githubFileUrl) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(githubFileUrl).build();
 
@@ -133,12 +157,20 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return null;
+            JOptionPane.showMessageDialog(panel, "Não foi possível descarregar o ficheiro. Tente novamente", "Erro", JOptionPane.ERROR_MESSAGE);
         }
         return null;
     }
 
+
+    /** 
+     * Verifica se ficheiro é do tipo .csv
+     * Verifica se o conteúdo do ficheiro tem as colunas desejadas
+     * Verifica, no caso de o ficheiro vir do github, se é mesmo da plataforma
+     * @param file
+     * @param git
+     * @throws IOException
+     */
     public void checkCsvStructure(File file, String git) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         String[] columns = reader.readLine().split(";");
@@ -160,9 +192,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 } else {
                     JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
-                if ((git != "") && (!git.toLowerCase().startsWith("https://raw.githubusercontent"))) {
-                    JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um ficheiro do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
             } else {
                 JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
@@ -171,8 +200,18 @@ public class UserUploadFile extends JFrame implements FileCallback{
         }
         
         reader.close();
-    }
+    }   
+        
+     /** 
+     * @return File[]
+     */
+    public File[] getFileholder() {
+        return fileholder;
+    }    
 
+    /** 
+     * @param selectedFile
+     */
     @Override
     public void onFileSelected(File selectedFile) {
         this.fileholder[0] = selectedFile;
