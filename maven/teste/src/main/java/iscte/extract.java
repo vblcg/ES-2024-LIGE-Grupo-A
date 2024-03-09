@@ -33,7 +33,7 @@ public class Extract{
     public void readCsvUsingBufferReader(){
 
         String line = "";
-        String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", 
+        String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no turno", "Dia da Semana", 
                             "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 

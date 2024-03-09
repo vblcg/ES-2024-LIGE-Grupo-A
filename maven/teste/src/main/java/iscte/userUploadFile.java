@@ -1,10 +1,15 @@
 package iscte;
 
 import javax.swing.*;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.text.Normalizer;
 import java.awt.Desktop;
 import java.awt.event.*;
 import okhttp3.OkHttpClient;
@@ -36,7 +41,11 @@ public class UserUploadFile extends JFrame implements FileCallback{
         JButton button = new JButton("Carregar Horário Localmente");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                openFileChooser();
+                try {
+                    openFileChooser();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 
@@ -48,7 +57,11 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 if(input == null)  
                     JOptionPane.showMessageDialog(panel,"Não colocou nenhum endereço", "Erro", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    openGitHubFileChooser(input);
+                    try {
+                        openGitHubFileChooser(input);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
             }
         });
 
@@ -78,13 +91,14 @@ public class UserUploadFile extends JFrame implements FileCallback{
     }
 
     //Escolher ficheiro localmente
-    public void openFileChooser() {
+    public void openFileChooser() throws IOException {
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
-
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
+            checkCsvStructure(selectedFile);
             if (selectedFile.getName().toLowerCase().endsWith(".csv")) {
+                JOptionPane.showMessageDialog(panel, "Horário Carregado!", "Sucesso", JOptionPane.PLAIN_MESSAGE);
                 callback.onFileSelected(selectedFile);
             } else {
                  JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -95,22 +109,16 @@ public class UserUploadFile extends JFrame implements FileCallback{
     }
 
     //Escolher ficheiro no github
-    public void openGitHubFileChooser(String input) {
+    public void openGitHubFileChooser(String input) throws IOException {
         String githubFileUrl = input;
         File selectedFile = downloadFileFromGitHub(githubFileUrl);
-
+        checkCsvStructure(selectedFile);
         if (selectedFile != null && input.toLowerCase().startsWith("https://raw.githubusercontent") && input.toLowerCase().endsWith(".csv")) {
             callback.onFileSelected(selectedFile);
         } else if(!selectedFile.getName().toLowerCase().endsWith(".csv")) {
-            JOptionPane.showMessageDialog(panel,
-                        "O arquivo selecionado não é um arquivo CSV.",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
         } else if(!input.toLowerCase().startsWith("https://raw.githubusercontent")){
-            JOptionPane.showMessageDialog(panel,
-                        "O arquivo selecionado não é um ficheiro do GitHub.",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel,"O arquivo selecionado não é um ficheiro do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -139,6 +147,26 @@ public class UserUploadFile extends JFrame implements FileCallback{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void checkCsvStructure(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        String[] columns = reader.readLine().split(";");
+        String[] expected = {"Curso", "Unidade Curricular", "Turno", "Turma", "Inscritos no turno", "Dia da semana", "Hora início da aula", "Hora fim da aula", "Data da aula", "Características da sala pedida para a aula", "Sala atribuída à aula"};
+        if(columns.length == expected.length) {
+            for(int i = 0; i < columns.length; i++) {
+                String normalizedString1 = Normalizer.normalize(columns[i].toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+                String normalizedString2 = Normalizer.normalize(expected[i].toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+                if(!normalizedString1.equals(normalizedString2)){
+                    JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+                System.out.println(columns[i]);
+                System.out.println(expected[i]);
+            }
+        } else {
+            JOptionPane.showMessageDialog(panel, "A estrutura do horário está errada.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        reader.close();
     }
 
     @Override
