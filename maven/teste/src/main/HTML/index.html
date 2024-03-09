@@ -101,6 +101,11 @@
         return weekNumber;
     }
 
+    function calculateWeekDifference(data1, data2) {
+        const diferencaEmMilissegundos = Math.abs(data2 - data1);
+        const umaSemanaEmMilissegundos = 7 * 24 * 60 * 60 * 1000;
+        return Math.ceil(diferencaEmMilissegundos / umaSemanaEmMilissegundos);
+    }
 
     fetch(pathJson)
     .then(response => {
@@ -112,6 +117,7 @@
         // Parse the JSON data
         return response.json();
     })
+
     .then(data => {
         // 'data' is now an array containing the parsed JSON content
         var table = new Tabulator("#table-horario", {
@@ -140,7 +146,19 @@
                     }
                     return "";
                 }},
-            {title: "Semana do semestre"}
+            {title: "Semana do semestre", field:"Data da aula", headerFilter:"input",
+                formatter: function (cell, formatterParams, onRendered) {
+
+                    // Data da primeira semana do semestre
+                    const primeiraSemanaSemestre = new Date('2022-09-02');
+
+                    // Data da última semana do semestre
+                    const ultimaSemanaSemestre = new Date('2023-07-06');
+
+                    const numSemanasNoSemestre = calculateWeekDifference(primeiraSemanaSemestre, ultimaSemanaSemestre);
+                    return "";
+                }
+            }
         ],
     });
 
