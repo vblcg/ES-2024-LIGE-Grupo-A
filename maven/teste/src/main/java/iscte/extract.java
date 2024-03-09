@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 /**
  * A classe Extract é responsável por ler informações de um arquivo CSV, processá-las e criar um ficheiro JSON.
  * Usa um BufferedReader para ler o arquivo CSV, processa os dados e escreve o JSON num ficheiro.
- * O ficheiro CSV é deve conter informações sobre cursos, turmas, horários e detalhes relacionados.
+ * O ficheiro CSV deve conter informações sobre cursos, turmas, horários e detalhes relacionados.
  *
  * @version 1.0
  */
@@ -23,7 +23,7 @@ public class Extract{
     private File[] holder;
 
     /**
-     * Constrói um objeto Extract com o array especificado de objetos File e o nome do arquivo de saída para armazenar os dados processados no formato JSON.
+     * Constrói um objeto Extract com o array especificado de objetos File e o nome do ficheiro criado para armazenar os dados processados no formato JSON.
      *
      * @param holder      Um array de objetos File representando os arquivos CSV de entrada.
      * @param outputFile  O nome do arquivo de saída para armazenar os dados em JSON.
