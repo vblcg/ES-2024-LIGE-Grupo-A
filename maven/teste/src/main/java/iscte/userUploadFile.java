@@ -111,7 +111,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
 
     //Descarregar ficheiro github 
     public File downloadFileFromGitHub(String githubFileUrl) {
-        System.out.println(!githubFileUrl.toLowerCase().endsWith(githubFileUrl));
         if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://") && !githubFileUrl.toLowerCase().endsWith(githubFileUrl)) {
             JOptionPane.showMessageDialog(panel, "URL inválida. Certifique-se de incluir 'http://' ou 'https://'.", "Erro", JOptionPane.ERROR_MESSAGE);
             return null;
@@ -134,9 +133,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERRO");
             JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
             return null;
         }
         return null;
