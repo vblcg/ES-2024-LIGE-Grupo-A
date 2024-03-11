@@ -104,4 +104,11 @@ public class Extract{
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) {
+        File[] fileholder = new File[1];
+        fileholder[0] = new File("CaracterizaçãoDasSalas.csv");
+        Extract extractorCsvToJson = new Extract(fileholder, "CaracterizaçãoDasSalas.json");
+        extractorCsvToJson.readCsvUsingBufferReader();
+    }
 }

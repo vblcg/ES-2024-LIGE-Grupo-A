@@ -88,6 +88,8 @@ public class UserUploadFile extends JFrame implements FileCallback{
 			}
         });
 
+        
+
         panel = new JPanel();
         panel.add(button);
         panel.add(buttonGitHub);
