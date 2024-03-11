@@ -79,8 +79,10 @@ public class UserUploadFile extends JFrame implements FileCallback{
 			public void actionPerformed(ActionEvent e){  
 				Desktop desk = Desktop.getDesktop(); 
 				try {
-					desk.browse(new java.net.URI("file://" + System.getProperty("user.dir") + "/" + "SalasDeAulaPorTiposDeSala.html"));
-				} catch (IOException | URISyntaxException e1) {
+                    String filePath = System.getProperty("user.dir") + File.separator + "/maven/teste/src/html/SalasDeAulaPorTiposDeSala.html";
+                    File file = new File(filePath);
+					desk.browse(file.toURI());
+				} catch (IOException e1) {
                     e1.printStackTrace();
                 } 
 			}
