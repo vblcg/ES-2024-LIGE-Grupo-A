@@ -2,9 +2,12 @@ package iscte;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import com.google.gson.GsonBuilder;
@@ -57,64 +60,6 @@ public class Extract{
     /**
      * Lê o arquivo CSV usando BufferedReader, processa os dados e gera um arquivo JSON como saída.
      */
-
-    public void readSalasCsv(){
-        String line = "";
-        String[] titles = {
-            "Edificio", "Nome sala", "Capacidade Normal", "Capacidade Exame", "Nº características",
-            "Anfiteatro aulas", "Apoio técnico eventos", "Arq 1", "Arq 2", "Arq 3",
-            "Arq 4", "Arq 5", "Arq 6", "Arq 9", "BYOD (Bring Your Own Device)", "Focus Group",
-            "Horário sala visível portal público", "Laboratório de Arquictetura de Computadores I",
-            "Laboratório de Arquictetura de Computadores II", "Laboratório de Base de Engenharia",
-            "Laboratório de Eletrónica", "Laboratório de Informática", "Laboratório de Jornalismo",
-            "Laboratório de Redes de Computadores I", "Laboratório de Redes de Computadores II",
-            "Laboratório de Telecomunicações", "Sala Aulas Mestrado", "Sala Aulas Mestrado Plus",
-            "Sala NEE", "Sala Provas", "Sala Reunião", "Sala de Arquitetura", "Sala de Aulas normal",
-            "videoconferência", "átrio"
-        };
-        try (BufferedReader reader = new BufferedReader(new FileReader(getHolder()[0])); 
-        FileWriter writer = new FileWriter(new File(getOutputFile()))) {
-        
-        writer.write("[\n");
-        line = reader.readLine();
-        boolean isLastRecord = false;
-
-        while((line = reader.readLine()) != null){ 
-            isLastRecord = !reader.ready(); // Check if there is no next line
-            
-            String[] infoAula = line.split(";");
-            Map<String, Object> jsonMap = new LinkedHashMap<>();
-
-            for (int i = 0; i < titles.length; i++) {
-                String value = (i < infoAula.length) ? infoAula[i] : ""; 
-                if ("Inscritos no Turno".equals(titles[i])) {
-                    try {
-                        int numero = Integer.parseInt(value);
-                        jsonMap.put(titles[i], numero);
-                    } catch (NumberFormatException e) {
-                        jsonMap.put(titles[i], null);
-                    }
-                } else {
-                    jsonMap.put(titles[i], value);
-                }
-            }
-
-            String gson =(new GsonBuilder().setPrettyPrinting().create().toJson(jsonMap));
-
-            if (isLastRecord) {
-                writer.write(gson + "\n");
-            } else {
-                writer.write(gson + ",\n");
-            }
-        }
-        writer.write("]\n");
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-    
-
-
     public void readCsvUsingBufferReader(){
 
         String line = "";
@@ -122,9 +67,8 @@ public class Extract{
                             "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(getHolder()[0])); 
-            FileWriter writer = new FileWriter(new File(getOutputFile()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8));
+        FileWriter writer = new FileWriter(new File(getOutputFile()), StandardCharsets.UTF_8)) {
             
             writer.write("[\n");
             line = reader.readLine();
@@ -168,6 +112,6 @@ public class Extract{
         File[] fileholder = new File[1];
         fileholder[0] = new File("CaracterizaçãoDasSalas.csv");
         Extract extractorCsvToJson = new Extract(fileholder, "CaracterizaçãoDasSalas.json");
-        extractorCsvToJson.readSalasCsv();
+        extractorCsvToJson.readCsvUsingBufferReader();
     }
 }
