@@ -63,9 +63,47 @@ public class Extract{
     public void readCsvUsingBufferReader(){
 
         String line = "";
-        String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no turno", "Dia da Semana", 
-                            "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
-                            "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
+       // String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no turno", "Dia da Semana", 
+                           // "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
+                            //"Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
+
+                            String[] titles = {
+                                "Edifício",
+                                "Nome sala",
+                                "Capacidade Normal",
+                                "Capacidade Exame",
+                                "Nº características",
+                                "Anfiteatro aulas",
+                                "Apoio técnico eventos",
+                                "Arq 1",
+                                "Arq 2",
+                                "Arq 3",
+                                "Arq 4",
+                                "Arq 5",
+                                "Arq 6",
+                                "Arq 9",
+                                "BYOD (Bring Your Own Device)",
+                                "Focus Group",
+                                "Horário sala visível portal público",
+                                "Laboratório de Arquictetura de Computadores I",
+                                "Laboratório de Arquictetura de Computadores II",
+                                "Laboratório de Base de Engenharia",
+                                "Laboratório de Eletrónica",
+                                "Laboratório de Informática",
+                                "Laboratório de Jornalismo",
+                                "Laboratório de Redes de Computadores I",
+                                "Laboratório de Redes de Computadores II",
+                                "Laboratório de Telecomunicações",
+                                "Sala Aulas Mestrado",
+                                "Sala Aulas Mestrado Plus",
+                                "Sala NEE",
+                                "Sala Provas",
+                                "Sala Reunião",
+                                "Sala de Arquitetura",
+                                "Sala de Aulas normal",
+                                "Videoconferência",
+                                "Átrio"
+                            };
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8));
         FileWriter writer = new FileWriter(new File(getOutputFile()), StandardCharsets.UTF_8)) {
@@ -80,17 +118,17 @@ public class Extract{
                 String[] infoAula = line.split(";");
                 Map<String, Object> jsonMap = new LinkedHashMap<>();
 
-                for (int i = 0; i < colunas.length; i++) {
+                for (int i = 0; i < titles.length; i++) {
                     String value = (i < infoAula.length) ? infoAula[i] : ""; 
-                    if ("Inscritos no Turno".equals(colunas[i])) {
+                    if ("Inscritos no Turno".equals(titles[i])) {
                         try {
                             int numero = Integer.parseInt(value);
-                            jsonMap.put(colunas[i], numero);
+                            jsonMap.put(titles[i], numero);
                         } catch (NumberFormatException e) {
-                            jsonMap.put(colunas[i], null);
+                            jsonMap.put(titles[i], null);
                         }
                     } else {
-                        jsonMap.put(colunas[i], value);
+                        jsonMap.put(titles[i], value);
                     }
                 }
     
