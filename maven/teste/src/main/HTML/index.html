@@ -114,6 +114,36 @@
         return Difference_In_Weeks;
     }
 
+    function toggleButtonFormatter(cell, formatterParams, onRendered) {
+        // Create a button element for toggling visibility
+        var toggleButton = document.createElement("button");
+        toggleButton.innerHTML = "Toggle";
+
+        // Add a click event listener to toggle column visibility
+        toggleButton.addEventListener("click", function (e) {
+       
+        // Toggle the visibility of the clicked column's data
+        var column = cell.getColumn();
+        column.toggle();
+
+        // Update the button text based on the column visibility
+        toggleButton.innerHTML = column.isVisible() ? "Hide" : "Show";
+        });
+
+        // Create a container div for the button and column title
+        var container = document.createElement("div");
+        container.appendChild(toggleButton);
+
+        // Add the column title to the container
+        var titleElement = document.createElement("span");
+        titleElement.innerHTML = cell.getColumn().getDefinition().title;
+        container.appendChild(titleElement);
+
+        // Return the container
+        return container;
+    }
+
+
     fetch(pathJson)
     .then(response => {
         // Check if the request was successful
@@ -132,7 +162,7 @@
         layout:"fitColumns",
         data: data,
         columns: [
-            {title: "Curso", field:"Curso", headerFilter: "input"},
+            {title: "Curso", field:"Curso", headerFilter: "input", titleFormatter:toggleButtonFormatter},
             {title: "UC", field:"UC", headerFilter:"input"},
             {title: "Turno", field:"Turno", headerFilter:"input", sorter:"alphanum"},
             {title: "Turma", field:"Turma", headerFilter:"input"},
@@ -172,6 +202,11 @@
                 }
             }
         ],
+    });
+
+    // Handle cell click to prevent default action
+    table.getElement().addEventListener("cellClick", function (e, cell) {
+        e.stopPropagation(); // Prevent default action on cell click
     });
 
         
