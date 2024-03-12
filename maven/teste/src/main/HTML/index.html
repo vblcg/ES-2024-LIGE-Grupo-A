@@ -88,6 +88,17 @@
         return true;
     }
 
+    function changeToDate(date){
+        if(date == null){
+            return "";
+        }
+        var parts = date.split("/");
+        var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
+
+        return dateFormat;
+    }
+
+
     //Função que recebe uma string com a data e calcula o valor da semana do ano
     function getWeekNumber(date){
         var parts = date.split("/");
@@ -102,10 +113,8 @@
     }
 
     function dateDiffInWeeks(date1, date2) {
-        console.log(date2)
         var parts = date2.split("/");
         var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
-        console.log(dateFormat)
         const _MS_PER_DAY = 1000 * 60 * 60 * 24;
         let Difference_In_Time = new Date(dateFormat).getTime() - new Date(date1).getTime();
         let Difference_In_Days = Math.round(Difference_In_Time / _MS_PER_DAY);
@@ -170,7 +179,7 @@
             {title: "Dia da Semana", field:"Dia da Semana", editor:"list", width:100 ,headerFilter:true, headerFilterParams:{values:{"Seg":"Segunda-feira", "Ter":"Terça-feira", "Qua":"Quarta-feira", "Qui":"Quinta-feira" ,"Sex":"Sexta-feira", "Sab":"Sábado", "Dom":"Domingo"}}},
             {title: "Hora Início da Aula", field:"Hora Início da Aula",editor:"list", headerFilter:true, headerFilterParams:{values:{"08:00":"08:00", "09:30":"09:30", "11:00":"11:00","13:00":"13:00", "14:00":"14:00", "14:30":"14:30", "16:00":"16:00", "17:30":"17:30", "18:00":"18:00", "19:00":"19:00","19:30":"19:30","20:00":"20:00", "20:30":"20:30","21:00":"21:00", "21:30":"21:30"}}},
             {title: "Hora Fim da Aula", field:"Hora Fim da Aula", headerFilter:"input"},
-            {title: "Data da aula", field:"Data da aula", headerFilter:"input"},
+            {title: "Data da aula", field:"Data da aula", headerFilter:"input", sorter:"date"},
             {title: "Caracteristicas da sala pedida para a aula", field:"Caracteristicas da sala pedida para a aula", headerFilter:"input"},
             {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
             {title: "Semana do ano", field:"Data da aula", headerFilter: "input",
@@ -182,31 +191,30 @@
                     }
                     return "";
                 }, sorter: function(a, b, aRow, bRow, column, dir, sorterParams) {
-                        var wnA = getWeekNumber(new Date(a));
-                        var wnB = getWeekNumber(new Date(b));
+                    var wnA = getWeekNumber(a);
+                    var wnB = getWeekNumber(b);
+
+                    if (a === "" || b === "") {
+                        return wnA === null ? 1 : -1;
+                    }
+                        
                         return (dir === "asc" ? wnA - wnB : wnB - wnA);
                     }},
             {title: "Semana do semestre", field:"Data da aula", headerFilter:"input",
                 formatter: function (cell, formatterParams, onRendered) {
                     var dateValue = cell.getValue();
-                    //console.log(dateValue);
                     if (dateValue) {
                         var a = new Date("09/02/2022"),
                             b = dateValue,
                             difference = dateDiffInWeeks(a, b);
                         //console.log(b)
-                        console.log(difference + ' weeks')
+                        //console.log(difference + ' weeks')
                         return difference;
                     }
                     return "";
                 }
             }
         ],
-    });
-
-    // Handle cell click to prevent default action
-    table.getElement().addEventListener("cellClick", function (e, cell) {
-        e.stopPropagation(); // Prevent default action on cell click
     });
 
         
