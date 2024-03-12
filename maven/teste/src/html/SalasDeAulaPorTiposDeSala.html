@@ -43,7 +43,7 @@
         <option value="8:00:00-9:30:00">8:00-9:30</option>
         <option value="9:30:00-12:00:00">9:30-11:00</option>
         <option value="11:00:00-12:30:00">11:00-12:30</option>
-        <option value="13:00:00-12:30:00">13:00-14:30</option>
+        <option value="13:00:00-14:30:00">13:00-14:30</option>
         <option value="14:30:00-16:00:00">14:30-16:00</option>
         <option value="16:00:00-17:30:00">16:00-17:30</option>
         <option value="18:00:00-12:30:00">18:00-19:30</option>
@@ -165,20 +165,22 @@
 
         function queryJSON(data, timeslot) {
           console.log("ENTROU");
+          var salasIndisponiveis = [];
+          var salasDisponiveis = [];
           for (let i = 0; i < jsonData.length; i++) {
             const currentDate = jsonData[i]["Data da aula"];
             const currentTimeslotInicio = jsonData[i]["Hora Inicio da Aula"];
             const currentTimeslotFim = jsonData[i]["Hora Fim da Aula"];
             const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
-            var salasDisponiveis = [];
-            var count = 0;
-            if (!(currentDate == data && currentTimeSlot == timeslot)) {
-              salasDisponiveis[count] = jsonData[i]["Sala atribuida a aula"];
-              count++;  
+            console.log(currentDate, data, currentTimeSlot, timeslot);
+            if ((currentDate == data && currentTimeSlot == timeslot)) {
+                console.log("entrou")
+                salasIndisponiveis.push(jsonData[i]["Sala atribuida a aula"]);
             }
-          }
-          return salasDisponiveis;
+          console.log(salasIndisponiveis);
         }
+        return salasIndisponiveis;
+    }
 
         function readJSON() {
           fetch(pathHorario)
@@ -189,10 +191,8 @@
               return response.json();
             })
             .then((data) => {
-              // Handle the JSON data here
               console.log(data);
               jsonData = data;
-              // You may want to store the data in a variable or process it in some way
             })
             .catch((error) => {
               console.error("Error fetching JSON:", error);
@@ -200,25 +200,30 @@
         }
 
         function formatDate(inputDate) {
-            // Split the input date string into year, month, and day
             const parts = inputDate.split('-');
-
-            // Create a new Date object with the parts rearranged in the desired format
             const formattedDate = new Date(parts[0], parts[1] - 1, parts[2]);
-
-            // Extract day, month, and year from the Date object
             const day = formattedDate.getDate();
             const month = formattedDate.getMonth() + 1;
             const year = formattedDate.getFullYear();
-
-            // Pad day and month with leading zeros if necessary
             const paddedDay = day < 10 ? '0' + day : day;
             const paddedMonth = month < 10 ? '0' + month : month;
-
-            // Construct the final formatted date string
             const formattedDateString = `${paddedDay}/${paddedMonth}/${year}`;
-
             return formattedDateString;
+        }
+
+        function filterDate(day, timeslot) {
+            salasDisponiveis = queryJSON(day, timeslot);
+            console.log(salasDisponiveis);
+            var filter = "";
+            for(let i = 0; i < salasDisponiveis.length; i++){
+                filter+=salasDisponiveis[i] + ";";
+                console.log(filter);
+            }
+            return filter;
+        }
+
+        function customFilter(data, salas) {
+            return salas.includes(data);
         }
 
         fetch(pathJson)
@@ -499,31 +504,20 @@
                 readJSON();
               });
 
-            document
-              .getElementById("data-horario")
-              .addEventListener("change", function () {
+            document.getElementById("data-horario").addEventListener("change", function () {
                 day_set = true;
                 day = formatDate(this.value);
                 if (day_set && timeslot_set) {
-                    salasDisponiveis = queryJSON(day, timeslot);
-                    console.log[salasDisponiveis];
-                    function customFilter(data) {
-                        return salasDisponiveis.includes(data);
-                }
-                    table.setFilter(customFilter);
+                    filter = filterDate(day, timeslot);
                 }
               });
 
+             
             document.getElementById("select-timeslot").addEventListener("change", function () {
                 timeslot = this.value;
                 timeslot_set = true;
                 if (day_set && timeslot_set) {
-                    salasDisponiveis = queryJSON(day, timeslot);
-                    console.log[salasDisponiveis];
-                    function customFilter(data) {
-                        return salasDisponiveis.includes(data);
-                    }
-                    table.setFilter(customFilter);
+                    filter = filterDate(day, timeslot);
                 }
               });
           })
