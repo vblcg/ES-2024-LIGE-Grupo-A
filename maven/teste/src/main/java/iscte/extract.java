@@ -63,47 +63,9 @@ public class Extract{
     public void readCsvUsingBufferReader(){
 
         String line = "";
-       // String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no turno", "Dia da Semana", 
-                           // "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
-                            //"Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
-
-                            String[] titles = {
-                                "Edifício",
-                                "Nome sala",
-                                "Capacidade Normal",
-                                "Capacidade Exame",
-                                "Nº características",
-                                "Anfiteatro aulas",
-                                "Apoio técnico eventos",
-                                "Arq 1",
-                                "Arq 2",
-                                "Arq 3",
-                                "Arq 4",
-                                "Arq 5",
-                                "Arq 6",
-                                "Arq 9",
-                                "BYOD (Bring Your Own Device)",
-                                "Focus Group",
-                                "Horário sala visível portal público",
-                                "Laboratório de Arquictetura de Computadores I",
-                                "Laboratório de Arquictetura de Computadores II",
-                                "Laboratório de Base de Engenharia",
-                                "Laboratório de Eletrónica",
-                                "Laboratório de Informática",
-                                "Laboratório de Jornalismo",
-                                "Laboratório de Redes de Computadores I",
-                                "Laboratório de Redes de Computadores II",
-                                "Laboratório de Telecomunicações",
-                                "Sala Aulas Mestrado",
-                                "Sala Aulas Mestrado Plus",
-                                "Sala NEE",
-                                "Sala Provas",
-                                "Sala Reunião",
-                                "Sala de Arquitetura",
-                                "Sala de Aulas normal",
-                                "Videoconferência",
-                                "Átrio"
-                            };
+        String[] titles = {"Curso", "UC", "Turno", "Turma", "Inscritos no turno", "Dia da Semana", 
+                           "Hora Inicio da Aula", "Hora Fim da Aula", "Data da aula", 
+                            "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8));
         FileWriter writer = new FileWriter(new File(getOutputFile()), StandardCharsets.UTF_8)) {
@@ -144,12 +106,5 @@ public class Extract{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        File[] fileholder = new File[1];
-        fileholder[0] = new File("CaracterizaçãoDasSalas.csv");
-        Extract extractorCsvToJson = new Extract(fileholder, "CaracterizaçãoDasSalas.json");
-        extractorCsvToJson.readCsvUsingBufferReader();
     }
 }
