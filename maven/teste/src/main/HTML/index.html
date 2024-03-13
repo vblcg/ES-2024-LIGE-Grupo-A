@@ -169,6 +169,7 @@
         var table = new Tabulator("#table-horario", {
         height:"700px",
         layout:"fitColumns",
+        pagination:"local",
         data: data,
         columns: [
             {title: "Curso", field:"Curso", headerFilter: "input", titleFormatter:toggleButtonFormatter},
