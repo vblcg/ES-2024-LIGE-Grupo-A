@@ -8,22 +8,22 @@
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 </head>
 
-  <body>
-    <div id="Filtro Localização">
-      <label for="location-filter">Filtrar por localização:</label>
-      <select id="location-filter">
-        <option value="" hidden></option>
-        <option value="Edifício Sedas Nunes (ISCTE-IUL)">
-          Edifício I (ISCTE-IUL)
-        </option>
-        <option value="Edifício II (ISCTE-IUL)">Edifício II (ISCTE-IUL)</option>
-        <option value="Polidesportivo (ISCTE-IUL)">
-          Polidesportivo (ISCTE-IUL)
-        </option>
-        <option value="Ala Autónoma (ISCTE-IUL)">
-          Ala Autónoma (ISCTE-IUL)
-        </option>
-      </select>
+<body>
+  <div id="Filtro Localização">
+    <label for="location-filter">Filtrar por localização:</label>
+    <select id="location-filter">
+      <option value="" hidden></option>
+      <option value="Edifício Sedas Nunes (ISCTE-IUL)">
+        Edifício I (ISCTE-IUL)
+      </option>
+      <option value="Edifício II (ISCTE-IUL)">Edifício II (ISCTE-IUL)</option>
+      <option value="Polidesportivo (ISCTE-IUL)">
+        Polidesportivo (ISCTE-IUL)
+      </option>
+      <option value="Ala Autónoma (ISCTE-IUL)">
+        Ala Autónoma (ISCTE-IUL)
+      </option>
+    </select>
 
     <button id="clear-filter">Limpar Filtro</button>
   </div>
@@ -36,7 +36,7 @@
     <select id="select-timeslot" hidden="true">
       <option value="" hidden></option>
       <option value="8:00:00-9:30:00">8:00-9:30</option>
-      <option value="9:30:00-12:00:00">9:30-11:00</option>
+      <option value="9:30:00-11:00:00">9:30-11:00</option>
       <option value="11:00:00-12:30:00">11:00-12:30</option>
       <option value="13:00:00-14:30:00">13:00-14:30</option>
       <option value="14:00:00-16:00:00">14:00-16:00</option>
@@ -64,7 +64,8 @@
       var timeslot_set = false;
       var day;
       var timeslot;
-      let jsonData;
+      let jsonHorario;
+      let jsonSalas;
       var salasIndisponiveis = [];
       var salasDisponiveis = [];
 
@@ -152,7 +153,6 @@
       function getWeekNumber(date) {
         var parts = date.split("/");
         var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
-        console.log(dateFormat);
 
         startDate = new Date(dateFormat.getFullYear(), 0, 1);
         let days = Math.floor(
@@ -169,24 +169,7 @@
         return Math.ceil(diferencaEmMilissegundos / umaSemanaEmMilissegundos);
       }
 
-      function queryJSON(data, timeslot) {
-        console.log("ENTROU");
-        for (let i = 0; i < jsonData.length; i++) {
-          const currentDate = jsonData[i]["Data da aula"];
-          const currentTimeslotInicio = jsonData[i]["Hora Inicio da Aula"];
-          const currentTimeslotFim = jsonData[i]["Hora Fim da Aula"];
-          const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
-          console.log(currentDate, data, currentTimeSlot, timeslot);
-          if ((currentDate == data && currentTimeSlot == timeslot)) {
-            console.log("entrou")
-            salasIndisponiveis.push(jsonData[i]["Sala atribuida a aula"]);
-          }
-          console.log(salasIndisponiveis);
-        }
-        return salasIndisponiveis;
-      }
-
-      function readJSON() {
+      function readHorario() {
         fetch(pathHorario)
           .then((response) => {
             if (!response.ok) {
@@ -195,13 +178,51 @@
             return response.json();
           })
           .then((data) => {
-            console.log(data);
-            jsonData = data;
+            jsonHorario = data;
           })
           .catch((error) => {
             console.error("Error fetching JSON:", error);
           });
       }
+
+      function readSalas() {
+        fetch(pathJson)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to fetch JSON: ${response.statusText}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            jsonSalas = data;
+          })
+          .catch((error) => {
+            console.error("Error fetching JSON:", error);
+          });
+      }
+
+      function filterDate(day, timeslot) {
+        return queryJSON(day, timeslot);
+      }
+
+      function queryJSON(data, timeslot) {
+        for (let i = 0; i < jsonHorario.length; i++) {
+          const currentDate = jsonHorario[i]["Data da aula"];
+          const currentTimeslotInicio = jsonHorario[i]["Hora Inicio da Aula"];
+          const currentTimeslotFim = jsonHorario[i]["Hora Fim da Aula"];
+          const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
+          if ((currentDate == data && currentTimeSlot == timeslot)) {
+            salasIndisponiveis.push(jsonHorario[i]["Sala atribuida a aula"]);
+          }
+        }
+        for (let j = 0; j < jsonSalas.length; j++) {
+          if (!salasIndisponiveis.includes(jsonSalas[j]["Nome sala"])) {
+            salasDisponiveis.push(jsonSalas[j]["Nome sala"]);
+          }
+        }
+        return salasDisponiveis;
+      }
+
 
       function formatDate(inputDate) {
         const parts = inputDate.split('-');
@@ -215,37 +236,23 @@
         return formattedDateString;
       }
 
-      function filterDate(day, timeslot) {
-        salasIndisponiveis = queryJSON(day, timeslot);
-        
-        console.log(salasIndisponiveis);
-        return salasIndisponiveis;
-      }
-
-      function customFilter(data, salas) {
-        return salas.filter(sala => !data.includes(sala));
-      }
-
-    
       fetch(pathJson)
         .then((response) => {
-          // Check if the request was successful
           if (!response.ok) {
             throw new Error(
               `Failed to fetch ${pathJson}: ${response.statusText}`
             );
           }
-
-          // Parse the JSON data
           return response.json();
         })
 
         .then((data) => {
           var table = new Tabulator("#table-horario", {
-            height: "700px",
             width: "1000",
             layout: "fitData",
             data: data,
+            pagination: true,
+            paginationSize: 25,
             columns: [
               { title: "Edifício", field: "Edifício", headerFilter: true },
               { title: "Nome sala", field: "Nome sala", headerFilter: true },
@@ -486,32 +493,27 @@
             .addEventListener("change", function () {
               const selectedLocation = this.value;
               table.setFilter("Edifício", "like", selectedLocation);
-              console.log(value);
             });
 
-          document
-            .getElementById("clear-filter")
-            .addEventListener("click", function () {
-              document.getElementById("location-filter").value = ""; // Limpa o seletor de localização
-              table.clearFilter();
-            });
+          document.getElementById("clear-filter").addEventListener("click", function () {
+            document.getElementById("location-filter").value = ""; // Limpa o seletor de localização
+            table.clearFilter();
+          });
 
-          document
-            .getElementById("time-filter-button")
-            .addEventListener("click", function () {
-              document.getElementById("select-timeslot").hidden = false;
-              document.getElementById("data-horario").hidden = false;
-              document.getElementById("time-filter-button").hidden = true;
-              readJSON();
-            });
+          document.getElementById("time-filter-button").addEventListener("click", function () {
+            document.getElementById("select-timeslot").hidden = false;
+            document.getElementById("data-horario").hidden = false;
+            document.getElementById("time-filter-button").hidden = true;
+            readHorario();
+            readSalas();
+          });
 
           document.getElementById("data-horario").addEventListener("change", function () {
             day_set = true;
             day = formatDate(this.value);
             if (day_set && timeslot_set) {
-              filter = filterDate(day,timeslot);
+              filter = filterDate(day, timeslot);
               table.setFilter("Nome sala", "in", filter);
-             
             }
           });
 
@@ -520,7 +522,7 @@
             timeslot = this.value;
             timeslot_set = true;
             if (day_set && timeslot_set) {
-              filter = filterDate(day,timeslot);
+              filter = filterDate(day, timeslot);
               table.setFilter("Nome sala", "in", filter);
             }
           });
