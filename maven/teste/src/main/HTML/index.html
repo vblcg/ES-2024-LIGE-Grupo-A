@@ -130,20 +130,6 @@
         return dateFormat;
     }
 
-
-    //Função que recebe uma string com a data e calcula o valor da semana do ano
-    function getWeekNumber(date){
-        var parts = date.split("/");
-        var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
-        //console.log(dateFormat);
-
-        startDate = new Date(dateFormat.getFullYear(), 0, 1);
-        let days = Math.floor((dateFormat - startDate) / (24 * 60 * 60 * 1000));
-        
-        let weekNumber = Math.ceil(days / 7);
-        return weekNumber;
-    }
-
     function dateDiffInWeeks(date1, date2) {
         var parts = date2.split("/");
         var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
@@ -220,24 +206,7 @@
             {title: "Data da aula", field:"Data da aula", headerFilter:"input", sorterParams:{format:"dd/MM/yy", alignEmptyValues:"top"}},
             {title: "Caracteristicas da sala pedida para a aula", field:"Caracteristicas da sala pedida para a aula", headerFilter:"input"},
             {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
-            {title: "Semana do ano", field:"Data da aula", headerFilter: "input",
-                formatter: function(cell, formatterParams, onRendered) {
-                    var dateValue = cell.getRow().getCell("Data da aula").getValue();
-                    if (dateValue) {
-                        var wn = getWeekNumber(dateValue);
-                        return wn;
-                    }
-                    return "";
-                }, sorter: function(a, b, aRow, bRow, column, dir, sorterParams) {
-                    var wnA = getWeekNumber(a);
-                    var wnB = getWeekNumber(b);
-
-                    if (a === "" || b === "") {
-                        return wnA === null ? 1 : -1;
-                    }
-                        
-                        return (dir === "asc" ? wnA - wnB : wnB - wnA);
-                    }},
+            {title: "Semana do ano", field:"Semana do ano", headerFilter: "input"},
             {title: "Semana do semestre", field:"Data da aula", headerFilter:"input",
                 formatter: function (cell, formatterParams, onRendered) {
                     var dateValue = cell.getValue();

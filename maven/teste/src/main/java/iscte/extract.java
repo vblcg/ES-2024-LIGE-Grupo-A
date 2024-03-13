@@ -5,12 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import com.google.gson.GsonBuilder;
 
 
-public class extract{
+public class Extract{
     private String outputFile;
     private File[] holder;
 
@@ -18,7 +22,7 @@ public class extract{
         readCsvUsingBufferReader();
     }
 
-    public extract(File[] holder, String outputFile) {
+    public Extract(File[] holder, String outputFile) {
         this.outputFile = outputFile;
         this.holder = holder;
     }
@@ -54,6 +58,35 @@ public class extract{
                         } catch (NumberFormatException e) {
                             // Handle parsing error
                             jsonMap.put(colunas[i], null);
+                        }
+                    } if ("Data da aula".equals(colunas[i])) {
+                        try {
+                            if(value == null || value == ""){
+                                jsonMap.put(colunas[i], value);
+                                jsonMap.put("Semana do ano", null);
+                            } else {
+                                String[] split_date = value.split("/");
+                                String data_invertida = split_date[2] + "/" + split_date[1] + "/" + split_date[0];
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                Date dataAula = dateFormat.parse(value);
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(dataAula);
+                                int semana_do_ano = calendar.get(Calendar.WEEK_OF_YEAR);
+
+                                jsonMap.put(colunas[i], data_invertida);
+                                jsonMap.put("Semana do ano", semana_do_ano);
+                                
+                            }
+                           
+
+                            
+                            
+                        } catch (NumberFormatException e) {
+                            // Handle parsing error
+                            
+                        } catch (ParseException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
                         }
                     } else {
                         jsonMap.put(colunas[i], value);
