@@ -9,8 +9,39 @@
 </head>
 
 <body>
+    <script type="text/javascript">
+        var table; // Declare the table variable
+        function toggleColumn(columnName) {
+            var column = table.getColumn(columnName);
+            if (column) {
+                column.toggle();
+                console.log(column);
+            }
+        }
+    </script>
+    
+    <div id="toggle-buttons">
+        <a>Esconder/mostrar colunas:</a>
+        <a class="link" href="##" id="Curso" onclick="toggleColumn('Curso', 'Curso')">Curso,</a>
+        <a class="link" href="##" id="UC" onclick="toggleColumn('UC')"> UC,</a>
+        <a class="link" href="##" id="Turno" onclick="toggleColumn('Turno')"> Turno,</a>
+        <a class="link" href="##" id="Turma" onclick="toggleColumn('Turma')"> Turma,</a>
+        <a class="link" href="##" id="Inscritos" onclick="toggleColumn('Inscritos no Turno')"> Inscritos no Turno,</a>
+        <a class="link" href="##" id="DiaSemana" onclick="toggleColumn('Dia da Semana')"> Dia da Semana,</a>
+        <a class="link" href="##" id="HoraInicio" onclick="toggleColumn('Hora Início da Aula')"> Hora Início da Aula,</a>
+        <a class="link" href="##" id="HoraFim" onclick="toggleColumn('Hora Fim da Aula')"> Hora Fim da Aula,</a>
+        <a class="link" href="##" id="DataAula" onclick="toggleColumn('Data da aula')"> Data da aula,</a>
+        <a class="link" href="##" id="CaracteristicasSala" onclick="toggleColumn('Caracteristicas da sala pedida para a aula')"> Caracteristicas da sala pedida para a aula,</a>
+        <a class="link" href="##" id="SalaAtribuida" onclick="toggleColumn('Sala atribuida a aula')"> Sala atribuida a aula,</a>
+        <a class="link" href="##" id="SemanaAno" onclick="toggleColumn('Semana do ano')"> Semana do ano,</a>
+        <a class="link" href="##" id="SemanaSemestre" onclick="toggleColumn('Semana do semestre')"> Semana do semestre</a>
+
+        <br><br>
+    </div>
     <div id="table-horario">
     <script type="text/javascript">
+
+    
 
     var colunas = ["Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"];
 
@@ -126,7 +157,7 @@
     function toggleButtonFormatter(cell, formatterParams, onRendered) {
         // Create a button element for toggling visibility
         var toggleButton = document.createElement("button");
-        toggleButton.innerHTML = "Toggle";
+        //toggleButton.innerHTML = "Toggle";
 
         // Add a click event listener to toggle column visibility
         toggleButton.addEventListener("click", function (e) {
@@ -152,6 +183,8 @@
         return container;
     }
 
+    
+
 
     fetch(pathJson)
     .then(response => {
@@ -166,14 +199,15 @@
 
     .then(data => {
         // 'data' is now an array containing the parsed JSON content
-        var table = new Tabulator("#table-horario", {
+
+        table = new Tabulator("#table-horario", {
         height:"700px",
         layout:"fitColumns",
         pagination:"local",
         resizableRows: true,
         data: data,
         columns: [
-            {title: "Curso", field:"Curso", headerFilter: "input", titleFormatter:toggleButtonFormatter},
+            {title: "Curso", field:"Curso", headerFilter: "input"},
             {title: "UC", field:"UC", headerFilter:"input"},
             {title: "Turno", field:"Turno", headerFilter:"input", sorter:"alphanum"},
             {title: "Turma", field:"Turma", headerFilter:"input"},
@@ -218,13 +252,30 @@
             }
         ],
     });
+    function toggleColumn(columnName, id) {
+                var column = table.getColumn(columnName);
+                var selected = false;
+                if (column) {
+                    column.toggle();
+                }
+            
+    }
 
         
-    })
+    }
+    )
     .catch(error => {
         console.error(`Error loading ${pathJson}:`, error);
     });
      
     </script>
     </div>
+    <style>
+        .link {
+            font-weight: normal;
+            color: darkblue;
+            text-decoration: none;
+        }
+    
+    </style>
 </body>
