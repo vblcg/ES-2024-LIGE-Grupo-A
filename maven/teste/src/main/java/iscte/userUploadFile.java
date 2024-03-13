@@ -21,7 +21,6 @@ import okhttp3.Response;
  * Estende JFrame e implementa FileCallback.
  */
 public class UserUploadFile extends JFrame implements FileCallback{
-
     private FileCallback callback;
     private File[] fileholder;
     JPanel panel;
