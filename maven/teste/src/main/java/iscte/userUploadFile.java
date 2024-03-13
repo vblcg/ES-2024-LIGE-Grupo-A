@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.text.Normalizer;
 import java.awt.Desktop;
 import java.awt.event.*;
@@ -87,8 +86,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
 			}
         });
 
-        
-
         panel = new JPanel();
         panel.add(button);
         panel.add(buttonGitHub);
@@ -113,7 +110,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
         }
     }
 
-    
     /** 
      * Verifica se o link vem do github.
      * Verifica se o link tem http:// ou https://.
@@ -121,18 +117,20 @@ public class UserUploadFile extends JFrame implements FileCallback{
      * 
      * @param githubFileUrl
      */
-    public void checkLinkStructure(String githubFileUrl) {
-        if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://") && !githubFileUrl.toLowerCase().endsWith(githubFileUrl)) {
+    public String checkLinkStructure(String githubFileUrl) {
+        if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://")) {
             JOptionPane.showMessageDialog(panel, "URL inválida. Certifique-se de incluir 'http://' ou 'https://'.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return;
+            return new String("URL inválida. Certifique-se de incluir 'http://' ou 'https://'.");
         } else if ((githubFileUrl != "") && (!githubFileUrl.toLowerCase().startsWith("https://raw.githubusercontent"))) {
-            JOptionPane.showMessageDialog(panel, "O ficheiro selecionado não é um  do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "O ficheiro selecionado não é um arquivo do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return new String("O ficheiro selecionado não é um arquivo do GitHub.");
         }  else if(!githubFileUrl.toLowerCase().endsWith(".csv")) {
             JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return new String("O arquivo selecionado não é um arquivo CSV.");
         } else {
             downloadFileFromGitHub(githubFileUrl);
         }
-        return;
+        return new String("");
     }
 
     /**
@@ -174,7 +172,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
      * @param git
      * @throws IOException
      */
-    public void checkCsvStructure(File file, String git) throws IOException {
+    public String checkCsvStructure(File file, String git) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         String[] columns = reader.readLine().split(";");
         String[] expected = {"Curso", "Unidade Curricular", "Turno", "Turma", "Inscritos no turno", "Dia da semana", "Hora início da aula", "Hora fim da aula", "Data da aula", "Características da sala pedida para a aula", "Sala atribuída à aula"};
@@ -192,6 +190,8 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 if (structureCorrect) {
                     JOptionPane.showMessageDialog(panel, "Horário Carregado!", "Sucesso", JOptionPane.PLAIN_MESSAGE);
                     callback.onFileSelected(file);
+                    reader.close();
+                    return new String("Horário Carregado!");
                 } else {
                     JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
@@ -203,6 +203,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
         }
         
         reader.close();
+        return new String("");
     }   
         
      /** 
