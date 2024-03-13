@@ -44,13 +44,13 @@ public class Extract{
             boolean isLastRecord = false;
 
             while((line = reader.readLine()) != null){
-                isLastRecord = !reader.ready(); // Check if there is no next line
+                isLastRecord = !reader.ready();
                 
                 String[] infoAula = line.split(";");
                 Map<String, Object> jsonMap = new LinkedHashMap<>();
 
                 for (int i = 0; i < colunas.length; i++) {
-                    String value = (i < infoAula.length) ? infoAula[i] : ""; // Replace null with empty string
+                    String value = (i < infoAula.length) ? infoAula[i] : "";
                     if ("Inscritos no Turno".equals(colunas[i])) {
                         try {
                             int numero = Integer.parseInt(value);
