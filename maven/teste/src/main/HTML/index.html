@@ -203,7 +203,7 @@
 
         table = new Tabulator("#table-horario", {
         height:"700px",
-        layout:"fitColumns",
+        layout:"fitDataTable",
         pagination:"local",
         resizableRows: true,
         movableColumns: true,
@@ -259,6 +259,7 @@
                 var selected = false;
                 if (column) {
                     column.toggle();
+                    adjustTableWidth();
                 }
             
     }
