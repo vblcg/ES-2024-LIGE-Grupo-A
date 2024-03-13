@@ -77,8 +77,6 @@ public class Extract{
                                 jsonMap.put("Semana do ano", semana_do_ano);
                                 
                             }
-                           
-
                             
                             
                         } catch (NumberFormatException e) {

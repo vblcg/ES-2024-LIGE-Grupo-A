@@ -120,16 +120,6 @@
         return true;
     }
 
-    function changeToDate(date){
-        if(date == null){
-            return "";
-        }
-        var parts = date.split("/");
-        var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
-
-        return dateFormat;
-    }
-
     function dateDiffInWeeks(date1, date2) {
         var parts = date2.split("/");
         var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
@@ -139,35 +129,6 @@
         let Difference_In_Weeks = Math.ceil(Difference_In_Days/7);
 
         return Difference_In_Weeks;
-    }
-
-    function toggleButtonFormatter(cell, formatterParams, onRendered) {
-        // Create a button element for toggling visibility
-        var toggleButton = document.createElement("button");
-        //toggleButton.innerHTML = "Toggle";
-
-        // Add a click event listener to toggle column visibility
-        toggleButton.addEventListener("click", function (e) {
-       
-        // Toggle the visibility of the clicked column's data
-        var column = cell.getColumn();
-        column.toggle();
-
-        // Update the button text based on the column visibility
-        toggleButton.innerHTML = column.isVisible() ? "Hide" : "Show";
-        });
-
-        // Create a container div for the button and column title
-        var container = document.createElement("div");
-        container.appendChild(toggleButton);
-
-        // Add the column title to the container
-        var titleElement = document.createElement("span");
-        titleElement.innerHTML = cell.getColumn().getDefinition().title;
-        container.appendChild(titleElement);
-
-        // Return the container
-        return container;
     }
 
     
