@@ -32,7 +32,7 @@
     <button id="time-filter-button">
       Filtrar por disponibilidade horária
     </button>
-    <input type="date" id="data-horario" name="dataHorario" hidden="true" />
+    <input type="date" id="data-horario" name="dataHorario" hidden="true" max="2022-12-31"/>
     <select id="select-timeslot" hidden="true">
       <option value="" hidden></option>
       <option value="8:00:00-9:30:00">8:00-9:30</option>
@@ -58,8 +58,8 @@
 
   <div id="table-horario">
     <script type="text/javascript">
-      const pathJson = "../../../../../CaracterizacaoDasSalas.json";
-      const pathHorario = "../../../../../output.json";
+      const pathJson = "http://localhost/CaracterizacaoDasSalas.json";
+      const pathHorario = "http://localhost/CaracterizacaoDasSalas.json";
       var day_set = false;
       var timeslot_set = false;
       var day;
@@ -497,6 +497,10 @@
 
           document.getElementById("clear-filter").addEventListener("click", function () {
             document.getElementById("location-filter").value = ""; // Limpa o seletor de localização
+            document.getElementById("select-timeslot").selectedIndex = -1;
+            document.getElementById("data-horario").value = "";
+            day_set=false;
+            timeslot_set=false;
             table.clearFilter();
           });
 

@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.Normalizer;
 import java.awt.Desktop;
@@ -82,7 +83,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
 			public void actionPerformed(ActionEvent e){ 
 				Desktop desk = Desktop.getDesktop(); 
 				try {
-					desk.browse(new java.net.URI("file://" + System.getProperty("user.dir") + "/" + "SalasDeAulaPorTiposDeSala.html"));
+                    desk.browse(new URI("http://localhost/SalasDeAulaPorTiposDeSala.html"));
 				} catch (IOException | URISyntaxException e1) {
                     e1.printStackTrace();
                 } 
