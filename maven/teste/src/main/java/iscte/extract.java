@@ -24,6 +24,8 @@ import com.google.gson.GsonBuilder;
 public class Extract{
     private String outputFile;
     private File[] holder;
+    private File outputJsonFile;
+
 
     /**
      * Constrói um objeto Extract com o array especificado de objetos File e o nome do ficheiro criado para armazenar os dados processados no formato JSON.
@@ -35,6 +37,7 @@ public class Extract{
     public Extract(File[] holder, String outputFile) {
         this.outputFile = outputFile;
         this.holder = holder;
+        this.outputJsonFile = new File(outputFile);
     }
     
     /**
@@ -57,6 +60,10 @@ public class Extract{
     }
 
 
+    public File getOutputJsonFile() {
+        return outputJsonFile;
+    }
+
     /**
      * Lê o arquivo CSV usando BufferedReader, processa os dados e gera um arquivo JSON como saída.
      */
@@ -68,7 +75,7 @@ public class Extract{
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8));
-        FileWriter writer = new FileWriter(new File(getOutputFile()), StandardCharsets.UTF_8)) {
+        FileWriter writer = new FileWriter(getOutputJsonFile(), StandardCharsets.UTF_8)) {
             
             writer.write("[\n");
             line = reader.readLine();

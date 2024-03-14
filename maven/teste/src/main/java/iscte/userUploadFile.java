@@ -41,6 +41,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 fileholder[0] = selectedFile;
                 Extract extractorCsvToJson = new Extract(fileholder, jsonFile);
                 extractorCsvToJson.readCsvUsingBufferReader();
+                XamppFileManager.saveToFileRoot(extractorCsvToJson.getOutputJsonFile());
                 return;
             }
         };
@@ -98,11 +99,8 @@ public class UserUploadFile extends JFrame implements FileCallback{
                     JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horároi", "Erro", JOptionPane.INFORMATION_MESSAGE);
                 } 
 				Desktop desk = Desktop.getDesktop(); 
-				try {
-					desk.browse(new java.net.URI("file://" + System.getProperty("user.dir") + "/" + "SalasDeAulaPorTiposDeSala.html"));
-				} catch (IOException | URISyntaxException e1) {
-                    e1.printStackTrace();
-                } 
+				//COLOCAR desk.browse do horario
+                System.err.println(""); 
 			}
         });
 
