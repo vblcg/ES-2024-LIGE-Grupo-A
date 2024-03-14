@@ -59,7 +59,7 @@
   <div id="table-horario">
     <script type="text/javascript">
       const pathJson = "http://localhost/CaracterizacaoDasSalas.json";
-      const pathHorario = "http://localhost/CaracterizacaoDasSalas.json";
+      const pathHorario = "http://localhost/output.json";
       var day_set = false;
       var timeslot_set = false;
       var day;
@@ -207,10 +207,13 @@
 
       function queryJSON(data, timeslot) {
         for (let i = 0; i < jsonHorario.length; i++) {
+          console.log(jsonHorario[i]);
           const currentDate = jsonHorario[i]["Data da aula"];
           const currentTimeslotInicio = jsonHorario[i]["Hora Inicio da Aula"];
           const currentTimeslotFim = jsonHorario[i]["Hora Fim da Aula"];
           const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
+          console.log(currentDate, currentTimeSlot, data, timeslot);
+          console.log(currentDate == data, currentTimeSlot == timeslot);
           if ((currentDate == data && currentTimeSlot == timeslot)) {
             salasIndisponiveis.push(jsonHorario[i]["Sala atribuida a aula"]);
           }
@@ -517,6 +520,7 @@
             day = formatDate(this.value);
             if (day_set && timeslot_set) {
               filter = filterDate(day, timeslot);
+              console.log(filter);
               table.setFilter("Nome sala", "in", filter);
             }
           });
@@ -527,6 +531,7 @@
             timeslot_set = true;
             if (day_set && timeslot_set) {
               filter = filterDate(day, timeslot);
+              console.log("ENTROU");
               table.setFilter("Nome sala", "in", filter);
             }
           });
