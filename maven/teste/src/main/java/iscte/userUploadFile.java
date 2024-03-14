@@ -24,7 +24,8 @@ public class UserUploadFile extends JFrame implements FileCallback{
 
     private FileCallback callback;
     private File[] fileholder;
-    JPanel panel;
+    private JPanel panel;
+    private boolean uploaded;
 
     /**
      * Construtor da classe UserUploadFile.
@@ -53,6 +54,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
             public void actionPerformed(ActionEvent e) {
                 try {
                     openFileChooser();
+                    
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -68,6 +70,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                     JOptionPane.showMessageDialog(panel,"Não colocou nenhum endereço", "Erro", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     checkLinkStructure(input);  //Verifica se o link tem uma estrutura que possibilita o descarregamento
+
                 }
             }
         });
@@ -76,7 +79,23 @@ public class UserUploadFile extends JFrame implements FileCallback{
         JButton buttonWebBrowser = new JButton("Mostrar Salas no Browser");  
 	    button.setBounds(20,20,250,50);  
 	    buttonWebBrowser.addActionListener(new ActionListener(){  	
-			public void actionPerformed(ActionEvent e){  
+			public void actionPerformed(ActionEvent e){ 
+				Desktop desk = Desktop.getDesktop(); 
+				try {
+					desk.browse(new java.net.URI("file://" + System.getProperty("user.dir") + "/" + "SalasDeAulaPorTiposDeSala.html"));
+				} catch (IOException | URISyntaxException e1) {
+                    e1.printStackTrace();
+                } 
+			}
+        });
+        
+        JButton buttonSchedule = new JButton("Mostrar Horário no Browser");
+        button.setBounds(20,20,250,50);  
+	    buttonSchedule.addActionListener(new ActionListener(){  	
+			public void actionPerformed(ActionEvent e){ 
+                if(!uploaded) {
+                    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horároi", "Erro", JOptionPane.INFORMATION_MESSAGE);
+                } 
 				Desktop desk = Desktop.getDesktop(); 
 				try {
 					desk.browse(new java.net.URI("file://" + System.getProperty("user.dir") + "/" + "SalasDeAulaPorTiposDeSala.html"));
@@ -87,6 +106,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
         });
 
         panel = new JPanel();
+        panel.add(buttonSchedule);
         panel.add(button);
         panel.add(buttonGitHub);
         panel.add(buttonWebBrowser);
@@ -188,6 +208,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 }
                 if (structureCorrect) {
                     JOptionPane.showMessageDialog(panel, "Horário Carregado!", "Sucesso", JOptionPane.PLAIN_MESSAGE);
+                    uploaded = true;
                     callback.onFileSelected(file);
                 } else {
                     JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
