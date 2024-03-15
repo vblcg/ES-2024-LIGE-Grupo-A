@@ -35,8 +35,8 @@
     <input type="date" id="data-horario" name="dataHorario" hidden="true" max="2022-12-31"/>
     <select id="select-timeslot" hidden="true">
       <option value="" hidden></option>
-      <option value="8:00:00-9:30:00">8:00-9:30</option>
-      <option value="9:30:00-11:00:00">9:30-11:00</option>
+      <option value="08:00:00-09:30:00">8:00-9:30</option>
+      <option value="09:30:00-11:00:00">9:30-11:00</option>
       <option value="11:00:00-12:30:00">11:00-12:30</option>
       <option value="13:00:00-14:30:00">13:00-14:30</option>
       <option value="14:00:00-16:00:00">14:00-16:00</option>
@@ -66,8 +66,8 @@
       var timeslot;
       let jsonHorario;
       let jsonSalas;
-      var salasIndisponiveis = [];
-      var salasDisponiveis = [];
+      var salasIndisponiveis;
+      var salasDisponiveis ;
 
       var minMaxFilterEditor = function (
         cell,
@@ -205,16 +205,18 @@
         return queryJSON(day, timeslot);
       }
 
-      function queryJSON(data, timeslot) {
+      function queryJSON(day, timeslot) {
+        salasDisponiveis = [];
+        salasIndisponiveis = [];
         for (let i = 0; i < jsonHorario.length; i++) {
           console.log(jsonHorario[i]);
           const currentDate = jsonHorario[i]["Data da aula"];
           const currentTimeslotInicio = jsonHorario[i]["Hora Inicio da Aula"];
           const currentTimeslotFim = jsonHorario[i]["Hora Fim da Aula"];
           const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
-          console.log(currentDate, currentTimeSlot, data, timeslot);
-          console.log(currentDate == data, currentTimeSlot == timeslot);
-          if ((currentDate == data && currentTimeSlot == timeslot)) {
+          console.log(currentDate, currentTimeSlot, day, timeslot);
+          console.log(currentDate == day, currentTimeSlot == timeslot);
+          if ((currentDate == day && currentTimeSlot == timeslot)) {
             salasIndisponiveis.push(jsonHorario[i]["Sala atribuida a aula"]);
           }
         }
