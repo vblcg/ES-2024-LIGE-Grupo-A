@@ -5,3 +5,5 @@ João Silva, 104811, JoaoSilva0
 Vasco Gaspar, 105231, vblcg
 João Lourenço, 104632, 
 António Bento, 82879, 
+
+Os javadocs podem ser acedidos em maven\teste\src\main\java\iscte\javadoc\index.html.
