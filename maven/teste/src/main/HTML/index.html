@@ -11,19 +11,26 @@
 
 <body>
     <script type="text/javascript">
-        var table; // Declare the table variable
+        var table; // Declarar a variável da tabela
+
+        /**
+         * Esconder e Mostrar colunas
+         * @param {string} columnName - Nome da coluna
+        */
         function toggleColumn(columnName) {
-            var column = table.getColumn(columnName);
-            if (column) {
-                column.toggle();
-                console.log(column);
+                var column = table.getColumn(columnName);
+                var selected = false;
+                if (column) {
+                    column.toggle();
+                    adjustTableWidth();
+                }
             }
-        }
     </script>
+
     <h1>Calendário de aulas:</h1>
     <div id="toggle-buttons">
         <a>Esconder/mostrar colunas:</a>
-        <a class="link" href="##" id="Curso" onclick="toggleColumn('Curso', 'Curso')">Curso,</a>
+        <a class="link" href="##" id="Curso" onclick="toggleColumn('Curso')">Curso,</a>
         <a class="link" href="##" id="UC" onclick="toggleColumn('UC')"> UC,</a>
         <a class="link" href="##" id="Turno" onclick="toggleColumn('Turno')"> Turno,</a>
         <a class="link" href="##" id="Turma" onclick="toggleColumn('Turma')"> Turma,</a>
@@ -41,10 +48,6 @@
     </div>
     <div id="table-horario">
     <script type="text/javascript">
-
-    
-
-    var colunas = ["Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"];
 
     const pathJson = '../../../../../output.json';
 
@@ -66,13 +69,20 @@
 
         start.value = cell.getValue();
 
+        /**
+         * Constroi os valores do start e do end do filtro minMax.
+        */
         function buildValues(){
             success({
                 start:start.value,
                 end:end.value,
             });
         }
-
+        
+         /**
+          * Trata de eventos keypress para o editor.
+          * @param {Event} e - Evento pressionado.
+         */
         function keypress(e){
             if(e.keyCode == 13){
                 buildValues();
@@ -101,7 +111,6 @@
         return container;
     }
     
-    
     var minMaxFilterFunction = function (headerValue, rowValue, rowData, filterParams) {
         if (rowValue !== null && rowValue !== undefined) {
             if (headerValue.start !== "") {
@@ -120,20 +129,9 @@
         return true;
     }
 
-    function dateDiffInWeeks(date1, date2) {
-        var parts = date2.split("/");
-        var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
-        const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-        let Difference_In_Time = new Date(dateFormat).getTime() - new Date(date1).getTime();
-        let Difference_In_Days = Math.round(Difference_In_Time / _MS_PER_DAY);
-        let Difference_In_Weeks = Math.ceil(Difference_In_Days/7);
-
-        return Difference_In_Weeks;
-    }
-
-    
-
-
+    /** 
+     * Lê os dados do ficheiro json e cria uma tabela do tabulator com os mesmos
+     */
     fetch(pathJson)
     .then(response => {
         // Check if the request was successful
@@ -168,36 +166,10 @@
             {title: "Caracteristicas da sala pedida para a aula", field:"Caracteristicas da sala pedida para a aula", headerFilter:"input"},
             {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
             {title: "Semana do ano", field:"Semana do ano", headerFilter: "input"},
-            {title: "Semana do semestre", field:"Data da aula", headerFilter:"input",
-                formatter: function (cell, formatterParams, onRendered) {
-                    var dateValue = cell.getValue();
-                    if (dateValue) {
-                        var a = new Date("09/02/2022"),
-                            b = dateValue,
-                            difference = dateDiffInWeeks(a, b);
-                        //console.log(b)
-                        //console.log(difference + ' weeks')
-                        return difference;
-                    }
-                    return "";
-                }
-            }
+            {title: "Semana do semestre", field:"Data da aula", headerFilter:"input"}
         ],
     });
-    
-    function toggleColumn(columnName, id) {
-                var column = table.getColumn(columnName);
-                var selected = false;
-                if (column) {
-                    column.toggle();
-                    adjustTableWidth();
-                }
-            
-    }
-
-        
-    }
-    )
+    })
     .catch(error => {
         console.error(`Error loading ${pathJson}:`, error);
     });
