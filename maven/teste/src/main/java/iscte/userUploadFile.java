@@ -73,7 +73,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
                     JOptionPane.showMessageDialog(panel,"Não colocou nenhum endereço", "Erro", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     checkLinkStructure(input);  //Verifica se o link tem uma estrutura que possibilita o descarregamento
-
                 }
             }
         });
@@ -136,7 +135,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
         }
     }
 
-    
     /** 
      * Verifica se o link vem do github.
      * Verifica se o link tem http:// ou https://.
@@ -168,8 +166,8 @@ public class UserUploadFile extends JFrame implements FileCallback{
     public File downloadFileFromGitHub(String githubFileUrl) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(githubFileUrl).build();
-
         try (Response response = client.newCall(request).execute()) {
+            System.err.println(response);
             if (response.isSuccessful()) {
                 String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
                 String destinationFilePath = fileName;
@@ -187,7 +185,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
         }
         return null;
     }
-
 
     /** 
      * Verifica se ficheiro é do tipo .csv
