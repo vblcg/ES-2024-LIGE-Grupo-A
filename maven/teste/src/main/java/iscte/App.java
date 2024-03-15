@@ -14,8 +14,8 @@ public class App {
      */
     public static void main(String[] args) {
         File[] fileHolder = new File[1]; 
-        String jsonFile = "output.json";
-        XamppFileManager.saveToFileRoot(new File("SalasDeAulaPorTiposDeSala.html"));
+        String jsonFile = "ficheiros/Horário.json";
+        XamppFileManager.saveToFileRoot(new File("ficheiros/SalasDeAulaPorTiposDeSala.html"));
         UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile); 
         uploadFile.setVisible(true); 
     }
