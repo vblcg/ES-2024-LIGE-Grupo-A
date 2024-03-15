@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import com.google.gson.GsonBuilder;
+//import com.google.gson.GsonBuilder;
 
 /**
  * Esta classe tem com funcionalidade ler o ficheiro CSV que contém o horário das aulas e convertê-lo num ficheiro com formato JSON
