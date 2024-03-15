@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-//import com.google.gson.GsonBuilder;
+import com.google.gson.GsonBuilder;
 
 /**
  * Esta classe tem com funcionalidade ler o ficheiro CSV que contém o horário das aulas e convertê-lo num ficheiro com formato JSON
@@ -24,7 +24,7 @@ public class Extract{
      * Main, que cria uma instância da classe Extract, com o ficheiro CSV de input e o ficheiro JSON de output desejado e invoca a função
      * de conversão
      *
-     * @param args - Argumento não usado
+     * @param args Argumento não usado
      */
     public static void main(String[] args) {
         Extract teste = new Extract("HorarioDeExemplo.csv", "output.json");
@@ -34,8 +34,8 @@ public class Extract{
     /**
      * Contrutor do objeto Extract
      *
-     * @param inputFile - String que representa o ficheiro CSV de input.
-     * @param outputFile - String que representa o ficheiro de output.
+     * @param inputFile String que representa o ficheiro CSV de input.
+     * @param outputFile String que representa o ficheiro de output.
      */
     public Extract(String inputFile, String outputFile) {
         this.outputFile = outputFile;
