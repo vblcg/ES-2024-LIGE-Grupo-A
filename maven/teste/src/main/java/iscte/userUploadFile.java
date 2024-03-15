@@ -30,6 +30,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
 
     /**
      * Construtor da classe UserUploadFile.
+     * A interface grafica instancia-se neste local, com a criacao de botoes para o efeito.
      *
      * @param fileholder Array de arquivos para armazenar o arquivo selecionado pelo usuário.
      * @param jsonFile    Nome do arquivo JSON.
