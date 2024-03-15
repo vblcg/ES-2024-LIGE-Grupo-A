@@ -2,5 +2,5 @@
     "vsintellicode.typescript.completionsEnabled": true,
     "vsintellicode.java.completionsEnabled": true,
     "java.configuration.updateBuildConfiguration": "automatic",
-    "java.debug.settings.onBuildFailureProceed": true
+    "maven.view": "hierarchical"
 }
