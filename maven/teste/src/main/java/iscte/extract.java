@@ -13,21 +13,40 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import com.google.gson.GsonBuilder;
 
-
+/**
+ * Esta classe tem com funcionalidade ler o ficheiro CSV que contém o horário das aulas e convertê-lo num ficheiro com formato JSON
+ */
 public class Extract{
-    private String outputFile;
-    private File[] holder;
+    private static String outputFile;
+    private static String inputFile;
 
+    /**
+     * Main, que cria uma instância da classe Extract, com o ficheiro CSV de input e o ficheiro JSON de output desejado e invoca a função
+     * de conversão
+     *
+     * @param args Argumento não usado
+     */
     public static void main(String[] args) {
-        readCsvUsingBufferReader();
+        Extract teste = new Extract("HorarioDeExemplo.csv", "output.json");
+        teste.readCsvUsingBufferReader();
     }
 
-    public Extract(File[] holder, String outputFile) {
+    /**
+     * Contrutor do objeto Extract
+     *
+     * @param inputFile   String que representa o ficheiro CSV de input.
+     * @param outputFile  String que representa o ficheiro de output.
+     */
+    public Extract(String inputFile, String outputFile) {
         this.outputFile = outputFile;
-        this.holder = holder;
+        this.inputFile = inputFile;
     }
 
-
+    /**
+     * Lê um ficheiro CSV, recorrendo a um BufferedREader, analisa o seu conteúdo e escreve toda a informação em 
+     * um ficheiro JSON. Calcula também a semana do ano e a semana do semestre, recorrendo à data das aulas, e adiciona
+     * esta informação extra a cada registo do ficheiro JSON.
+     */
     public static void readCsvUsingBufferReader(){
 
         String line = "";
@@ -35,8 +54,8 @@ public class Extract{
                             "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("HorarioDeExemplo.csv")); 
-            FileWriter writer = new FileWriter(new File("output.json"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); 
+            FileWriter writer = new FileWriter(new File(outputFile))) {
 
             writer.write("[\n");
 

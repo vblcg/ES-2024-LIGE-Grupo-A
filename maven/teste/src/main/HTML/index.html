@@ -138,7 +138,7 @@
     .then(response => {
         // Check if the request was successful
         if (!response.ok) {
-        throw new Error(`Failed to fetch ${pathJson}: ${response.statusText}`);
+            throw new Error(`Failed to fetch ${pathJson}: ${response.statusText}`);
         }
 
         // Parse the JSON data
@@ -184,6 +184,7 @@
             }
         ],
     });
+    
     function toggleColumn(columnName, id) {
                 var column = table.getColumn(columnName);
                 var selected = false;
