@@ -2,6 +2,10 @@ package iscte;
 
 import javax.swing.*;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,9 +17,7 @@ import java.net.URISyntaxException;
 import java.text.Normalizer;
 import java.awt.Desktop;
 import java.awt.event.*;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 
 /**
  * Classe para permitir o carregamento de arquivos pelo usuario.
@@ -167,20 +169,21 @@ public class UserUploadFile extends JFrame implements FileCallback{
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(githubFileUrl).build();
         try (Response response = client.newCall(request).execute()) {
-            System.err.println(response);
             if (response.isSuccessful()) {
                 String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
-                String destinationFilePath = fileName;
+                String destinationFilePath = "ficheiros/" + fileName;
                 File downloadedFile = new File(destinationFilePath);
                 checkCsvStructure(downloadedFile, githubFileUrl);
                 try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
                     outputStream.write(response.body().bytes());
                     return downloadedFile;
                 } catch (Exception e) {
+                    System.out.println("erro aqui");
                     e.printStackTrace();
                 }
             }
         } catch (Exception e) {
+            System.err.println("Error writing file: " + e.getMessage());
             JOptionPane.showMessageDialog(panel, "Não foi possível descarregar o ficheiro. Tente novamente", "Erro", JOptionPane.ERROR_MESSAGE);
         }
         return null;
