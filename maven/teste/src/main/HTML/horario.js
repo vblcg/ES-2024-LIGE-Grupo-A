@@ -1,10 +1,11 @@
+const pathJson = '../../../../../output.json';
+ 
  /**
   * Esconder e Mostrar colunas
   * @param {string} columnName Nome da coluna
 */
  function toggleColumn(columnName) {
     var column = table.getColumn(columnName);
-    var selected = false;
     if (column) {
         column.toggle();
         adjustTableWidth();
