@@ -13,10 +13,9 @@ import java.net.URISyntaxException;
 import java.text.Normalizer;
 import java.awt.Desktop;
 import java.awt.event.*;
-/*import okhttp3.OkHttpClient;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
- */
 
 /**
  * Classe para permitir o carregamento de arquivos pelo usuario.

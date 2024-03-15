@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
-//import com.google.gson.GsonBuilder;
+import com.google.gson.GsonBuilder;
 
 /**
  * Responsável por ler um arquivo CSV, processa-lo e criar um ficheiro JSON.
@@ -18,8 +18,6 @@ import java.util.Map;
  *
  * @version 1.0
  */
-
-
 public class Extract{
     private String outputFile;
     private File[] holder;
@@ -59,7 +57,6 @@ public class Extract{
     }
 
 
-    
     /** 
      * @return File
      */
