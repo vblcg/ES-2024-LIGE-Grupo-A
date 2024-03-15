@@ -91,10 +91,16 @@ public class Extract{
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTime(dataAula);
                                 int semana_do_ano = calendar.get(Calendar.WEEK_OF_YEAR);
-
                                 jsonMap.put(colunas[i], data_invertida);
                                 jsonMap.put("Semana do ano", semana_do_ano);
+
+                                String inicioSemestre = new String("02/09/2022");
+                                Date dataSemestre = dateFormat.parse(inicioSemestre);
+                                long differenceInMillis = dataAula.getTime() - dataSemestre.getTime();
+                                int semana_do_semestre = (int) Math.ceil(differenceInMillis / (7 * 24 * 60 * 60 * 1000));
                                 
+                                jsonMap.put(colunas[i], data_invertida);
+                                jsonMap.put("Semana do semestre", semana_do_semestre);
                             }
                             
                             
