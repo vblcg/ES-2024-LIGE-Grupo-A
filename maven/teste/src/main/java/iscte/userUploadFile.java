@@ -144,7 +144,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
      * @param githubFileUrl
      */
     public void checkLinkStructure(String githubFileUrl) {
-        if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://") && !githubFileUrl.toLowerCase().endsWith(githubFileUrl)) {
+        if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://")) {
             JOptionPane.showMessageDialog(panel, "URL inválida. Certifique-se de incluir 'http://' ou 'https://'.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         } else if ((githubFileUrl != "") && (!githubFileUrl.toLowerCase().startsWith("https://raw.githubusercontent"))) {
