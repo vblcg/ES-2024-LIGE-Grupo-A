@@ -106,7 +106,7 @@ public class Extract{
             
             // Set the reference date to 09/02/2022
             Calendar referenceDate = Calendar.getInstance();
-            referenceDate.setTime(sdf.parse("2022-09-02"));
+            referenceDate.setTime(sdf.parse("02/09/2022"));
             
             // Set the given date to Calendar object
             Calendar givenDateCal = Calendar.getInstance();
@@ -114,8 +114,7 @@ public class Extract{
             
             // Calculate the difference in weeks
             long diffInMillies = givenDateCal.getTimeInMillis() - referenceDate.getTimeInMillis();
-            diffInWeeks = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7;
-            
+            diffInWeeks = (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7);
             
         } catch (ParseException e) {
             e.printStackTrace();
@@ -176,7 +175,7 @@ public class Extract{
                                 int semana_semestre_func = (int)getSemanaSemestre(value);
                                 
                                 jsonMap.put(colunas[i], data_invertida);
-                                jsonMap.put("Semana do semestre", semana_do_semestre);
+                                jsonMap.put("Semana do semestre", semana_semestre_func);
                             }
                             
                             

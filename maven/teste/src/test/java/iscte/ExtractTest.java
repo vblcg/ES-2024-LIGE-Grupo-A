@@ -42,14 +42,12 @@ public class ExtractTest {
         // Datas de teste
        
         String[] dates = {"09/09/2022", "09/12/2022", "15/03/2023"};
-
         // Semanas esparadas para as datas de teste
-        long[] expectedWeekNumbers = { 1, 14, 27 };
+        long[] expectedWeekNumbers = {1, 14, 27 };
 
-        for (int i = 0; i < dates.length; i++) {
+        for (int i = 0; i < dates.length; i++){
             long actualWeekNumber = Extract.getSemanaSemestre(dates[i]);
-            if (actualWeekNumber==expectedWeekNumbers[i])
-                System.out.println("correto");
+            assertEquals(expectedWeekNumbers[i], actualWeekNumber);
         }
 
     }
