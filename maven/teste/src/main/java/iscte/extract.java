@@ -13,6 +13,9 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import com.google.gson.GsonBuilder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Esta classe tem com funcionalidade ler o ficheiro CSV que contém o horário das aulas e convertê-lo num ficheiro com formato JSON
@@ -83,6 +86,27 @@ public class Extract{
     }
 
     /**
+     * @param data Data no formato "DD/MM/AAAA"
+     * @return  Numero da semana do semestre calculado com base na data "02/09/2022"
+     * Temporario
+     */
+    public static long getSemanaSemestre(String data) {
+        long differenceInWeeks = 0;
+        LocalDate dataAula;
+        try {
+
+            dataAula = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            String inicioSemestre = new String("02/09/2022");
+            LocalDate dataSemestre = LocalDate.parse(inicioSemestre, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            differenceInWeeks = ChronoUnit.WEEKS.between(dataSemestre, dataAula);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
+        return differenceInWeeks;
+    }
+    /**
      * Lê um ficheiro CSV, recorrendo a um BufferedREader, analisa o seu conteúdo e escreve toda a informação em 
      * um ficheiro JSON. Calcula também a semana do ano e a semana do semestre, recorrendo à data das aulas, e adiciona
      * esta informação extra a cada registo do ficheiro JSON.
@@ -132,12 +156,7 @@ public class Extract{
                                 jsonMap.put(colunas[i], data_invertida);
                                 jsonMap.put("Semana do ano", semana_ano_func);
 
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                                Date dataAula = dateFormat.parse(value);
-                                String inicioSemestre = new String("02/09/2022");
-                                Date dataSemestre = dateFormat.parse(inicioSemestre);
-                                long differenceInMillis = dataAula.getTime() - dataSemestre.getTime();
-                                int semana_do_semestre = (int) Math.ceil(differenceInMillis / (7 * 24 * 60 * 60 * 1000));
+                               
                                 
                                 jsonMap.put(colunas[i], data_invertida);
                                 jsonMap.put("Semana do semestre", semana_do_semestre);

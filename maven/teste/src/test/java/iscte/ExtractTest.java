@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
+import org.apache.commons.compress.harmony.pack200.Segment.PassException;
 import org.junit.Test;
 
 public class ExtractTest {
@@ -36,6 +37,21 @@ public class ExtractTest {
         }
     }
    
+    @Test
+    public void testGetSemanaSemestre() throws ParseException{
+        // Datas de teste
+        String[] dates = {"09/09/2022", "09/12/2022", "15/03/2023"};
+
+        // Semanas esparadas para as datas de teste
+        long[] expectedWeekNumbers = { 1, 14, 27 };
+
+        for (int i = 0; i < dates.length; i++) {
+            long actualWeekNumber = Extract.getSemanaSemestre(dates[i]);
+            assertEquals(expectedWeekNumbers[i], actualWeekNumber);
+        }
+
+    }
+
     @Test
     public void testReadCsvUsingBufferReader() {
         String inputFile = "C:\\Users\\nunol\\OneDrive\\Documentos\\Github\\ES\\ES-2024-LIGE-Grupo-A\\HorarioDeExemplo.csv";
