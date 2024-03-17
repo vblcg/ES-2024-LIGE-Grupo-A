@@ -105,21 +105,27 @@ public class Extract{
             Date givenDate = sdf.parse(data);
             
             // Set the reference date to 09/02/2022
-            Calendar referenceDate = Calendar.getInstance();
-            referenceDate.setTime(sdf.parse("02/09/2022"));
+            Calendar referenceDateFirstSemester = Calendar.getInstance();
+            referenceDateFirstSemester.setTime(sdf.parse("01/09/2022"));
             
+            Calendar referenceDateSecondSemester = Calendar.getInstance();
+            referenceDateSecondSemester.setTime(sdf.parse("01/02/2023"));
+
             // Set the given date to Calendar object
             Calendar givenDateCal = Calendar.getInstance();
             givenDateCal.setTime(givenDate);
             
             // Calculate the difference in weeks
-            long diffInMillies = givenDateCal.getTimeInMillis() - referenceDate.getTimeInMillis();
-            diffInWeeks = (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7);
-            
+            if (givenDateCal.get(Calendar.MONTH) >= Calendar.SEPTEMBER || givenDateCal.get(Calendar.MONTH) == Calendar.JANUARY) {
+                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateFirstSemester.getTimeInMillis();
+                diffInWeeks = (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7);
+            } else {
+                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateSecondSemester.getTimeInMillis();
+                diffInWeeks = (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return diffInWeeks;
     }
     /**
