@@ -156,7 +156,7 @@ public class Extract{
                                 jsonMap.put(colunas[i], data_invertida);
                                 jsonMap.put("Semana do ano", semana_ano_func);
 
-                               
+                                int semana_semestre_func = (int)getSemanaSemestre(value);
                                 
                                 jsonMap.put(colunas[i], data_invertida);
                                 jsonMap.put("Semana do semestre", semana_do_semestre);
