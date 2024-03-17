@@ -84,11 +84,17 @@ public class UserUploadFile extends JFrame implements FileCallback{
 	    button.setBounds(20,20,250,50);  
 	    buttonWebBrowser.addActionListener(new ActionListener(){  	
 			public void actionPerformed(ActionEvent e){ 
-				Desktop desk = Desktop.getDesktop(); 
-				try {
-                    desk.browse(new URI("http://localhost/SalasDeAulaPorTiposDeSala.html"));
-				} catch (IOException | URISyntaxException e1) {
-                    e1.printStackTrace();
+				if(!uploaded) {
+                    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    Desktop desk = Desktop.getDesktop(); 
+                    try {
+                        desk.browse(new URI("http://localhost/SalasDeAulaPorTiposDeSala.html"));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (URISyntaxException e1) {
+                        e1.printStackTrace();
+                    }
                 } 
 			}
         });
@@ -144,11 +150,11 @@ public class UserUploadFile extends JFrame implements FileCallback{
      * @param githubFileUrl
      */
     public void checkLinkStructure(String githubFileUrl) {
-        if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://") && !githubFileUrl.toLowerCase().endsWith(githubFileUrl)) {
+        if (!githubFileUrl.toLowerCase().startsWith("http://") && !githubFileUrl.toLowerCase().startsWith("https://")) {
             JOptionPane.showMessageDialog(panel, "URL inválida. Certifique-se de incluir 'http://' ou 'https://'.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         } else if ((githubFileUrl != "") && (!githubFileUrl.toLowerCase().startsWith("https://raw.githubusercontent"))) {
-            JOptionPane.showMessageDialog(panel, "O ficheiro selecionado não é um  do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "O ficheiro selecionado não é do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
         }  else if(!githubFileUrl.toLowerCase().endsWith(".csv")) {
             JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
         } else {
