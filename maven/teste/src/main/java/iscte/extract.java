@@ -111,7 +111,6 @@ public class Extract{
                             int numero = Integer.parseInt(value);
                             jsonMap.put(colunas[i], numero);
                         } catch (NumberFormatException e) {
-                            // Handle parsing error
                             jsonMap.put(colunas[i], null);
                         }
                     } if ("Data da aula".equals(colunas[i])) {
@@ -120,6 +119,7 @@ public class Extract{
                                 jsonMap.put(colunas[i], value);
                                 jsonMap.put("Semana do ano", null);
                             } else {
+                                // Inverter a data para o formato "AAAA/MM/DD"
                                 String[] split_date = value.split("/");
                                 String data_invertida = split_date[2] + "/" + split_date[1] + "/" + split_date[0];
 
