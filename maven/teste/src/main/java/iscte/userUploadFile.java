@@ -59,7 +59,6 @@ public class UserUploadFile extends JFrame implements FileCallback{
             public void actionPerformed(ActionEvent e) {
                 try {
                     openFileChooser();
-                    
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -154,7 +153,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
             JOptionPane.showMessageDialog(panel, "URL inválida. Certifique-se de incluir 'http://' ou 'https://'.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         } else if ((githubFileUrl != "") && (!githubFileUrl.toLowerCase().startsWith("https://raw.githubusercontent"))) {
-            JOptionPane.showMessageDialog(panel, "O ficheiro selecionado não é do GitHub.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "O ficheiro selecionado não é do GitHub ou não é 'raw'.", "Erro", JOptionPane.ERROR_MESSAGE);
         }  else if(!githubFileUrl.toLowerCase().endsWith(".csv")) {
             JOptionPane.showMessageDialog(panel, "O arquivo selecionado não é um arquivo CSV.", "Erro", JOptionPane.ERROR_MESSAGE);
         } else {
@@ -178,12 +177,11 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
                 String destinationFilePath = "ficheiros/" + fileName;
                 File downloadedFile = new File(destinationFilePath);
-                checkCsvStructure(downloadedFile);
                 try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
                     outputStream.write(response.body().bytes());
+                    checkCsvStructure(downloadedFile);
                     return downloadedFile;
                 } catch (Exception e) {
-                    System.out.println("erro aqui");
                     e.printStackTrace();
                 }
             }
@@ -203,7 +201,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
      */
     public void checkCsvStructure(File file) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-        String[] columns = reader.readLine().split(";");
+        String[] columns = reader.readLine().split("[;,]");
         String[] expected = {"Curso", "Unidade Curricular", "Turno", "Turma", "Inscritos no turno", "Dia da semana", "Hora início da aula", "Hora fim da aula", "Data da aula", "Características da sala pedida para a aula", "Sala atribuída à aula"};
         if (file.getName().toLowerCase().endsWith(".csv")) {
             if (columns.length == expected.length) {
@@ -221,6 +219,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                     uploaded = true;
                     callback.onFileSelected(file);
                 } else {
+                    System.out.println("erro");
                     JOptionPane.showMessageDialog(panel, "A Estrutura do Horário Está Errada.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
