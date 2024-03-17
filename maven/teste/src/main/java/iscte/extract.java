@@ -60,6 +60,10 @@ public class Extract{
         return inputFile;
     }
 
+    /**
+     * @param data Data no formato "DD/MM/AAAA"
+     * @return Número da semana do ano da "data"
+     */
     public static int getSemanaAno(String data){
         int semana_do_ano = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
