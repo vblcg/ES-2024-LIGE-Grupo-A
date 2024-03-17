@@ -12,9 +12,12 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import com.google.gson.GsonBuilder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
 /**
@@ -91,20 +94,30 @@ public class Extract{
      * Temporario
      */
     public static long getSemanaSemestre(String data) {
-        long differenceInWeeks = 0;
-        LocalDate dataAula;
+        
+        // Define SimpleDateFormat object with pattern
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        
         try {
-
-            dataAula = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            String inicioSemestre = new String("02/09/2022");
-            LocalDate dataSemestre = LocalDate.parse(inicioSemestre, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            differenceInWeeks = ChronoUnit.WEEKS.between(dataSemestre, dataAula);
+            // Parse the given date string to Date object
+            Date givenDate = sdf.parse(data);
+            
+            // Set the reference date to 09/02/2022
+            Calendar referenceDate = Calendar.getInstance();
+            referenceDate.setTime(sdf.parse("2022-09-02"));
+            
+            // Set the given date to Calendar object
+            Calendar givenDateCal = Calendar.getInstance();
+            givenDateCal.setTime(givenDate);
+            
+            // Calculate the difference in weeks
+            long diffInMillies = givenDateCal.getTimeInMillis() - referenceDate.getTimeInMillis();
+            long diffInWeeks = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7;
+            return diffInWeeks;
+            
         } catch (ParseException e) {
             e.printStackTrace();
-            return -1;
         }
-
-        return differenceInWeeks;
     }
     /**
      * Lê um ficheiro CSV, recorrendo a um BufferedREader, analisa o seu conteúdo e escreve toda a informação em 
