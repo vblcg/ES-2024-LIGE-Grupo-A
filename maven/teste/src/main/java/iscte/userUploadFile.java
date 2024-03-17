@@ -130,8 +130,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            String git = "";
-            checkCsvStructure(selectedFile, git);
+            checkCsvStructure(selectedFile);
         } else {
             JOptionPane.showMessageDialog(panel,"Não Selecionou Nenhum Ficheiro", "", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -173,7 +172,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
                 String destinationFilePath = "ficheiros/" + fileName;
                 File downloadedFile = new File(destinationFilePath);
-                checkCsvStructure(downloadedFile, githubFileUrl);
+                checkCsvStructure(downloadedFile);
                 try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
                     outputStream.write(response.body().bytes());
                     return downloadedFile;
@@ -194,10 +193,9 @@ public class UserUploadFile extends JFrame implements FileCallback{
      * Verifica se o conteúdo do ficheiro tem as colunas desejadas
      * Verifica, no caso de o ficheiro vir do github, se é mesmo da plataforma
      * @param file
-     * @param git
      * @throws IOException
      */
-    public void checkCsvStructure(File file, String git) throws IOException {
+    public void checkCsvStructure(File file) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         String[] columns = reader.readLine().split(";");
         String[] expected = {"Curso", "Unidade Curricular", "Turno", "Turma", "Inscritos no turno", "Dia da semana", "Hora início da aula", "Hora fim da aula", "Data da aula", "Características da sala pedida para a aula", "Sala atribuída à aula"};
