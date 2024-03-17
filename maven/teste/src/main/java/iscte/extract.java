@@ -97,6 +97,8 @@ public class Extract{
         
         // Define SimpleDateFormat object with pattern
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        long diffInWeeks = 0;
         
         try {
             // Parse the given date string to Date object
@@ -112,12 +114,14 @@ public class Extract{
             
             // Calculate the difference in weeks
             long diffInMillies = givenDateCal.getTimeInMillis() - referenceDate.getTimeInMillis();
-            long diffInWeeks = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7;
-            return diffInWeeks;
+            diffInWeeks = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7;
+            
             
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        return diffInWeeks;
     }
     /**
      * Lê um ficheiro CSV, recorrendo a um BufferedREader, analisa o seu conteúdo e escreve toda a informação em 
