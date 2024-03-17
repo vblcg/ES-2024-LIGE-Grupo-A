@@ -6,6 +6,7 @@
   <title>Salas ISCTE</title>
   <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet" />
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+  <script type="text/javascript" src="SalasDeAulaPorTiposDeSala.js"></script>
 </head>
 
 <body>
@@ -16,7 +17,8 @@
       <option value="Edifício Sedas Nunes (ISCTE-IUL)">
         Edifício I (ISCTE-IUL)
       </option>
-      <option value="Edifício II (ISCTE-IUL)">Edifício II (ISCTE-IUL)</option>
+      <option value="Edifício II (ISCTE-IUL)">
+        Edifício II (ISCTE-IUL)</option>
       <option value="Polidesportivo (ISCTE-IUL)">
         Polidesportivo (ISCTE-IUL)
       </option>
@@ -59,7 +61,7 @@
   <div id="table-horario">
     <script type="text/javascript">
       const pathJson = "http://localhost/CaracterizacaoDasSalas.json";
-      const pathHorario = "http://localhost/output.json";
+      const pathHorario = "http://localhost/Horário.json";
       var day_set = false;
       var timeslot_set = false;
       var day;
@@ -149,25 +151,6 @@
         return true;
       };
 
-      //Função que recebe uma string com a data e calcula o valor da semana do ano
-      function getWeekNumber(date) {
-        var parts = date.split("/");
-        var dateFormat = new Date(parts[2], parts[1] - 1, parts[0]);
-
-        startDate = new Date(dateFormat.getFullYear(), 0, 1);
-        let days = Math.floor(
-          (dateFormat - startDate) / (24 * 60 * 60 * 1000)
-        );
-
-        let weekNumber = Math.ceil(days / 7);
-        return weekNumber;
-      }
-
-      function calculateWeekDifference(data1, data2) {
-        const diferencaEmMilissegundos = Math.abs(data2 - data1);
-        const umaSemanaEmMilissegundos = 7 * 24 * 60 * 60 * 1000;
-        return Math.ceil(diferencaEmMilissegundos / umaSemanaEmMilissegundos);
-      }
 
       function readHorario() {
         fetch(pathHorario)
@@ -209,13 +192,10 @@
         salasDisponiveis = [];
         salasIndisponiveis = [];
         for (let i = 0; i < jsonHorario.length; i++) {
-          console.log(jsonHorario[i]);
           const currentDate = jsonHorario[i]["Data da aula"];
           const currentTimeslotInicio = jsonHorario[i]["Hora Inicio da Aula"];
           const currentTimeslotFim = jsonHorario[i]["Hora Fim da Aula"];
           const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
-          console.log(currentDate, currentTimeSlot, day, timeslot);
-          console.log(currentDate == day, currentTimeSlot == timeslot);
           if ((currentDate == day && currentTimeSlot == timeslot)) {
             salasIndisponiveis.push(jsonHorario[i]["Sala atribuida a aula"]);
           }
@@ -522,7 +502,6 @@
             day = formatDate(this.value);
             if (day_set && timeslot_set) {
               filter = filterDate(day, timeslot);
-              console.log(filter);
               table.setFilter("Nome sala", "in", filter);
             }
           });
@@ -533,7 +512,6 @@
             timeslot_set = true;
             if (day_set && timeslot_set) {
               filter = filterDate(day, timeslot);
-              console.log("ENTROU");
               table.setFilter("Nome sala", "in", filter);
             }
           });
