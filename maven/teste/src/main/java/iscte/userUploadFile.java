@@ -99,16 +99,16 @@ public class UserUploadFile extends JFrame implements FileCallback{
 			public void actionPerformed(ActionEvent e){ 
                 if(!uploaded) {
                     JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
-                } 
-				Desktop desk = Desktop.getDesktop(); 
-				try {
-                    desk.browse(new URI("http://localhost/Horário.html"));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                } catch (URISyntaxException e1) {
-                    e1.printStackTrace();
+                } else {
+                    Desktop desk = Desktop.getDesktop(); 
+                    try {
+                        desk.browse(new URI("http://localhost/Horário.html"));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (URISyntaxException e1) {
+                        e1.printStackTrace();
+                    }
                 }
-                System.err.println(""); 
 			}
         });
 
