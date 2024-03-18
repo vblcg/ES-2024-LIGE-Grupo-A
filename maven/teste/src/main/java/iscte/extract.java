@@ -7,7 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import com.google.gson.GsonBuilder;
 
@@ -62,6 +68,69 @@ public class Extract{
      */
     public File getOutputJsonFile() {
         return outputJsonFile;
+    }
+
+    /**
+     * @param data Data no formato "DD/MM/AAAA"
+     * @return Número da semana do ano da "data"
+     */
+    public static int getSemanaAno(String data){
+        int semana_do_ano = 0;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date dataAula;
+        try {
+            dataAula = dateFormat.parse(data);
+            Calendar calendar = Calendar.getInstance(Locale.getDefault());
+            calendar.setFirstDayOfWeek(Calendar.MONDAY); // Definir segunda como o primeiro dia da semana
+            calendar.setTime(dataAula);
+            semana_do_ano = calendar.get(Calendar.WEEK_OF_YEAR);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
+        return semana_do_ano;
+    }
+
+    /**
+     * @param data Data no formato "DD/MM/AAAA"
+     * @return  Numero da semana do semestre calculado com base na data "02/09/2022"
+     * Temporario
+     */
+    public static long getSemanaSemestre(String data) {
+        
+        // Define SimpleDateFormat object with pattern
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        long diffInWeeks = 0;
+        
+        try {
+            // Parse the given date string to Date object
+            Date givenDate = sdf.parse(data);
+            
+            // Set the reference date to 09/02/2022
+            Calendar referenceDateFirstSemester = Calendar.getInstance();
+            referenceDateFirstSemester.setTime(sdf.parse("01/09/2022"));
+            
+            Calendar referenceDateSecondSemester = Calendar.getInstance();
+            referenceDateSecondSemester.setTime(sdf.parse("01/02/2023"));
+
+            // Set the given date to Calendar object
+            Calendar givenDateCal = Calendar.getInstance();
+            givenDateCal.setTime(givenDate);
+            
+            // Calculate the difference in weeks
+            if (givenDateCal.get(Calendar.MONTH) >= Calendar.SEPTEMBER || givenDateCal.get(Calendar.MONTH) == Calendar.JANUARY) {
+                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateFirstSemester.getTimeInMillis();
+                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
+            } else {
+                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateSecondSemester.getTimeInMillis();
+                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return diffInWeeks;
     }
 
     /**
