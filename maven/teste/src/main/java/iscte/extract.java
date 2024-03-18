@@ -118,10 +118,10 @@ public class Extract{
             // Calculate the difference in weeks
             if (givenDateCal.get(Calendar.MONTH) >= Calendar.SEPTEMBER || givenDateCal.get(Calendar.MONTH) == Calendar.JANUARY) {
                 long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateFirstSemester.getTimeInMillis();
-                diffInWeeks = (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7);
+                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
             } else {
                 long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateSecondSemester.getTimeInMillis();
-                diffInWeeks = (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7);
+                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
             }
         } catch (ParseException e) {
             e.printStackTrace();
