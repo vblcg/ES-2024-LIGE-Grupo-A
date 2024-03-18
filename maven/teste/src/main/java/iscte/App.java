@@ -18,6 +18,7 @@ public class App {
         UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile); 
         XamppFileManager.saveToFileRoot(new File("ficheiros/SalasDeAulaPorTiposDeSala.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/Horário.html"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/CaracterizacaoDasSalas.json"));
         uploadFile.setVisible(true); 
     }
 }
