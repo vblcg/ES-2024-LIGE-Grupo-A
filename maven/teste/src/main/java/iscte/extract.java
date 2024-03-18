@@ -164,7 +164,7 @@ public class Extract{
                             jsonMap.put(colunas[i], null);
                         }
                     } if ("Data da aula".equals(colunas[i])) {
-                        try {
+                    
                             if(value == null || value == ""){
                                 jsonMap.put(colunas[i], value);
                                 jsonMap.put("Semana do ano", null);
@@ -182,16 +182,8 @@ public class Extract{
                                 
                                 jsonMap.put(colunas[i], data_invertida);
                                 jsonMap.put("Semana do semestre", semana_semestre_func);
-                            }
-                            
-                            
-                        } catch (NumberFormatException e) {
-                            // Handle parsing error
-                            
-                        } catch (ParseException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
                         }
+                            
                     } else {
                         jsonMap.put(colunas[i], value);
                     }
