@@ -14,10 +14,13 @@ public class ExtractTest {
 
     @Test
     public void testExtractConstructor() {
-        String inputFile = "HorarioDeExemplo.csv";
-        String outputFile = "output.json";
+        String inputFile = "ficheiro\\HorarioDeExemplo.csv";
+        String outputFile = "ficheiros\\Horário.json";
+
+        File[] file = new File[1];
+        file[0] = new File(inputFile);
         
-        Extract extract = new Extract(inputFile, outputFile);
+        Extract extract = new Extract(file, outputFile);
 
         assertEquals(inputFile, extract.getInputFile());
         assertEquals(outputFile, extract.getOutputFile());
@@ -54,7 +57,10 @@ public class ExtractTest {
 
     @Test
     public void testReadCsvUsingBufferReader() {
-        String inputFile = "C:\\Users\\nunol\\OneDrive\\Documentos\\Github\\ES\\ES-2024-LIGE-Grupo-A\\HorarioDeExemplo.csv";
+        String inputFile = "ficheiros\\HorarioDeExemplo.csv";
+
+        File[] file = new File[1];
+        file[0] = new File(inputFile);
         
         File outputFile;
         try {
@@ -63,7 +69,7 @@ public class ExtractTest {
             throw new RuntimeException("Failed to create temporary file", e);
         }
 
-        Extract testExtractor = new Extract(inputFile, outputFile.getAbsolutePath());
+        Extract testExtractor = new Extract(file, outputFile.getAbsolutePath());
         testExtractor.readCsvUsingBufferReader();
 
         //Verifica se o fihcheiro foi criado corretamente

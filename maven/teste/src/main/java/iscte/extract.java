@@ -2,9 +2,12 @@ package iscte;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +24,8 @@ import com.google.gson.GsonBuilder;
  */
 public class Extract{
     private static String outputFile;
-    private static String inputFile;
+    private static File[] inputFile;
+    private File outputJsonFile;
 
 
     /**
@@ -31,8 +35,6 @@ public class Extract{
      * @param args Argumento não usado
      */
     public static void main(String[] args) {
-        Extract teste = new Extract("HorarioDeExemplo.csv", "output.json");
-        teste.readCsvUsingBufferReader();
     }
 
     /**
@@ -41,9 +43,17 @@ public class Extract{
      * @param inputFile String que representa o ficheiro CSV de input.
      * @param outputFile String que representa o ficheiro de output.
      */
-    public Extract(String inputFile, String outputFile) {
+    public Extract(File[] inputFile, String outputFile) {
         this.outputFile = outputFile;
         this.inputFile = inputFile;
+        this.outputJsonFile = new File(outputFile);
+    }
+
+    /** 
+     * @return File
+     */
+    public File getOutputJsonFile() {
+        return outputJsonFile;
     }
 
     /**
@@ -54,11 +64,22 @@ public class Extract{
         return outputFile;
     }
 
+
     /**
      * Obtém o path do ficheiro de input.
      * @return O path do ficheiro de input.
      */
     public static String getInputFile() {
+        return inputFile[0].getPath();
+    }
+
+    /**
+     * Obtém o array de objetos File representando os arquivos CSV de entrada.
+     *
+     * @return Um array de objetos File representando os arquivos CSV de entrada.
+     */
+
+     public static File[] getHolder() {
         return inputFile;
     }
 
@@ -136,7 +157,7 @@ public class Extract{
                             "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); 
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8)); 
             FileWriter writer = new FileWriter(new File(outputFile))) {
 
             writer.write("[\n");
