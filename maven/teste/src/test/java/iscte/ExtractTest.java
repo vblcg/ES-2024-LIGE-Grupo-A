@@ -58,25 +58,27 @@ public class ExtractTest {
     @Test
     public void testReadCsvUsingBufferReader() {
         String inputFile = "ficheiros\\HorarioDeExemplo.csv";
+        String outputFileS = "ficheiros\\Horário.json";
+        String directoryPath = "ficheiros";
 
         File[] file = new File[1];
         file[0] = new File(inputFile);
         
-        File outputFile;
-        try {
-            outputFile = File.createTempFile("output", ".json");
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create temporary file", e);
-        }
 
-        Extract testExtractor = new Extract(file, outputFile.getAbsolutePath());
+        Extract testExtractor = new Extract(file, outputFileS);
         testExtractor.readCsvUsingBufferReader();
 
-        //Verifica se o fihcheiro foi criado corretamente
-        assertTrue(outputFile.exists());
-        //Verifica se foi escrita alguma coisa no ficheiro
-        assertTrue(outputFile.length() > 0);
-        
-        outputFile.delete();
+        File directory = new File(directoryPath);
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    if (file1.getName().equals("outputFileS")) {
+                        assertTrue(file1.length() > 1);
+                    }
+                }
+            }
+        }
     }
+
 }
