@@ -191,7 +191,7 @@
         salasDisponiveis = [];
         salasIndisponiveis = [];
         for (let i = 0; i < jsonHorario.length; i++) {
-          const currentDate = jsonHorario[i]["Data da aula"];
+          const currentDate = formatDateJson(jsonHorario[i]["Data da aula"]);
           const currentTimeslotInicio = jsonHorario[i]["Hora Inicio da Aula"];
           const currentTimeslotFim = jsonHorario[i]["Hora Fim da Aula"];
           const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
@@ -207,6 +207,15 @@
         return salasDisponiveis;
       }
 
+      function formatDateJson(inputDate) {
+      // Split the input date string by '/'
+      var parts = inputDate.split('/');
+      
+      // Rearrange the parts to form the desired format
+      var formattedDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+      
+      return formattedDate;
+    }
 
       function formatDate(inputDate) {
         const parts = inputDate.split('-');

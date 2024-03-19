@@ -20,22 +20,12 @@ import java.util.concurrent.TimeUnit;
 import com.google.gson.GsonBuilder;
 
 /**
- * Esta classe tem com funcionalidade ler o ficheiro CSV que contém o horário das aulas e convertê-lo num ficheiro com formato JSON
+ * Esta classe tem com funcionalidade ler o ficheiro CSV que contem o horario das aulas e converte-lo num ficheiro com formato JSON
  */
 public class Extract{
-    private static String outputFile;
-    private static File[] inputFile;
+    private String outputFile;
+    private File[] inputFile;
     private File outputJsonFile;
-
-
-    /**
-     * Main, que cria uma instância da classe Extract, com o ficheiro CSV de input e o ficheiro JSON de output desejado e invoca a função
-     * de conversão
-     *
-     * @param args Argumento não usado
-     */
-    public static void main(String[] args) {
-    }
 
     /**
      * Contrutor do objeto Extract
@@ -60,7 +50,7 @@ public class Extract{
      * Obtém o path do ficheiro de output.
      * @return O path do ficheiro de ouput.
      */
-    public static String getOutputFile() {
+    public String getOutputFile() {
         return outputFile;
     }
 
@@ -69,7 +59,7 @@ public class Extract{
      * Obtém o path do ficheiro de input.
      * @return O path do ficheiro de input.
      */
-    public static String getInputFile() {
+    public String getInputFile() {
         return inputFile[0].getPath();
     }
 
@@ -79,7 +69,7 @@ public class Extract{
      * @return Um array de objetos File representando os arquivos CSV de entrada.
      */
 
-     public static File[] getHolder() {
+     public File[] getHolder() {
         return inputFile;
     }
 
@@ -87,7 +77,7 @@ public class Extract{
      * @param data Data no formato "DD/MM/AAAA"
      * @return Número da semana do ano da "data"
      */
-    public static int getSemanaAno(String data){
+    public int getSemanaAno(String data){
         int semana_do_ano = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date dataAula;
@@ -110,7 +100,7 @@ public class Extract{
      * @return  Numero da semana do semestre calculado com base na data "02/09/2022"
      * Temporario
      */
-    public static long getSemanaSemestre(String data) {
+    public long getSemanaSemestre(String data) {
         
         // Define SimpleDateFormat object with pattern
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -150,11 +140,11 @@ public class Extract{
      * um ficheiro JSON. Calcula também a semana do ano e a semana do semestre, recorrendo à data das aulas, e adiciona
      * esta informação extra a cada registo do ficheiro JSON.
      */
-    public static void readCsvUsingBufferReader(){
+    public void readCsvUsingBufferReader(){
 
         String line = "";
         String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", 
-                            "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
+                            "Hora Inicio da Aula", "Hora Fim da Aula", "Data da aula", 
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8)); 
