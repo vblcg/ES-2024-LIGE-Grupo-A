@@ -7,5 +7,6 @@ João Lourenço, 104632, jtvfl-iscte
 António Bento, 82879, amcrdb
 
 Os javadocs podem ser acedidos em maven\teste\src\main\java\iscte\javadoc\index.html.
+Os jsdocs podem ser acedidos em maven\teste\src\test\js\horario\global.html e \js\salasDeAula.html
 
 Para correr a aplicação, deve-se inicar o Apache com o XAMPP. Depois, basta correr a classe App.java.
