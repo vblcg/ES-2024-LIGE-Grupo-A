@@ -15,10 +15,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.GsonBuilder;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 
 /**
  * Esta classe tem com funcionalidade ler o ficheiro CSV que contém o horário das aulas e convertê-lo num ficheiro com formato JSON

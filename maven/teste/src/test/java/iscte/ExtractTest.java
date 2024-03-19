@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
-import org.apache.commons.compress.harmony.pack200.Segment.PassException;
 import org.junit.Test;
 
 public class ExtractTest {
