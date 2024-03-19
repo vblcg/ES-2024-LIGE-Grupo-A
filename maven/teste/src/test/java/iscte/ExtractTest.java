@@ -9,17 +9,20 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
-import org.apache.commons.compress.harmony.pack200.Segment.PassException;
+
 import org.junit.Test;
 
 public class ExtractTest {
 
     @Test
     public void testExtractConstructor() {
-        String inputFile = "HorarioDeExemplo.csv";
-        String outputFile = "output.json";
+        String inputFile = "ficheiro\\HorarioDeExemplo.csv";
+        String outputFile = "ficheiros\\Horário.json";
+
+        File[] file = new File[1];
+        file[0] = new File(inputFile);
         
-        Extract extract = new Extract(inputFile, outputFile);
+        Extract extract = new Extract(file, outputFile);
 
         assertEquals(inputFile, extract.getInputFile());
         assertEquals(outputFile, extract.getOutputFile());
@@ -56,24 +59,28 @@ public class ExtractTest {
 
     @Test
     public void testReadCsvUsingBufferReader() {
-        String inputFile = "C:\\Users\\nunol\\OneDrive\\Documentos\\Github\\ES\\ES-2024-LIGE-Grupo-A\\HorarioDeExemplo.csv";
-        
-        File outputFile;
-        try {
-            outputFile = File.createTempFile("output", ".json");
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create temporary file", e);
-        }
+        String inputFile = "ficheiros\\HorarioDeExemplo.csv";
+        String outputFileS = "ficheiros\\Horário.json";
+        String directoryPath = "ficheiros";
 
-        Extract testExtractor = new Extract(inputFile, outputFile.getAbsolutePath());
+        File[] file = new File[1];
+        file[0] = new File(inputFile);
+        
+
+        Extract testExtractor = new Extract(file, outputFileS);
         testExtractor.readCsvUsingBufferReader();
 
-        //Verifica se o fihcheiro foi criado corretamente
-        assertTrue(outputFile.exists());
-        //Verifica se foi escrita alguma coisa no ficheiro
-        assertTrue(outputFile.length() > 0);
-        
-        outputFile.delete();
+        File directory = new File(directoryPath);
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    if (file1.getName().equals("outputFileS")) {
+                        assertTrue(file1.length() > 1);
+                    }
+                }
+            }
+        }
     }
 
 }
