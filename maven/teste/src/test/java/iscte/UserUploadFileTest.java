@@ -43,9 +43,8 @@ public class UserUploadFileTest {
         userUploadFile.downloadFileFromGitHub(githubFileUrl);
         File file = userUploadFile.getFileholder()[0];
 
-        assertTrue(file.exists());
+        assertTrue(downloadedFile.length() == file.length());
 
-        //assertEquals(downloadedFile, file);
     }
 
 
@@ -65,7 +64,6 @@ public class UserUploadFileTest {
                 try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
                     outputStream.write(response.body().bytes());
                 } catch (Exception e) {
-                    System.out.println("erro aqui");
                     e.printStackTrace();
                 }
             }
@@ -73,11 +71,9 @@ public class UserUploadFileTest {
             System.err.println("Error writing file: " + e.getMessage());
         }
 
-
         userUploadFile.checkCsvStructure(downloadedFile);
 
-
-        assertTrue(userUploadFile.getFileholder()[0].exists());
+        assertTrue(userUploadFile.getFileholder()[0].length() == downloadedFile.length());
     }
     
     
