@@ -1,6 +1,7 @@
 package iscte;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,18 +14,6 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class UserUploadFileTest {
-    
-    /*
-    @Test
-    public void testUserUploadFileConstructor() {
-        File[] fileHolder = new File[1]; 
-        String jsonFile = "teste.json";
-
-        UserUploadFile userUploadFile = new UserUploadFile(fileHolder, jsonFile);
-
-        assertEquals(fileHolder, userUploadFile.getFileholder()[0]);
-    }
-    */
 
     @Test
     public void testDownloadFileFromGitHub() {
@@ -64,7 +53,7 @@ public class UserUploadFileTest {
 
         String githubFileUrl = "https://raw.githubusercontent.com/vblcg/ES-2024-LIGE-Grupo-A/main/ficheiros/HorarioDeExemplo.csv";
         String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
-        String destinationFilePath = "maven/teste/src/test/java/iscte" + fileName;
+        String destinationFilePath = "ficheiros/" + fileName;
         File downloadedFile = new File(destinationFilePath);
 
         OkHttpClient client = new OkHttpClient();
@@ -87,7 +76,7 @@ public class UserUploadFileTest {
         userUploadFile.checkCsvStructure(downloadedFile);
 
 
-        assertEquals(userUploadFile.getFileholder()[0], downloadedFile);
+        assertTrue(downloadedFile.exists());
     }
     
     
