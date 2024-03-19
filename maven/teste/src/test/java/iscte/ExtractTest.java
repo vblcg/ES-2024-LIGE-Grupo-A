@@ -30,6 +30,14 @@ public class ExtractTest {
 
     @Test
     public void testGetSemanaAno() throws ParseException {
+        String inputFile = "ficheiro\\HorarioDeExemplo.csv";
+        String outputFile = "ficheiros\\Horário.json";
+
+        File[] file = new File[1];
+        file[0] = new File(inputFile);
+        
+        Extract extract = new Extract(file, outputFile);
+
         // Datas de teste
         String[] dates = {"01/01/2024", "15/06/2025", "31/12/2022"};
 
@@ -37,13 +45,20 @@ public class ExtractTest {
         int[] expectedWeekNumbers = {1, 24, 52};
 
         for (int i = 0; i < dates.length; i++) {
-            int actualWeekNumber = Extract.getSemanaAno(dates[i]);
+            int actualWeekNumber = extract.getSemanaAno(dates[i]);
             assertEquals(expectedWeekNumbers[i], actualWeekNumber);
         }
     }
    
     @Test
     public void testGetSemanaSemestre() throws ParseException{
+        String inputFile = "ficheiro\\HorarioDeExemplo.csv";
+        String outputFile = "ficheiros\\Horário.json";
+
+        File[] file = new File[1];
+        file[0] = new File(inputFile);
+        
+        Extract extract = new Extract(file, outputFile);
         // Datas de teste
        
         String[] dates = {"09/09/2022", "09/12/2022", "15/03/2023"};
@@ -51,7 +66,7 @@ public class ExtractTest {
         long[] expectedWeekNumbers = {1, 14, 6};
 
         for (int i = 0; i < dates.length; i++){
-            long actualWeekNumber = Extract.getSemanaSemestre(dates[i]);
+            long actualWeekNumber = extract.getSemanaSemestre(dates[i]);
             assertEquals(expectedWeekNumbers[i], actualWeekNumber);
         }
 
