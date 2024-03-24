@@ -126,7 +126,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 } else {
                     Desktop desk = Desktop.getDesktop(); 
                     try {
-                        desk.browse(new URI("http://localhost/Alocação.html"));
+                        desk.browse(new URI("http://localhost/Alocacao.html"));
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     } catch (URISyntaxException e1) {

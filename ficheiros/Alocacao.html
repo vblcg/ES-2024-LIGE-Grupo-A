@@ -27,61 +27,21 @@
         }
     </script>
 
-    <h1>Calendário de aulas:</h1>
-    <div id="toggle-buttons">
-        <a>Esconder/mostrar colunas:</a>
-        <a class="link" href="##" id="Curso" onclick="toggleColumn('Curso')">Curso,</a>
-        <a class="link" href="##" id="UC" onclick="toggleColumn('UC')"> UC,</a>
-        <a class="link" href="##" id="SalaAtribuida" onclick="toggleColumn('Sala atribuida a aula')"> Sala atribuida a aula</a>
-        <br><br>
-    </div>
-    <div id="table-horario">
-        <script type="text/javascript">
-            const pathJson = 'http://localhost/Horário.json';
+    <h1>Calendáriooooooooooooooooooooooooooooooo de aulas:</h1>
+    
+    <!-- Formulário para solicitar 3 inputs -->
+    <form id="userInputForm">
+        <label for="input1">Input 1:</label>
+        <input type="text" id="input1" name="input1" required><br><br>
+        
+        <label for="input2">Input 2:</label>
+        <input type="text" id="input2" name="input2" required><br><br>
+        
+        <label for="input3">Input 3:</label>
+        <input type="text" id="input3" name="input3" required><br><br>
 
-            /** 
-             * Lê os dados do ficheiro json e cria uma tabela do tabulator com os mesmos
-             */
-            fetch(pathJson)
-                .then(response => {
-                    // Check if the request was successful
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch ${pathJson}: ${response.statusText}`);
-                    }
-
-                    // Parse the JSON data
-                    return response.json();
-                })
-
-                .then(data => {
-                    // 'data' is now an array containing the parsed JSON content
-
-                    table = new Tabulator("#table-horario", {
-                        height: "700px",
-                        layout: "fitDataTable",
-                        pagination: "local",
-                        resizableRows: true,
-                        movableColumns: true,
-                        data: data,
-                        columns: [
-                            { title: "Curso", field: "Curso", headerFilter: "input" },
-                            { title: "UC", field: "UC", headerFilter: "input" },
-                            { title: "Sala atribuida a aula", field: "Sala atribuida a aula", headerFilter: "input" }
-                        ],
-                    });
-                })
-                .catch(error => {
-                    console.error(`Error loading ${pathJson}:`, error);
-                });
-        </script>
-    </div>
-    <style>
-        .link {
-            font-weight: normal;
-            color: darkblue;
-            text-decoration: none;
-        }
-    </style>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 
 </html>
