@@ -119,7 +119,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
 
         JButton buttonAllocate = new JButton("Alocação");
         button.setBounds(20,20,250,50);  
-	    buttonSchedule.addActionListener(new ActionListener(){  	
+	    buttonAllocate.addActionListener(new ActionListener(){  	
 			public void actionPerformed(ActionEvent e){ 
                 if(!uploaded) {
                     JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
