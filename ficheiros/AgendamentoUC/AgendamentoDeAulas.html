@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Horário ISCTE</title>
-    <script src="luxon.js"></script>
+    <link rel="stylesheet" type="text/css" href="estilos.css">
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 </head>
@@ -18,10 +18,10 @@
         <input type="text" id="input1" name="input1" required><br><br>
 
         <label for="input2">Número de aulas da UC a serem marcadas no horário:</label>
-        <input type="text" id="input2" name="input2" max="40" required><br><br>
+        <input type="number" id="input2" name="input2" max="40" required><br><br>
 
 
-        <label>Períodos que devem ser excluídos para alocação das aulas:</label><br>
+        <label for="input3">Períodos que devem ser excluídos para alocação das aulas:</label><br>
         <input type="checkbox" id="manha" name="periodoAExcluir" value="Manhã">
         <label for="manha">Manhã (8:00 - 12:30) </label><br>
         <input type="checkbox" id="tarde" name="periodoAExcluir" value="Tarde">
@@ -39,28 +39,25 @@
         <label for="noite">Noite (18:30 - 23:00)</label><br><br>
 
 
-        <label for="input4">Preferência de dias da semana:</label><br>
-        <input type="checkbox" id="segunda" name="diaDaSemanaPref" value="Segunda-feira">
+        <label for="input5">Preferência de dias da semana:</label><br>
+        <input type="checkbox" value="Seg" name="diaDaSemanaPref" id="Segunda-feira">
         <label for="segunda">Segunda-feira</label><br>
-        <input type="checkbox" id="terca" name="diaDaSemanaPref" value="Terça-feira">
+        <input type="checkbox" value="Ter" name="diaDaSemanaPref" id="Terça-feira">
         <label for="terca">Terça-feira</label><br>
-        <input type="checkbox" id="quarta" name="diaDaSemanaPref" value="Quarta-feira">
+        <input type="checkbox" value="Qua" name="diaDaSemanaPref" id="Quarta-feira">
         <label for="quarta">Quarta-feira</label><br>
-        <input type="checkbox" id="quinta" name="diaDaSemanaPref" value="Quinta-feira">
+        <input type="checkbox" value="Qui" name="diaDaSemanaPref" id="Quinta-feira">
         <label for="quinta">Quinta-feira</label><br>
-        <input type="checkbox" id="sexta" name="diaDaSemanaPref" value="Sexta-feira">
+        <input type="checkbox" value="Sex" name="diaDaSemanaPref" id="Sexta-feira">
         <label for="sexta">Sexta-feira</label><br>
-        <input type="checkbox" id="sabado" name="diaDaSemanaPref" value="Sábado">
+        <input type="checkbox" value="Sab" name="diaDaSemanaPref" id="Sábado">
         <label for="sabado">Sábado</label><br>
-
-
 
 
         <div class="form-group">
             <p>Preferência de Salas:</p>
             <select class="form-select" id="preferenciaSala" name="preferenciaSala" aria-label="Default select example"
                 multiple>
-                <option selected>Escolha uma Preferência</option>
             </select>
 
         </div><br>
@@ -69,65 +66,19 @@
             <p>Salas Inaceitáveis:</p>
             <select class="form-select" id='salasInaceitaveis' name="salasInaceitaveis[]"
                 aria-label="Default select example" multiple>
-                <option selected>Indique as salas inaceitáveis</option>
             </select>
         </div><br>
 
 
-        <label for="input7">Duração das aulas:</label>
-        <input type="text" id="input7" name="input7"><br><br>
+        <label for="input8">Duração das aulas:</label>
+        <input type="text" id="input8" name="input7"><br><br>
 
         <label for="input9">Necessidade especiais das aulas:</label>
         <input type="text" id="input9" name="input9"><br><br>
 
         <input type="submit" value="Submit">
     </form>
-
-    <script type="text/javascript">
-        const pathJsonSalas = 'CaracterizacaoDasSalas.json';
-        fetch(pathJsonSalas)
-            .then(response => {
-                // Verificar se o request foi bem sucedido
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch ${pathJsonSalas}: ${response.statusText}`);
-                }
-
-                // Parse the JSON data
-                return response.json();
-            })
-
-            .then(data => {
-
-                const salas = data;
-
-                // Obter todas as salas
-                const nomesSalas = salas.map(room => room['Nome sala']);
-
-                const preferenciaSala = document.getElementById('preferenciaSala');
-
-
-                const salasInaceitaveis = document.getElementById('salasInaceitaveis');
-
-                nomesSalas.forEach(nomeSala => {
-                    const optionPreferencia1 = document.createElement('option');
-                    optionPreferencia1.textContent = nomeSala;
-                    preferenciaSala.appendChild(optionPreferencia1);
-
-                    const optionSalasInaceitaveis = document.createElement('option');
-                    optionSalasInaceitaveis.textContent = nomeSala;
-                    salasInaceitaveis.appendChild(optionSalasInaceitaveis);
-                });
-
-
-            })
-            .catch(error => {
-                console.error(`Error loading ${pathJsonSalas}:`, error);
-            });
-    </script>
-
-    <script src="form.js">
-
-    </script>
+    <script src="form.js"></script>
 
 </body>
 

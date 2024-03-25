@@ -5,38 +5,60 @@ let jsonData;
 function adicionarAulas(inputs) {
     let filteredJson;
     numeroAulas = inputs[1];
-    for (let i = 0; i < numeroAulas; i++) {
+    diasSemana = inputs[4];
+    salasIndisponiveis = []
+    filteredJson = jsonData.filter(entry => diasSemana.includes(entry['Dia da Semana']));
+    console.log(filteredJson);
+    console.log(diasSemana);
+    for(let i = 0; i < numeroAulas; i++) {
         const novaAula = {
-            "UC": inputs[0]
+            "UC" : inputs[0] 
         };
         jsonData.push(novaAula);
     }
 }
 
 // Adicionando um ouvinte de evento para o evento de envio do formulário
-form.addEventListener('submit', function (event) {
+form.addEventListener('submit', function(event) {
     event.preventDefault();
     alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
     inputs = [];
+
     inputs.push(document.getElementById('input1').value);
     inputs.push(document.getElementById('input2').value);
-    var checkboxes = document.getElementsByName('periodoPossivel');
-    checkboxes.forEach(function (checkbox) {
+    const checkboxes1 = document.querySelectorAll('input[name="periodoAExcluir"]');
+    const selectedValues1 = [];
+    checkboxes1.forEach(function(checkbox) {
         if (checkbox.checked) {
-            inputs.push(checkbox.value);
+            selectedValues1.push(checkbox.value);
         }
     });
-    var checkboxes = document.getElementsByName('diaDaSemanaPref');
-    checkboxes.forEach(function (checkbox) {
+    inputs.push(selectedValues1);
+    const checkboxes2 = document.querySelectorAll('input[name="periodoPossivel"]');
+    const selectedValues2 = [];
+    checkboxes2.forEach(function(checkbox) {
         if (checkbox.checked) {
-            inputs.push(checkbox.value);
+            selectedValues2.push(checkbox.value);
         }
-    });
-    inputs.push(document.getElementById('preferenciaSala').value);
-    inputs.push(document.getElementById('salasInaceitaveis').value);
-    inputs.push(document.getElementById('input6').value);
-    inputs.push(document.getElementById('input7').value);
+    });    
+    inputs.push(selectedValues2);
+    const checkboxes3 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
+    const selectedValues3 = [];
+    checkboxes3.forEach(function(checkbox) {
+        if (checkbox.checked) {
+            selectedValues3.push(checkbox.value);
+        }
+    });    
+    inputs.push(selectedValues3);
+    console.log(selectedValues3);
+    const preferenciaSalaSelect = document.getElementById("preferenciaSala");
+    const selectedOptions = preferenciaSalaSelect.selectedOptions;
+    inputs.push(Array.from(selectedOptions).map(option => option.value));
+    const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+    const selectedOptionsInaceitaveis = salasInaceitaveis.selectedOptions;
+    inputs.push(Array.from(selectedOptionsInaceitaveis).map(option => option.value));
     inputs.push(document.getElementById('input8').value);
+    inputs.push(document.getElementById('input9').value);
 
     adicionarAulas(inputs);
     // Exibindo os valores na janela de alerta (você pode manipulá-los como quiser)
