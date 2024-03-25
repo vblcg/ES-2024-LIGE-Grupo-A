@@ -11,13 +11,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <link rel="stylesheet" href="HorárioStyleSheet.css">
+
 </head>
 
 <body>
 
         <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
@@ -28,38 +30,85 @@
             <!-- Modal Body -->
             <div class="modal-body">
             <!-- Form -->
-                <style>
-                    .form-group p {
-                        margin-bottom: 2px; /* Altere este valor conforme necessário */
-                    }
-                </style>
                 <form>
                     <div class="form-group">
-                        <p>Aula a Substituir:</p>
-                        <input type="text" id="aula-a-substituir" name="aula-a-substituir">
+                        <p class="first_label_input">Períodos Excluídos:</p>
+                        <p>Altura do dia:</p>
+                        <select class="form-select" id="alturaDoDiaExcluir" aria-label="Default select example">
+                            <option selected>Altura do dia a excluir</option>
+                            <option>Manhã</option>
+                            <option>Tarde</option>
+                            <option>Noite</option>
+                        </select>
+                        <p>Dia da semana:</p>
+                        <select class="form-select" id="diaSemanaExcluir" aria-label="Default select example">
+                            <option selected>Dia da semana a excluir</option>
+                            <option>Segunda-feira</option>
+                            <option>Terça-feira</option>
+                            <option>Quarta-feira</option>
+                            <option>Quinta-feira</option>
+                            <option>Sexta-feira</option>
+                            <option>Sábado</option>
+                            <option>Domingo</option>
+                        </select>
+                        <p>Horário:</p>
+                        <select class="form-select" id="horarioExcluir" aria-label="Default select example">
+                            <option selected>Horário a excluir</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <p>Períodos Excluídos:</p>
-                        <input type="text" id="periodos-excluidos" name="periodos-excluidos" placeholder="Ex: Segundas-feiras 10h-12h">
+                        <p class="label_input">Horário Preferencial:</p>
+                        <p>Altura do dia:</p>
+                        <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example">
+                            <option selected>Altura do dia preferência</option>
+                            <option>Manhã</option>
+                            <option>Tarde</option>
+                            <option>Noite</option>
+                        </select>
+                        <p>Dia da semana:</p>
+                        <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example">
+                            <option selected>Dia da semana preferência</option>
+                            <option>Segunda-feira</option>
+                            <option>Terça-feira</option>
+                            <option>Quarta-feira</option>
+                            <option>Quinta-feira</option>
+                            <option>Sexta-feira</option>
+                            <option>Sábado</option>
+                            <option>Domingo</option>
+                        </select>
+                        <p>Horário:</p>
+                        <select class="form-select" id="horarioPref" aria-label="Default select example">
+                            <option selected>Horário da aula preferência</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <p>Horário Preferencial:</p>
-                        <input type="text" id="horario-preferencial" name="horario-preferencial" placeholder="Ex: Tarde">
-                    </div>
-                    <div class="form-group">
-                        <p>Tipos de Sala Preferidos:</p>
-                        <input type="text" id="tipos-sala-preferidos" name="tipos-sala-preferidos" placeholder="Ex: Salas de Aula, Laboratórios">
+                        <p class="label_input">Preferência de sala</p>
+                        <p>Preferência nº1:</p>
+                        <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
+                            <option selected>Escolha uma Preferência</option>
+                        </select>
+                        <p>Preferência nº2:</p>
+                        <select class="form-select" id="preferenciaSala2" aria-label="Default select example" >
+                            <option selected>Escolha uma Preferência</option>
+                        </select>
+                        <p>Preferência nº3:</p>
+                        <select class="form-select" id="preferenciaSala3" aria-label="Default select example">
+                            <option selected>Escolha uma Preferência</option>
+                        </select>
+                        
                     </div>
                     <div class="form-group">
                         <p>Salas Inaceitáveis:</p>
-                        <input type="text" id="salas-inaceitaveis" name="salas-inaceitaveis" placeholder="Ex: BYOD, 0S08">
+                        <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
+                            <option selected>Indique as salas inaceitáveis</option>
+                        </select>
                     </div>
                 
             </div>
     
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
                 </form>
@@ -106,7 +155,8 @@
     <div id="table-horario">
     <script type="text/javascript">
 
-    const pathJson = 'Horário.json';
+    const pathJsonHorario = 'Horário.json';
+    const pathJsonSalas = 'CaracterizacaoDasSalas.json';
 
     var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
 
@@ -202,11 +252,11 @@
     /** 
      * Lê os dados do ficheiro json e cria uma tabela do tabulator com os mesmos
      */
-    fetch(pathJson)
+    fetch(pathJsonHorario)
     .then(response => {
         // Verificar se o request foi bem sucedido
         if (!response.ok) {
-            throw new Error(`Failed to fetch ${pathJson}: ${response.statusText}`);
+            throw new Error(`Failed to fetch ${pathJsonHorario}: ${response.statusText}`);
         }
 
         // Parse the JSON data
@@ -237,7 +287,7 @@
             {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
             {title: "Semana do ano", field:"Semana do ano", headerFilter: "input"},
             {title: "Semana do semestre", field:"Semana do semestre", headerFilter:"input"},
-            {title: "Alterar aula", field: "Alterar aula", formatter: alterarAulaButton, align: "center", headerSort:false}
+            {title: "Alterar aula", field: "Alterar aula", formatter: alterarAulaButton, headerSort:false}
 
         ],
     });
@@ -250,18 +300,58 @@
         });
     })
     .catch(error => {
-        console.error(`Error loading ${pathJson}:`, error);
+        console.error(`Error loading ${pathJsonHorario}:`, error);
+    });
+
+    fetch(pathJsonSalas)
+    .then(response => {
+        // Verificar se o request foi bem sucedido
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${pathJsonSalas}: ${response.statusText}`);
+        }
+
+        // Parse the JSON data
+        return response.json();
+    })
+
+    .then(data => {
+
+        const salas = data;
+
+        // Obter todas as salas
+        const nomesSalas = salas.map(room => room['Nome sala']);
+
+        const preferenciaSala1 = document.getElementById('preferenciaSala1');
+        const preferenciaSala2 = document.getElementById('preferenciaSala2');
+        const preferenciaSala3 = document.getElementById('preferenciaSala3');
+
+        const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+
+        nomesSalas.forEach(nomeSala => {
+            const optionPreferencia1 = document.createElement('option');
+            optionPreferencia1.textContent = nomeSala;
+            preferenciaSala1.appendChild(optionPreferencia1);
+
+            const optionPreferencia2 = document.createElement('option');
+            optionPreferencia2.textContent = nomeSala;
+            preferenciaSala2.appendChild(optionPreferencia2);
+
+            const optionPreferencia3 = document.createElement('option');
+            optionPreferencia3.textContent = nomeSala;
+            preferenciaSala3.appendChild(optionPreferencia3);
+
+            const optionSalasInaceitaveis = document.createElement('option');
+            optionSalasInaceitaveis.textContent = nomeSala;
+            salasInaceitaveis.appendChild(optionSalasInaceitaveis);
+        });
+
+
+    })
+    .catch(error => {
+        console.error(`Error loading ${pathJsonSalas}:`, error);
     });
 
      
     </script>
     </div>
-    <style>
-        .link {
-            font-weight: normal;
-            color: darkblue;
-            text-decoration: none;
-        }
-    
-    </style>
 </body>
