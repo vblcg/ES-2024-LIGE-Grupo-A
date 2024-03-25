@@ -11,12 +11,6 @@ h1 {
     text-align: center;
 }
 
-
-label {
-    font-weight: bold;
-}
-
-
 #userInputForm {
     width: 50%;
     margin: 0 auto;
