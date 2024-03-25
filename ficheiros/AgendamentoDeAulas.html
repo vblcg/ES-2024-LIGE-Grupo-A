@@ -10,28 +10,11 @@
 </head>
 
 <body>
-    <script type="text/javascript">
-        var table; // Declarar a variável da tabela
-
-        /**
-         * Esconder e Mostrar colunas
-         * @param {string} columnName - Nome da coluna
-        */
-        function toggleColumn(columnName) {
-            var column = table.getColumn(columnName);
-            var selected = false;
-            if (column) {
-                column.toggle();
-                adjustTableWidth();
-            }
-        }
-    </script>
-
     <h1>Agendamento de Aulas:</h1>
     
     <!-- Formulário para solicitar 3 inputs -->
     <form id="userInputForm">
-        <label for="input1">UC:</label>
+        <label for="input1">Nome da UC:</label>
         <input type="text" id="input1" name="input1" required><br><br>
         
         <label for="input2">Número de aulas da UC a serem marcadas no horário:</label>
