@@ -117,7 +117,9 @@ public class UserUploadFile extends JFrame implements FileCallback{
 			}
         });
 
-        JButton buttonAllocate = new JButton("Alocação");
+       
+
+        JButton buttonAllocate = new JButton("Agendamento De Aulas");
         button.setBounds(20,20,250,50);  
 	    buttonAllocate.addActionListener(new ActionListener(){  	
 			public void actionPerformed(ActionEvent e){ 
@@ -126,7 +128,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                 } else {
                     Desktop desk = Desktop.getDesktop(); 
                     try {
-                        desk.browse(new URI("http://localhost/Alocacao.html"));
+                        desk.browse(new URI("http://localhost/AgendamentoDeAulas.html"));
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     } catch (URISyntaxException e1) {
@@ -142,6 +144,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
         panel.add(buttonGitHub);
         panel.add(buttonWebBrowser);
         panel.add(buttonAllocate);
+       
 
         add(panel);
     }

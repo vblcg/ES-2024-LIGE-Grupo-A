@@ -19,7 +19,7 @@ public class App {
         XamppFileManager.saveToFileRoot(new File("ficheiros/SalasDeAulaPorTiposDeSala.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/Horário.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/CaracterizacaoDasSalas.json"));
-        XamppFileManager.saveToFileRoot(new File("ficheiros/Alocacao.html"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoDeAulas.html"));
 
         uploadFile.setVisible(true); 
     }
