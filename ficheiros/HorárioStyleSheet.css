@@ -1,0 +1,28 @@
+.form-group p {
+    margin-bottom: 2px;
+}
+
+.form-group select {
+    margin-bottom: 5px;
+}
+
+.label_input {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.first_label_input {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.link {
+    font-weight: normal;
+    color: darkblue;
+    text-decoration: none;
+}

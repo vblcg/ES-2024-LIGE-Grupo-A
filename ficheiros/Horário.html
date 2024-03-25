@@ -6,10 +6,116 @@
     <title>Horário ISCTE</title>
     <script src="luxon.js"></script>
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="HorárioStyleSheet.css">
+
 </head>
 
 <body>
+
+        <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Alterar aula</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+    
+            <!-- Modal Body -->
+            <div class="modal-body">
+            <!-- Form -->
+                <form>
+                    <div class="form-group">
+                        <p class="first_label_input">Períodos Excluídos:</p>
+                        <p>Altura do dia:</p>
+                        <select class="form-select" id="alturaDoDiaExcluir" aria-label="Default select example">
+                            <option selected>Altura do dia a excluir</option>
+                            <option>Manhã</option>
+                            <option>Tarde</option>
+                            <option>Noite</option>
+                        </select>
+                        <p>Dia da semana:</p>
+                        <select class="form-select" id="diaSemanaExcluir" aria-label="Default select example">
+                            <option selected>Dia da semana a excluir</option>
+                            <option>Segunda-feira</option>
+                            <option>Terça-feira</option>
+                            <option>Quarta-feira</option>
+                            <option>Quinta-feira</option>
+                            <option>Sexta-feira</option>
+                            <option>Sábado</option>
+                            <option>Domingo</option>
+                        </select>
+                        <p>Horário:</p>
+                        <select class="form-select" id="horarioExcluir" aria-label="Default select example">
+                            <option selected>Horário a excluir</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <p class="label_input">Horário Preferencial:</p>
+                        <p>Altura do dia:</p>
+                        <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example">
+                            <option selected>Altura do dia preferência</option>
+                            <option>Manhã</option>
+                            <option>Tarde</option>
+                            <option>Noite</option>
+                        </select>
+                        <p>Dia da semana:</p>
+                        <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example">
+                            <option selected>Dia da semana preferência</option>
+                            <option>Segunda-feira</option>
+                            <option>Terça-feira</option>
+                            <option>Quarta-feira</option>
+                            <option>Quinta-feira</option>
+                            <option>Sexta-feira</option>
+                            <option>Sábado</option>
+                            <option>Domingo</option>
+                        </select>
+                        <p>Horário:</p>
+                        <select class="form-select" id="horarioPref" aria-label="Default select example">
+                            <option selected>Horário da aula preferência</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <p class="label_input">Preferência de sala</p>
+                        <p>Preferência nº1:</p>
+                        <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
+                            <option selected>Escolha uma Preferência</option>
+                        </select>
+                        <p>Preferência nº2:</p>
+                        <select class="form-select" id="preferenciaSala2" aria-label="Default select example" >
+                            <option selected>Escolha uma Preferência</option>
+                        </select>
+                        <p>Preferência nº3:</p>
+                        <select class="form-select" id="preferenciaSala3" aria-label="Default select example">
+                            <option selected>Escolha uma Preferência</option>
+                        </select>
+                        
+                    </div>
+                    <div class="form-group">
+                        <p>Salas Inaceitáveis:</p>
+                        <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
+                            <option selected>Indique as salas inaceitáveis</option>
+                        </select>
+                    </div>
+                
+            </div>
+    
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+                </form>
+
+        </div>
+        </div>
+    </div>
     <script type="text/javascript">
         var table; // Declarar a variável da tabela
 
@@ -19,7 +125,6 @@
         */
         function toggleColumn(columnName) {
                 var column = table.getColumn(columnName);
-                var selected = false;
                 if (column) {
                     column.toggle();
                     adjustTableWidth();
@@ -42,14 +147,16 @@
         <a class="link" href="##" id="CaracteristicasSala" onclick="toggleColumn('Caracteristicas da sala pedida para a aula')"> Caracteristicas da sala pedida para a aula,</a>
         <a class="link" href="##" id="SalaAtribuida" onclick="toggleColumn('Sala atribuida a aula')"> Sala atribuida a aula,</a>
         <a class="link" href="##" id="SemanaAno" onclick="toggleColumn('Semana do ano')"> Semana do ano,</a>
-        <a class="link" href="##" id="SemanaSemestre" onclick="toggleColumn('Semana do semestre')"> Semana do semestre</a>
+        <a class="link" href="##" id="SemanaSemestre" onclick="toggleColumn('Semana do semestre')"> Semana do semestre,</a>
+        <a class="link" href="##" id="SemanaSemestre" onclick="toggleColumn('Alterar aula')"> Alterar aula</a>
 
         <br><br>
     </div>
     <div id="table-horario">
     <script type="text/javascript">
 
-    const pathJson = 'http://localhost/Horário.json';
+    const pathJsonHorario = 'Horário.json';
+    const pathJsonSalas = 'CaracterizacaoDasSalas.json';
 
     var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
 
@@ -129,14 +236,27 @@
         return true;
     }
 
+    var alterarAulaButton = function(cell, formatterParams, onRendered) {
+        var button = document.createElement("button");
+        button.innerHTML = "Alterar aula";
+        button.classList.add("alterar-aula-button");
+        button.addEventListener("click", function() {
+            $('#myModal').modal('show');
+        });
+        return button;
+    };
+
+    
+
+
     /** 
      * Lê os dados do ficheiro json e cria uma tabela do tabulator com os mesmos
      */
-    fetch(pathJson)
+    fetch(pathJsonHorario)
     .then(response => {
-        // Check if the request was successful
+        // Verificar se o request foi bem sucedido
         if (!response.ok) {
-            throw new Error(`Failed to fetch ${pathJson}: ${response.statusText}`);
+            throw new Error(`Failed to fetch ${pathJsonHorario}: ${response.statusText}`);
         }
 
         // Parse the JSON data
@@ -144,7 +264,7 @@
     })
 
     .then(data => {
-        // 'data' is now an array containing the parsed JSON content
+        // 'data' é agora um array que contém o conteúdo do ficheiro JSON
 
         table = new Tabulator("#table-horario", {
         height:"700px",
@@ -160,28 +280,78 @@
             {title: "Turma", field:"Turma", headerFilter:"input"},
             {title: "Inscritos no Turno", field:"Inscritos no Turno", headerFilter:"input", sorter:"number",headerFilter:minMaxFilterEditor, headerFilterFunc:minMaxFilterFunction, headerFilterLiveFilter:false},
             {title: "Dia da Semana", field:"Dia da Semana", editor:"list", width:100 ,headerFilter:true, headerFilterParams:{values:{"Seg":"Segunda-feira", "Ter":"Terça-feira", "Qua":"Quarta-feira", "Qui":"Quinta-feira" ,"Sex":"Sexta-feira", "Sab":"Sábado", "Dom":"Domingo"}}},
-            {title: "Hora Início da Aula", field:"Hora Início da Aula",editor:"list", headerFilter:true, headerFilterParams:{values:{"08:00":"08:00", "09:30":"09:30", "11:00":"11:00","13:00":"13:00", "14:00":"14:00", "14:30":"14:30", "16:00":"16:00", "17:30":"17:30", "18:00":"18:00", "19:00":"19:00","19:30":"19:30","20:00":"20:00", "20:30":"20:30","21:00":"21:00", "21:30":"21:30"}}},
-            {title: "Hora Fim da Aula", field:"Hora Fim da Aula", headerFilter:"input"},
+            {title: "Hora Início da Aula", field:"Hora Início da Aula",editor:"list", headerFilter:true, headerFilterParams:{values:{"08:00":"08:00", "08:30":"08:30", "09:00":"09:00", "09:30":"09:30", "10:00":"10:00", "10:30":"10:30", "11:00":"11:00", "11:30":"11:30", "12:00":"12:00", "12:30":"12:30", "13:00":"13:00", "13:30":"13:30", "14:00":"14:00", "14:30":"14:30", "15:00":"15:00", "15:30":"15:30", "16:00":"16:00", "16:30":"16:30", "17:00":"17:00", "17:30":"17:30", "18:00":"18:00", "18:30":"18:30", "19:00":"19:00", "19:30":"19:30", "20:00":"20:00", "20:30":"20:30","21:00":"21:00", "21:30":"21:30"}}},
+            {title: "Hora Fim da Aula", field:"Hora Fim da Aula", editor:"list", headerFilter:true, headerFilterParams:{values:{"09:30":"09:30", "10:30":"10:30", "11:00":"11:00", "11:30":"11:30" ,"12:00":"12:00", "12:30":"12:30", "13:00":"13:00", "13:30":"13:30", "14:00":"14:00", "14:30":"14:30", "15:00":"15:00", "15:30":"15:30", "16:00":"16:00", "16:30":"16:30", "17:00":"17:00", "17:30":"17:30", "18:00":"18:00", "18:30":"18:30", "19:00":"19:00","19:30":"19:30","20:00":"20:00", "20:30":"20:30", "21:00":"21:00", "21:30":"21:30", "22:00":"22:00", "22:30":"22:30"}}},
             {title: "Data da aula", field:"Data da aula", headerFilter:"input", sorterParams:{format:"dd/MM/yy", alignEmptyValues:"top"}},
             {title: "Caracteristicas da sala pedida para a aula", field:"Caracteristicas da sala pedida para a aula", headerFilter:"input"},
             {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
             {title: "Semana do ano", field:"Semana do ano", headerFilter: "input"},
-            {title: "Semana do semestre", field:"Semana do semestre", headerFilter:"input"}
+            {title: "Semana do semestre", field:"Semana do semestre", headerFilter:"input"},
+            {title: "Alterar aula", field: "Alterar aula", formatter: alterarAulaButton, headerSort:false}
+
         ],
     });
+
+
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('alterar-aula-button')) {
+                $('#myModal').modal('show');
+            }
+        });
     })
     .catch(error => {
-        console.error(`Error loading ${pathJson}:`, error);
+        console.error(`Error loading ${pathJsonHorario}:`, error);
     });
+
+    fetch(pathJsonSalas)
+    .then(response => {
+        // Verificar se o request foi bem sucedido
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${pathJsonSalas}: ${response.statusText}`);
+        }
+
+        // Parse the JSON data
+        return response.json();
+    })
+
+    .then(data => {
+
+        const salas = data;
+
+        // Obter todas as salas
+        const nomesSalas = salas.map(room => room['Nome sala']);
+
+        const preferenciaSala1 = document.getElementById('preferenciaSala1');
+        const preferenciaSala2 = document.getElementById('preferenciaSala2');
+        const preferenciaSala3 = document.getElementById('preferenciaSala3');
+
+        const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+
+        nomesSalas.forEach(nomeSala => {
+            const optionPreferencia1 = document.createElement('option');
+            optionPreferencia1.textContent = nomeSala;
+            preferenciaSala1.appendChild(optionPreferencia1);
+
+            const optionPreferencia2 = document.createElement('option');
+            optionPreferencia2.textContent = nomeSala;
+            preferenciaSala2.appendChild(optionPreferencia2);
+
+            const optionPreferencia3 = document.createElement('option');
+            optionPreferencia3.textContent = nomeSala;
+            preferenciaSala3.appendChild(optionPreferencia3);
+
+            const optionSalasInaceitaveis = document.createElement('option');
+            optionSalasInaceitaveis.textContent = nomeSala;
+            salasInaceitaveis.appendChild(optionSalasInaceitaveis);
+        });
+
+
+    })
+    .catch(error => {
+        console.error(`Error loading ${pathJsonSalas}:`, error);
+    });
+
      
     </script>
     </div>
-    <style>
-        .link {
-            font-weight: normal;
-            color: darkblue;
-            text-decoration: none;
-        }
-    
-    </style>
 </body>
