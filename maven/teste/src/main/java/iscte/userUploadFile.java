@@ -123,9 +123,9 @@ public class UserUploadFile extends JFrame implements FileCallback{
         button.setBounds(20,20,250,50);  
 	    buttonAllocate.addActionListener(new ActionListener(){  	
 			public void actionPerformed(ActionEvent e){ 
-                if(!uploaded) {
-                    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
-                } else {
+                //if(!uploaded) {
+                //    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
+                //} else {
                     Desktop desk = Desktop.getDesktop(); 
                     try {
                         desk.browse(new URI("http://localhost/AgendamentoDeAulas.html"));
@@ -134,7 +134,7 @@ public class UserUploadFile extends JFrame implements FileCallback{
                     } catch (URISyntaxException e1) {
                         e1.printStackTrace();
                     }
-                }
+                //}
 			}
         });
 
