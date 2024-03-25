@@ -20,14 +20,14 @@
         <label for="input2">Número de aulas da UC a serem marcadas no horário:</label>
         <input type="text" id="input2" name="input2" max="40" required><br><br>
 
-
+<!--
         <label>Períodos que devem ser excluídos para alocação das aulas:</label><br>
         <input type="checkbox" id="manha" name="periodoAExcluir" value="Manhã">
         <label for="manha">Manhã (8:00 - 12:30) </label><br>
         <input type="checkbox" id="tarde" name="periodoAExcluir" value="Tarde">
         <label for="tarde">Tarde (12:30 - 18:30) </label><br>
         <input type="checkbox" id="noite" name="periodoAExcluir" value="Noite">
-        <label for="noite">Noite (18:30 - 23:00) </label><br><br>
+        <label for="noite">Noite (18:30 - 23:00) </label><br><br>-->
 
 
         <label for="input4">Períodos em que é <strong>possível</strong> alocar as aulas:</label><br>
@@ -60,7 +60,7 @@
             <p>Preferência de Salas:</p>
             <select class="form-select" id="preferenciaSala" name="preferenciaSala" aria-label="Default select example"
                 multiple>
-                <option selected>Escolha uma Preferência</option>
+                <option selected disabled>Escolha uma Preferência</option>
             </select>
 
         </div><br>
@@ -69,7 +69,7 @@
             <p>Salas Inaceitáveis:</p>
             <select class="form-select" id='salasInaceitaveis' name="salasInaceitaveis[]"
                 aria-label="Default select example" multiple>
-                <option selected>Indique as salas inaceitáveis</option>
+                <option selected disabled>Indique as salas inaceitáveis</option>
             </select>
         </div><br>
 
@@ -78,7 +78,7 @@
         <input type="text" id="input7" name="input7"><br><br>
 
         <label for="input9">Necessidade especiais das aulas:</label>
-        <input type="text" id="input9" name="input9"><br><br>
+        <input type="text" id="input8" name="input8"><br><br>
 
         <input type="submit" value="Submit">
     </form>

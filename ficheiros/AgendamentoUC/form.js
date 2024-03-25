@@ -5,9 +5,9 @@ let jsonData;
 
 function adicionarAulas(inputs) {
     numeroAulas = inputs[1];
-    for(let i = 0; i < numeroAulas; i++) {
+    for (let i = 0; i < numeroAulas; i++) {
         const novaAula = {
-            "UC" : inputs[0] 
+            "UC": inputs[0]
         };
         jsonData.push(novaAula);
     }
@@ -15,20 +15,29 @@ function adicionarAulas(inputs) {
 }
 
 // Adicionando um ouvinte de evento para o evento de envio do formulário
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', function (event) {
     event.preventDefault();
     alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
     inputs = [];
-
     inputs.push(document.getElementById('input1').value);
     inputs.push(document.getElementById('input2').value);
-    inputs.push(document.getElementById('input3').value);
-    inputs.push(document.getElementById('input4').value);
-    inputs.push(document.getElementById('input5').value);
+    var checkboxes = document.getElementsByName('periodoPossivel');
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            inputs.push(checkbox.value);
+        }
+    });
+    var checkboxes = document.getElementsByName('diaDaSemanaPref');
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            inputs.push(checkbox.value);
+        }
+    });
+    inputs.push(document.getElementById('preferenciaSala').value);
+    inputs.push(document.getElementById('salasInaceitaveis').value);
     inputs.push(document.getElementById('input6').value);
     inputs.push(document.getElementById('input7').value);
     inputs.push(document.getElementById('input8').value);
-    inputs.push(document.getElementById('input9').value);
 
     adicionarAulas(inputs);
     console.log(jsonData);
@@ -39,10 +48,10 @@ _writeFile("../Horário.json", data, (error) => {
     // throwing the error
     // in case of a writing problem
     if (error) {
-      // logging the error
-      console.error(error);
-  
-      throw error;
+        // logging the error
+        console.error(error);
+
+        throw error;
     }
 });
 
