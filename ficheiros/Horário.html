@@ -32,32 +32,7 @@
             <!-- Form -->
                 <form>
                     <div class="form-group">
-                        <p class="first_label_input">Períodos Excluídos:</p>
-                        <p>Altura do dia:</p>
-                        <select class="form-select" id="alturaDoDiaExcluir" aria-label="Default select example">
-                            <option selected>Altura do dia a excluir</option>
-                            <option>Manhã</option>
-                            <option>Tarde</option>
-                            <option>Noite</option>
-                        </select>
-                        <p>Dia da semana:</p>
-                        <select class="form-select" id="diaSemanaExcluir" aria-label="Default select example">
-                            <option selected>Dia da semana a excluir</option>
-                            <option>Segunda-feira</option>
-                            <option>Terça-feira</option>
-                            <option>Quarta-feira</option>
-                            <option>Quinta-feira</option>
-                            <option>Sexta-feira</option>
-                            <option>Sábado</option>
-                            <option>Domingo</option>
-                        </select>
-                        <p>Horário:</p>
-                        <select class="form-select" id="horarioExcluir" aria-label="Default select example">
-                            <option selected>Horário a excluir</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <p class="label_input">Horário Preferencial:</p>
+                        <p class="first_label_input">Horário Preferencial:</p>
                         <p>Altura do dia:</p>
                         <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example">
                             <option selected>Altura do dia preferência</option>
@@ -83,25 +58,23 @@
                     </div>
                     <div class="form-group">
                         <p class="label_input">Preferência de sala</p>
-                        <p>Preferência nº1:</p>
-                        <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
-                            <option selected>Escolha uma Preferência</option>
-                        </select>
-                        <p>Preferência nº2:</p>
-                        <select class="form-select" id="preferenciaSala2" aria-label="Default select example" >
-                            <option selected>Escolha uma Preferência</option>
-                        </select>
-                        <p>Preferência nº3:</p>
-                        <select class="form-select" id="preferenciaSala3" aria-label="Default select example">
-                            <option selected>Escolha uma Preferência</option>
-                        </select>
+                        <div id="preferencias-container">
+                            <p>Preferência nº1:</p>
+                            <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
+                                <option selected>Escolha uma Preferência</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addPreferenceBtn">Adicionar Preferência</button>
                         
                     </div>
                     <div class="form-group">
+                        <div id="salasInaceitaveis-container">
                         <p>Salas Inaceitáveis:</p>
                         <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
                             <option selected>Indique as salas inaceitáveis</option>
                         </select>
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addSalaInaceitavel">Adicionar salas inaceitáveis</button>
                     </div>
                 
             </div>
@@ -118,6 +91,8 @@
     </div>
     <script type="text/javascript">
         var table; // Declarar a variável da tabela
+        var nomesSalas;
+        var salas;
 
         /**
          * Esconder e Mostrar colunas
@@ -316,14 +291,12 @@
 
     .then(data => {
 
-        const salas = data;
+        salas = data;
 
         // Obter todas as salas
-        const nomesSalas = salas.map(room => room['Nome sala']);
+        nomesSalas = salas.map(room => room['Nome sala']);
 
         const preferenciaSala1 = document.getElementById('preferenciaSala1');
-        const preferenciaSala2 = document.getElementById('preferenciaSala2');
-        const preferenciaSala3 = document.getElementById('preferenciaSala3');
 
         const salasInaceitaveis = document.getElementById('salasInaceitaveis');
 
@@ -332,24 +305,78 @@
             optionPreferencia1.textContent = nomeSala;
             preferenciaSala1.appendChild(optionPreferencia1);
 
-            const optionPreferencia2 = document.createElement('option');
-            optionPreferencia2.textContent = nomeSala;
-            preferenciaSala2.appendChild(optionPreferencia2);
-
-            const optionPreferencia3 = document.createElement('option');
-            optionPreferencia3.textContent = nomeSala;
-            preferenciaSala3.appendChild(optionPreferencia3);
-
             const optionSalasInaceitaveis = document.createElement('option');
             optionSalasInaceitaveis.textContent = nomeSala;
             salasInaceitaveis.appendChild(optionSalasInaceitaveis);
         });
 
 
+
     })
     .catch(error => {
         console.error(`Error loading ${pathJsonSalas}:`, error);
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButton = document.getElementById('addPreferenceBtn');
+        const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');;
+
+        const preferencesContainer = document.getElementById('preferencias-container');
+        const inaceitavelCointainer = document.getElementById('salasInaceitaveis-container');
+
+        let preferenceCount = 1;
+        let inaceitavelCount = 1;
+
+        addButton.addEventListener('click', function () {
+            preferenceCount++;
+
+            const preferenceDiv = document.createElement('div');
+            preferenceDiv.classList.add('form-group');
+            preferenceDiv.innerHTML = `
+                <p>Preferência nº${preferenceCount}:</p>
+                <select class="form-select" id="preferenciaSala${preferenceCount}" aria-label="Default select example">
+                    <option selected>Escolha uma Preferência</option>
+                </select>
+            `;
+
+            preferencesContainer.appendChild(preferenceDiv);
+
+            const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`); // Use backticks here
+
+            // Assuming nomesSalas is an array containing the options for select
+            nomesSalas.forEach(nomeSala => {
+                const optionSalas = document.createElement('option');
+                optionSalas.textContent = nomeSala;
+                novaPref.appendChild(optionSalas);
+            });
+        });
+
+        addButtonSalasIn.addEventListener('click', function () {
+            inaceitavelCount++;
+
+            const inaceitavelDiv = document.createElement('div');
+            inaceitavelDiv.classList.add('form-group');
+            inaceitavelDiv.innerHTML = `
+                <p>Sala inaceitável nº${inaceitavelCount}:</p>
+                <select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
+                    <option selected>Escolha uma sala inaceitável</option>
+                </select>
+            `;
+
+            inaceitavelCointainer.appendChild(inaceitavelDiv);
+
+            const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`); // Use backticks here
+
+            // Assuming nomesSalas is an array containing the options for select
+            nomesSalas.forEach(nomeSala => {
+                const optionSalas = document.createElement('option');
+                optionSalas.textContent = nomeSala;
+                novaInaceitavel.appendChild(optionSalas);
+            });
+        });
+    });
+
+    
 
      
     </script>

@@ -26,3 +26,13 @@
     color: darkblue;
     text-decoration: none;
 }
+
+#addPreferenceBtn {
+    transform: scale(0.8);
+    margin-left: -17px;
+}
+
+#addSalaInaceitavel {
+    transform: scale(0.8);
+    margin-left: -17px;
+}
