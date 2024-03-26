@@ -20,16 +20,6 @@
         <label for="input2">Número de aulas da UC a serem marcadas no horário:</label>
         <input type="number" id="input2" name="input2" max="40" required><br><br>
 
-
-        <label for="input3">Períodos que devem ser excluídos para alocação das aulas:</label><br>
-        <input type="checkbox" id="manha" name="periodoAExcluir" value="Manhã">
-        <label for="manha">Manhã (8:00 - 12:30) </label><br>
-        <input type="checkbox" id="tarde" name="periodoAExcluir" value="Tarde">
-        <label for="tarde">Tarde (12:30 - 18:30) </label><br>
-        <input type="checkbox" id="noite" name="periodoAExcluir" value="Noite">
-        <label for="noite">Noite (18:30 - 23:00) </label><br><br>
-
-
         <label for="input4">Períodos em que é <strong>possível</strong> alocar as aulas:</label><br>
         <input type="checkbox" id="manha" name="periodoPossivel" value="Manhã">
         <label for="manha">Manhã (8:00 - 12:30)</label><br>
@@ -69,15 +59,54 @@
             </select>
         </div><br>
 
-
-        <label for="input8">Duração das aulas:</label>
-        <input type="text" id="input8" name="input7"><br><br>
-
-        <label for="input9">Necessidade especiais das aulas:</label>
-        <input type="text" id="input9" name="input9"><br><br>
+        <label for="input8">Número de Alunos:</label>
+        <input type="number" id="input8" name="input7"><br><br>
 
         <input type="submit" value="Submit">
     </form>
+
+    <script type="text/javascript">
+        const pathJsonSalas = 'CaracterizacaoDasSalas.json';
+        fetch(pathJsonSalas)
+            .then(response => {
+                // Verificar se o request foi bem sucedido
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${pathJsonSalas}: ${response.statusText}`);
+                }
+
+                // Parse the JSON data
+                return response.json();
+            })
+
+            .then(data => {
+
+                const salas = data;
+
+                // Obter todas as salas
+                const nomesSalas = salas.map(room => room['Nome sala']);
+
+                const preferenciaSala = document.getElementById('preferenciaSala');
+
+
+                const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+
+                nomesSalas.forEach(nomeSala => {
+                    const optionPreferencia1 = document.createElement('option');
+                    optionPreferencia1.textContent = nomeSala;
+                    preferenciaSala.appendChild(optionPreferencia1);
+
+                    const optionSalasInaceitaveis = document.createElement('option');
+                    optionSalasInaceitaveis.textContent = nomeSala;
+                    salasInaceitaveis.appendChild(optionSalasInaceitaveis);
+                });
+
+
+            })
+            .catch(error => {
+                console.error(`Error loading ${pathJsonSalas}:`, error);
+            });
+    </script>
+
     <script src="form.js"></script>
 
 </body>
