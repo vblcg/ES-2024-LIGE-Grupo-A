@@ -1,32 +1,29 @@
-
 const form = document.getElementById('userInputForm');
 let jsonData;
 let jsonSalas;
 
+
+//TO-DO SEMANAS DO SEMESTRE -> COMEÇO DE MARCAÇÃO FORMULARIO
+// LICENCIATURA FORMULARIO
 function adicionarAulas(inputs) {
     let slotsDisponiveis = {};
-    let filteredJson;
+    let filteredJson = jsonData;
     numeroAulas = inputs[1];
     periodos = inputs[2];
     diasSemana = inputs[3];
     salasInaceitaveis = inputs[5];
     numeroAlunos = inputs[6];
-    salasIndisponiveis = [];
 
-    if(numeroAlunos == null) {
-        numeroAlunos = 0;
+    //FILTRO DIA DA SEMANA, SE HOUVER INPUT
+    if(diasSemana != null) {
+        filteredJson = jsonData.filter(entry => diasSemana.includes(entry['Dia da Semana']));
     }
+    //console.log(filteredJson);
 
-    //FILTRO DIA DA SEMANA
-    filteredJson = jsonData.filter(entry => diasSemana.includes(entry['Dia da Semana']));
-    
-    
-    //min = parseFloat(periodos[0].split("-"));
-    //max = parseFloat(periodos[periodos.length-1].split("-")[1]);
-    //filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
-    //filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);
-
+   
     //FILTRO CAPACIDADE
+    if(numeroAlunos == null) 
+        numeroAlunos = 0;
     let salasDisponiveis = jsonSalas.map(room => room['Nome sala']);
     let filteredSalas = [];
     jsonSalas.forEach(entry => {
@@ -38,30 +35,36 @@ function adicionarAulas(inputs) {
     salasDisponiveis = filteredSalas;
     salasDisponiveis = salasDisponiveis.filter(entry => !salasInaceitaveis.includes(entry));
 
-
-    for(let i = 0; i < numeroAulas; i++) {
+    semanaSemestre = 1;
+    for(let semana = 0; semana < numeroAulas; semana++) {
         //fazer else
-        if(periodos == null) {
+        if(periodos ==null) {
             exist = false;
             min = 8.0;
             max = 9.30;
             count = 0;
-            //VER SE HA ALGUMA DAS PREFERIDAS AQUI
+            //VER SE HA ALGUMA DAS SALAS PREFERIDAS AQUI
             while(!exist) {
                 min += (1.3 * count);
                 max += (1.3 * count);
-                max = parseFloat(periodos[periodos.length-1].split("-")[1]);
+                //FILTRO POR SEMANA -> ATENÇÃO, DEVE FILTRAR UM DIA DE CADA VEZ, COMEÇAR NA SEGUNDA (IF QUE VERIFICA SE DEPOIS DOS FILTROS HA RESULTADOS)
+                filteredJson = filteredJson.filter(entry => entry['Semana do semestre'] == semanaSemestre);
+                //console.log(filteredJson);
+                //FILTRO POR HORÁRIO
                 filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
                 filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);            
-                salasOcupadas = filteredJson.map(room => room['Nome sala']);
+                salasOcupadas = filteredJson.map(room => room['Sala atribuida a aula']);
                 salasDisponiveisFinal = salasDisponiveis.filter(entry => !salasOcupadas.includes(entry));
+                console.log(filteredJson);
+                //console.log(salasOcupadas);
+                console.log(salasDisponiveisFinal);
+                //FAZER VERIFICACAO NAS SALAS DISPONIVEIS SE HA ALGUMA QUE CORRESPONDE A PREFERENCIA
+                console.log("SALA ATRIBUIDA: " + salasDisponiveisFinal[0]);
                 if(salasDisponiveisFinal.length > 0)
                     exist = true;
-                else 
-                    count ++;
-            }
-            
-            
+                count++;
+                semanaSemestre++;
+            }     
         }
         const novaAula = {
             "UC" : inputs[0] 
@@ -85,22 +88,32 @@ form.addEventListener('submit', function(event) {
     //periodos possiveis 2
     const checkboxes1 = document.querySelectorAll('input[name="periodoPossivel"]');
     const selectedValues1 = [];
+    let selectedAny = false;
     checkboxes1.forEach(function(checkbox) {
         if (checkbox.checked) {
             selectedValues1.push(checkbox.value);
         }
     });    
-    inputs.push(selectedValues1);
+    if(selectedAny) 
+        inputs.push(selectedValues1);
+    else
+        inputs.push(null);
 
     //dias da semana possiveis 3
     const checkboxes2 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
     const selectedValues2 = [];
+    let selectedAnyDay = false;
     checkboxes2.forEach(function(checkbox) {
         if (checkbox.checked) {
             selectedValues2.push(checkbox.value);
+            selectedAnyDay = true;
         }
-    });    
-    inputs.push(selectedValues2);
+    });        
+    if(selectedAnyDay) 
+        inputs.push(selectedValues2);
+    else
+        inputs.push(null);
+
 
     //preferencia sala 4
     const preferenciaSalaSelect = document.getElementById("preferenciaSala");
