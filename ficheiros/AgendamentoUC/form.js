@@ -16,15 +16,15 @@ function adicionarAulas(inputs) {
     if(numeroAlunos == null) {
         numeroAlunos = 0;
     }
+
+    //FILTRO DIA DA SEMANA
     filteredJson = jsonData.filter(entry => diasSemana.includes(entry['Dia da Semana']));
     
     
-    min = parseFloat(periodos[0].split("-"));
-    max = parseFloat(periodos[periodos.length-1].split("-")[1]);
-    filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
-    filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);
-
-    //SALAS INACEITAVEIS -> SE EXISTIR, TIRAR DE "salasDisponiveis"
+    //min = parseFloat(periodos[0].split("-"));
+    //max = parseFloat(periodos[periodos.length-1].split("-")[1]);
+    //filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
+    //filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);
 
     //FILTRO CAPACIDADE
     let salasDisponiveis = jsonSalas.map(room => room['Nome sala']);
@@ -36,18 +36,31 @@ function adicionarAulas(inputs) {
 
     //FILTRO SALAS INACEITAVEIS
     salasDisponiveis = filteredSalas;
-    console.log(salasDisponiveis);
     salasDisponiveis = salasDisponiveis.filter(entry => !salasInaceitaveis.includes(entry));
-    console.log(salasDisponiveis);
 
-    //let salasIndisponiveis = [...new Set(jsonData.map(entry => entry["Sala atribuida a aula"]))];
-    //console.log(salasIndisponiveis);
+
     for(let i = 0; i < numeroAulas; i++) {
         //fazer else
         if(periodos == null) {
-            slot = 8.30;
-            let slotJson = filteredJson.filter(entry => slot == parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
-            let salasIndisponiveis = [...new Set(slotJson.map(entry => entry["Sala atribuida a aula"]))];
+            exist = false;
+            min = 8.0;
+            max = 9.30;
+            count = 0;
+            //VER SE HA ALGUMA DAS PREFERIDAS AQUI
+            while(!exist) {
+                min += (1.3 * count);
+                max += (1.3 * count);
+                max = parseFloat(periodos[periodos.length-1].split("-")[1]);
+                filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
+                filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);            
+                salasOcupadas = filteredJson.map(room => room['Nome sala']);
+                salasDisponiveisFinal = salasDisponiveis.filter(entry => !salasOcupadas.includes(entry));
+                if(salasDisponiveisFinal.length > 0)
+                    exist = true;
+                else 
+                    count ++;
+            }
+            
             
         }
         const novaAula = {
