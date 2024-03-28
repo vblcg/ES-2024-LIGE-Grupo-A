@@ -93,6 +93,8 @@
         var table; // Declarar a variável da tabela
         var nomesSalas;
         var salas;
+        var tiposDeSala;
+        var horario;
 
         /**
          * Esconder e Mostrar colunas
@@ -241,6 +243,8 @@
     .then(data => {
         // 'data' é agora um array que contém o conteúdo do ficheiro JSON
 
+        horario = data;
+
         table = new Tabulator("#table-horario", {
         height:"700px",
         layout:"fitDataTable",
@@ -293,23 +297,43 @@
 
         salas = data;
 
-        // Obter todas as salas
-        nomesSalas = salas.map(room => room['Nome sala']);
+        /**
+         * Adiciona tanto os tipos de sala como as próprias salas, específicados no documento
+         * json da caracterização das salas ao primeiro input de preferência de sala e de 
+         * salas inaceitáveis.
+        */
+        function initializeSelectOptionsSalas() {
+            tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
+            nomesSalas = salas.map(room => room['Nome sala']);
 
-        const preferenciaSala1 = document.getElementById('preferenciaSala1');
+            const preferenciaSala1 = document.getElementById('preferenciaSala1');
+            const salasInaceitaveis = document.getElementById('salasInaceitaveis');
 
-        const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+            // Adicionar cada tipo de sala existente aos respetivos inputs
+            tiposDeSala.forEach(tipoDeSala => {
+                const optionTipoSala = document.createElement('option');
+                optionTipoSala.textContent = tipoDeSala;
+                preferenciaSala1.appendChild(optionTipoSala);
 
-        nomesSalas.forEach(nomeSala => {
-            const optionPreferencia1 = document.createElement('option');
-            optionPreferencia1.textContent = nomeSala;
-            preferenciaSala1.appendChild(optionPreferencia1);
+                const OptionTipoSalaInaceitavel = document.createElement('option');
+                OptionTipoSalaInaceitavel.textContent = tipoDeSala;
+                salasInaceitaveis.appendChild(OptionTipoSalaInaceitavel);
+            });
 
-            const optionSalasInaceitaveis = document.createElement('option');
-            optionSalasInaceitaveis.textContent = nomeSala;
-            salasInaceitaveis.appendChild(optionSalasInaceitaveis);
-        });
+            
+            // Adicionar cada sala existente no json com a Caracterização das Salas aos respetivos inputs
+            nomesSalas.forEach(nomeSala => {
+                const optionPreferencia1 = document.createElement('option');
+                optionPreferencia1.textContent = nomeSala;
+                preferenciaSala1.appendChild(optionPreferencia1);
 
+                const optionSalasInaceitaveis = document.createElement('option');
+                optionSalasInaceitaveis.textContent = nomeSala;
+                salasInaceitaveis.appendChild(optionSalasInaceitaveis);
+            });
+        }
+
+    initializeSelectOptionsSalas();
 
 
     })
@@ -317,6 +341,15 @@
         console.error(`Error loading ${pathJsonSalas}:`, error);
     });
 
+    
+
+    /**
+     *  Adiciona um evento de click ao botão para adicionar mais uma preferência de sala e ao botão
+     *  para adicionar mais uma sala inaceitável. Este evento adiciona mais um input de prefrência ou
+     *  de sala inaceitável, consoante o botão clicado. Este input irá conter os tipos de sala e as
+     *  salas existentes no ficheiro json da caracterização das salas.
+     *  
+    */
     document.addEventListener('DOMContentLoaded', function () {
         const addButton = document.getElementById('addPreferenceBtn');
         const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');;
@@ -330,6 +363,7 @@
         addButton.addEventListener('click', function () {
             preferenceCount++;
 
+            // Adiciona um novo input para as salas preferidas
             const preferenceDiv = document.createElement('div');
             preferenceDiv.classList.add('form-group');
             preferenceDiv.innerHTML = `
@@ -341,9 +375,16 @@
 
             preferencesContainer.appendChild(preferenceDiv);
 
-            const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`); // Use backticks here
+            const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`);
 
-            // Assuming nomesSalas is an array containing the options for select
+            // Adiciona as opções de tipo de sala ao novo input criado
+            tiposDeSala.forEach(tipoDeSala => {
+                const optionTipoSala = document.createElement('option');
+                optionTipoSala.textContent = tipoDeSala;
+                novaPref.appendChild(optionTipoSala);
+            })
+
+            // Adiciona as opções com as salas existentes ao novo input criado
             nomesSalas.forEach(nomeSala => {
                 const optionSalas = document.createElement('option');
                 optionSalas.textContent = nomeSala;
@@ -354,6 +395,7 @@
         addButtonSalasIn.addEventListener('click', function () {
             inaceitavelCount++;
 
+            // Adiciona um novo input para as salas inaceitáveis
             const inaceitavelDiv = document.createElement('div');
             inaceitavelDiv.classList.add('form-group');
             inaceitavelDiv.innerHTML = `
@@ -365,9 +407,16 @@
 
             inaceitavelCointainer.appendChild(inaceitavelDiv);
 
-            const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`); // Use backticks here
+            const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`);
 
-            // Assuming nomesSalas is an array containing the options for select
+            // Adiciona as opções de tipo de sala ao novo input criado
+            tiposDeSala.forEach(tipoDeSala => {
+                const optionTipoSala = document.createElement('option');
+                optionTipoSala.textContent = tipoDeSala;
+                novaPref.appendChild(optionTipoSala);
+            })
+
+            // Adiciona as opções com as salas existentes ao novo input criado
             nomesSalas.forEach(nomeSala => {
                 const optionSalas = document.createElement('option');
                 optionSalas.textContent = nomeSala;
