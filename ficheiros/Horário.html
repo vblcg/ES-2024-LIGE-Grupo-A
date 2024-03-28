@@ -33,34 +33,46 @@
                 <form>
                     <div class="form-group">
                         <p class="first_label_input">Horário Preferencial:</p>
-                        <p>Altura do dia:</p>
-                        <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example">
-                            <option selected>Altura do dia preferência</option>
-                            <option>Manhã</option>
-                            <option>Tarde</option>
-                            <option>Noite</option>
+                        <p>Semana do semestre:</p>
+                        <select class="form-select" id="semanaPref" aria-label="Default select example">
+                            <option selected>Semana a selecionar:</option>
+                            <option value="1">1ª Semana</option>
+                            <option value="2">2ª Semana</option>
+                            <option value="3">3ª Semana</option>
+                            <option value="4">4ª Semana</option>
+                            <option value="5">5ª Semana</option>
+                            <option value="6">6ª Semana</option>
+                            <option value="7">7ª Semana</option>
+                            <option value="8">8ª Semana</option>
+                            <option value="9">9ª Semana</option>
+                            <option value="10">10ª Semana</option>
+                            <option value="11">11ª Semana</option>
+                            <option value="12">12ª Semana</option>
+                            <option value="13">13ª Semana</option>
+                            <option value="14">14ª Semana</option>
+                            <option value="15">15ª Semana</option>
+                            <option value="16">16ª Semana</option>
+                            <option value="17">17ª Semana</option>
+                            <option value="18">18ª Semana</option>
+                            <option value="19">19ª Semana</option>
+                            <option value="20">20ª Semana</option>
+                            <option value="21">21ª Semana</option>
                         </select>
                         <p>Dia da semana:</p>
                         <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example">
-                            <option selected>Dia da semana preferência</option>
-                            <option>Segunda-feira</option>
-                            <option>Terça-feira</option>
-                            <option>Quarta-feira</option>
-                            <option>Quinta-feira</option>
-                            <option>Sexta-feira</option>
-                            <option>Sábado</option>
-                            <option>Domingo</option>
+                            <option selected>Dia da semana a selecionar:</option>
+                            <option value="Seg">Segunda-feira</option>
+                            <option value="Ter">Terça-feira</option>
+                            <option value="Qua">Quarta-feira</option>
+                            <option value="Qui">Quinta-feira</option>
+                            <option value="Sex">Sexta-feira</option>
                         </select>
-                        <p>Horário:</p>
-                        <select class="form-select" id="horarioPref" aria-label="Default select example">
-                            <option selected>Horário da aula preferência</option>
-                            <option>8:00 - 9:00</option>
-                            <option>9:00 - 10:00</option>
-                            <option>10:00 - 11:00</option>
-                            <option>11:00 - 12:00</option>
-                            <option>12:00 - 13:00</option>
-                            <option>13:00 - 14:00</option>
-                            <option>14:00 - 15:00</option>
+                        <p>Altura do dia:</p>
+                        <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example">
+                            <option selected>Altura do dia a selecionar:</option>
+                            <option>Manhã (8:00 - 13:00)</option>
+                            <option>Tarde (13:00 - 18:00)</option>
+                            <option>Noite (18:00 - 23:00)</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -89,7 +101,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-primary" id="guardarButton">Guardar</button>
             </div>
                 </form>
 
@@ -447,6 +459,38 @@
     
 
      
+    </script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const guardarButton = document.getElementById('guardarButton');
+
+            guardarButton.addEventListener('click', function (event) {
+                event.preventDefault(); 
+
+                var semanaPrefValue = document.getElementById('semanaPref').value;
+                var diaDaSemanaPrefValue = document.getElementById('diaDaSemanaPref').value.toLowerCase();
+                //var alturaDoDiaPrefValue = document.getElementById('alturaDoDiaPref').value.toLowerCase();
+                var preferenciaSala1Value = document.getElementById('preferenciaSala1').value.toLowerCase();
+                var salasInaceitaveisValue = document.getElementById('salasInaceitaveis').value.toLowerCase();
+
+                var filteredData = horario.filter(function (item) {
+                    var semanaSemestre = item['Semana do semestre'];
+                    var diaDaSemana = item['Dia da Semana'].toLowerCase();
+                    //var horaInicio = item['Hora Inicio da Aula'].toLowerCase();
+                    var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
+                    var salaAtribuida = item['Sala atribuida a aula'].toLowerCase();
+
+                    return semanaSemestre !== semanaPrefValue &&
+                        !diaDaSemana.includes(diaDaSemanaPrefValue) &&
+                        //horaInicio.includes(alturaDoDiaPrefValue) &&
+                        (!caracteristicasSala.includes(preferenciaSala1Value) || !salaAtribuida.includes(preferenciaSala1Value)) &&
+                        salasInaceitaveisValue.includes(salaAtribuida);
+                });
+
+                console.log(filteredData);
+            });
+        });
+
     </script>
     </div>
 </body>
