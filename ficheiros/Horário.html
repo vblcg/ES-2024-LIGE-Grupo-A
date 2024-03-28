@@ -480,11 +480,11 @@
                     var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
                     var salaAtribuida = item['Sala atribuida a aula'].toLowerCase();
 
-                    return semanaSemestre !== semanaPrefValue &&
-                        !diaDaSemana.includes(diaDaSemanaPrefValue) &&
+                    return semanaSemestre === semanaPrefValue &&
+                        diaDaSemana.includes(diaDaSemanaPrefValue) &&
                         //horaInicio.includes(alturaDoDiaPrefValue) &&
-                        (!caracteristicasSala.includes(preferenciaSala1Value) || !salaAtribuida.includes(preferenciaSala1Value)) &&
-                        salasInaceitaveisValue.includes(salaAtribuida);
+                        (caracteristicasSala.includes(preferenciaSala1Value) || salaAtribuida.includes(preferenciaSala1Value)) &&
+                        !salasInaceitaveisValue.includes(salaAtribuida);
                 });
 
                 console.log(filteredData);
