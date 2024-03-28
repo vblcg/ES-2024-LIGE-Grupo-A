@@ -245,6 +245,15 @@
 
         horario = data;
 
+        function concatenateColumns(jsonData, column1, column2) {
+            const concatenatedValues = [];
+            jsonData.forEach(item => {
+                concatenatedValues.push(item[column1] + '-' + item[column2]);
+            });
+            return concatenatedValues;
+        }
+
+
         table = new Tabulator("#table-horario", {
         height:"700px",
         layout:"fitDataTable",
@@ -271,6 +280,9 @@
         ],
     });
 
+
+        const horarios = concatenateColumns(data, 'Hora Início da Aula', 'Hora Fim da Aula');
+        console.log(horarios);
 
         document.addEventListener('click', function(event) {
             if (event.target.classList.contains('alterar-aula-button')) {
