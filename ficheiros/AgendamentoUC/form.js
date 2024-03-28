@@ -1,22 +1,62 @@
 
 const form = document.getElementById('userInputForm');
 let jsonData;
+let jsonSalas;
 
 function adicionarAulas(inputs) {
+    let slotsDisponiveis = {};
     let filteredJson;
     numeroAulas = inputs[1];
-    diasSemana = inputs[4];
-    salasIndisponiveis = []
+    periodos = inputs[2];
+    diasSemana = inputs[3];
+    salasInaceitaveis = inputs[5];
+    numeroAlunos = inputs[6];
+    salasIndisponiveis = [];
+
+    if(numeroAlunos == null) {
+        numeroAlunos = 0;
+    }
     filteredJson = jsonData.filter(entry => diasSemana.includes(entry['Dia da Semana']));
-    console.log(filteredJson);
-    console.log(diasSemana);
+    
+    
+    min = parseFloat(periodos[0].split("-"));
+    max = parseFloat(periodos[periodos.length-1].split("-")[1]);
+    filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
+    filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);
+
+    //SALAS INACEITAVEIS -> SE EXISTIR, TIRAR DE "salasDisponiveis"
+
+    //FILTRO CAPACIDADE
+    let salasDisponiveis = jsonSalas.map(room => room['Nome sala']);
+    let filteredSalas = [];
+    jsonSalas.forEach(entry => {
+        if(parseFloat(entry['Capacidade Normal']) >= numeroAlunos && salasDisponiveis.includes(entry['Nome sala']))
+            filteredSalas.push((entry['Nome sala']));
+    });
+
+    //FILTRO SALAS INACEITAVEIS
+    salasDisponiveis = filteredSalas;
+    console.log(salasDisponiveis);
+    salasDisponiveis = salasDisponiveis.filter(entry => !salasInaceitaveis.includes(entry));
+    console.log(salasDisponiveis);
+
+    //let salasIndisponiveis = [...new Set(jsonData.map(entry => entry["Sala atribuida a aula"]))];
+    //console.log(salasIndisponiveis);
     for(let i = 0; i < numeroAulas; i++) {
+        //fazer else
+        if(periodos == null) {
+            slot = 8.30;
+            let slotJson = filteredJson.filter(entry => slot == parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
+            let salasIndisponiveis = [...new Set(slotJson.map(entry => entry["Sala atribuida a aula"]))];
+            
+        }
         const novaAula = {
             "UC" : inputs[0] 
         };
-        jsonData.push(novaAula);
+        //slotsDisponiveis.push(novaAula);
     }
 }
+
 
 // Adicionando um ouvinte de evento para o evento de envio do formulário
 form.addEventListener('submit', function(event) {
@@ -24,17 +64,23 @@ form.addEventListener('submit', function(event) {
     alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
     inputs = [];
 
+    //nome uc 0
     inputs.push(document.getElementById('input1').value);
+    //numero aulas 1
     inputs.push(document.getElementById('input2').value);
-    const checkboxes1 = document.querySelectorAll('input[name="periodoAExcluir"]');
+   
+    //periodos possiveis 2
+    const checkboxes1 = document.querySelectorAll('input[name="periodoPossivel"]');
     const selectedValues1 = [];
     checkboxes1.forEach(function(checkbox) {
         if (checkbox.checked) {
             selectedValues1.push(checkbox.value);
         }
-    });
+    });    
     inputs.push(selectedValues1);
-    const checkboxes2 = document.querySelectorAll('input[name="periodoPossivel"]');
+
+    //dias da semana possiveis 3
+    const checkboxes2 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
     const selectedValues2 = [];
     checkboxes2.forEach(function(checkbox) {
         if (checkbox.checked) {
@@ -42,26 +88,21 @@ form.addEventListener('submit', function(event) {
         }
     });    
     inputs.push(selectedValues2);
-    const checkboxes3 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
-    const selectedValues3 = [];
-    checkboxes3.forEach(function(checkbox) {
-        if (checkbox.checked) {
-            selectedValues3.push(checkbox.value);
-        }
-    });    
-    inputs.push(selectedValues3);
-    console.log(selectedValues3);
+
+    //preferencia sala 4
     const preferenciaSalaSelect = document.getElementById("preferenciaSala");
     const selectedOptions = preferenciaSalaSelect.selectedOptions;
     inputs.push(Array.from(selectedOptions).map(option => option.value));
+
+    //salas inaceitaveis 5
     const salasInaceitaveis = document.getElementById('salasInaceitaveis');
     const selectedOptionsInaceitaveis = salasInaceitaveis.selectedOptions;
     inputs.push(Array.from(selectedOptionsInaceitaveis).map(option => option.value));
+
+    //numero alunos 6
     inputs.push(document.getElementById('input8').value);
-    inputs.push(document.getElementById('input9').value);
 
     adicionarAulas(inputs);
-    // Exibindo os valores na janela de alerta (você pode manipulá-los como quiser)
 });
 
 
@@ -90,10 +131,10 @@ fetch('../CaracterizacaoDasSalas.json')
 
     .then(data => {
 
-        const salas = data;
+        jsonSalas = data;
 
         // Obter todas as salas
-        const nomesSalas = salas.map(room => room['Nome sala']);
+        const nomesSalas = jsonSalas.map(room => room['Nome sala']);
         const preferenciaSala = document.getElementById('preferenciaSala');
         const salasInaceitaveis = document.getElementById('salasInaceitaveis');
 
