@@ -3,24 +3,35 @@ let jsonData;
 let jsonSalas;
 
 
+function decimalParaHora(decimal) {
+    let horaInteira = Math.floor(decimal);
+    let minutos = Math.round((decimal - horaInteira) * 60);
+    return hora + minutos;
+}
 //TO-DO SEMANAS DO SEMESTRE -> COMEÇO DE MARCAÇÃO FORMULARIO
 // LICENCIATURA FORMULARIO
 function adicionarAulas(inputs) {
-    let slotsDisponiveis = {};
+    let slotsDisponiveis = [];
     let filteredJson = jsonData;
     numeroAulas = inputs[1];
     periodos = inputs[2];
-    diasSemana = inputs[3];
+    diasSemanaInput = inputs[3];
     salasInaceitaveis = inputs[5];
     numeroAlunos = inputs[6];
 
-    //FILTRO DIA DA SEMANA, SE HOUVER INPUT
-    if(diasSemana != null) {
-        filteredJson = jsonData.filter(entry => diasSemana.includes(entry['Dia da Semana']));
-    }
-    //console.log(filteredJson);
+    const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
 
-   
+    //INICIALIZAÇÃO PARAMETROS SEMANA -> diaSemanaString ex: "Seg", diaSemanaNumero -> para aceder aos arrays, inputsDias -> para verificar se já se viram todos os dias de input
+    if(diasSemanaInput != null) {
+        diaSemanaString = diasSemanaInput[0];
+        diaSemanaNumero = 0;
+        inputsDias = diasSemanaInput.length;
+    } else {
+        diaSemana = diasDaSemana[0];
+        diaSemanaNumero = 0;
+        inputsDias = 0;
+    }
+
     //FILTRO CAPACIDADE
     if(numeroAlunos == null) 
         numeroAlunos = 0;
@@ -35,40 +46,79 @@ function adicionarAulas(inputs) {
     salasDisponiveis = filteredSalas;
     salasDisponiveis = salasDisponiveis.filter(entry => !salasInaceitaveis.includes(entry));
 
-    semanaSemestre = 1;
+    semanaSemestre = 1; //ATENÇÃO VAI PASSAR A SER INPUT 
     for(let semana = 0; semana < numeroAulas; semana++) {
         //fazer else
-        if(periodos ==null) {
+        if(periodos == null) {
             exist = false;
             min = 8.0;
             max = 9.30;
-            count = 0;
+            horaCount = 0;
             //VER SE HA ALGUMA DAS SALAS PREFERIDAS AQUI
             while(!exist) {
-                min += (1.3 * count);
-                max += (1.3 * count);
-                //FILTRO POR SEMANA -> ATENÇÃO, DEVE FILTRAR UM DIA DE CADA VEZ, COMEÇAR NA SEGUNDA (IF QUE VERIFICA SE DEPOIS DOS FILTROS HA RESULTADOS)
+                //QUANDO SE VIU TODOS OS SLOTS DO DIA
+                if(max += (1.3 * horaCount) >= 23.00) {
+                    min = 8.0;
+                    max = 9.30;
+                    horaCount = 0; 
+                    diaSemanaNumero += 1; //AVANÇA UM DIA NA SEMANA
+                    if(diasSemanaInput != null && diaSemanaNumero < inputsDias) {
+                        diaSemanaString = diasSemana[diaSemanaNumero]; //SE AINDA HOUVER MAIS DIAS SELECIONADOS PARA VERIFICAR
+                    } else if(diasSemanaInput == null) {
+                        diaSemanaString = diasDaSemana[diaSemanaNumero]; //SE NÃO SE TIVEREM SELECIONADO DIAS
+                    } else if(semanaSemestre >= 15) { 
+                        console.log("NÃO HÁ SLOTS DISPONÍVEIS DE ACORDO COM AS PREFERÊNCIAS INDICADAS");
+                    } else {
+                        semanaSemestre += 1;
+                        diaSemanaNumero = 0;
+                    }
+                } else {
+                    min += decimalParaHora((1.3 * horaCount));
+                    max += decimalParaHora((1.3 * horaCount));
+                }
+                
+                //FILTRO DIA DA SEMANA
+                filteredJson = jsonData.filter(entry => diaSemanaString == entry['Dia da Semana']);
+                
+                //FILTRO SEMANA DO SEMESTRE 
                 filteredJson = filteredJson.filter(entry => entry['Semana do semestre'] == semanaSemestre);
-                //console.log(filteredJson);
-                //FILTRO POR HORÁRIO
+
+                //FILTRO POR SLOT
                 filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
                 filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);            
                 salasOcupadas = filteredJson.map(room => room['Sala atribuida a aula']);
                 salasDisponiveisFinal = salasDisponiveis.filter(entry => !salasOcupadas.includes(entry));
+
                 console.log(filteredJson);
                 //console.log(salasOcupadas);
                 console.log(salasDisponiveisFinal);
                 //FAZER VERIFICACAO NAS SALAS DISPONIVEIS SE HA ALGUMA QUE CORRESPONDE A PREFERENCIA
                 console.log("SALA ATRIBUIDA: " + salasDisponiveisFinal[0]);
-                if(salasDisponiveisFinal.length > 0)
-                    exist = true;
-                count++;
+                //NAO ESTA COMPLETO ATENÇÃO
+                if(salasDisponiveisFinal.length > 0) {
+                    const novaAula = {
+                        "Curso": "",
+                        "UC": inputs[0],
+                        "Turno": "1",
+                        "Turma": "",
+                        "Inscritos no Turno": numeroAlunos,
+                        "Dia da Semana": diaSemanaString,
+                        "Hora Inicio da Aula": min,
+                        "Hora Fim da Aula": max,
+                        "Data da aula": "",
+                        "Semana do ano": "",
+                        "Semana do semestre": semanaSemestre,
+                        "Caracteristicas da sala pedida para a aula": "",
+                        "Sala atribuida a aula": salasDisponiveisFinal[0]
+                      };
+                      slotsDisponiveis.push(novaAula);
+                      exist = true;
+                }
+                horaCount++;
                 semanaSemestre++;
             }     
         }
-        const novaAula = {
-            "UC" : inputs[0] 
-        };
+        
         //slotsDisponiveis.push(novaAula);
     }
 }

@@ -52,5 +52,7 @@ input[type="submit"]:hover {
     display: inline-block;
     vertical-align: top;
     margin-right: 30px; /* Espaço entre os inputs */
+    width: 300px;
 }
+
 
