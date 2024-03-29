@@ -1,7 +1,10 @@
 const form = document.getElementById('userInputForm');
 let jsonData;
 let jsonSalas;
-
+var nomesSalas;
+var salas;
+var tiposDeSala;
+const pathJsonSalas = 'CaracterizacaoDasSalas.json';    
 
 function decimalParaHora(decimal) {
     let horaInteira = Math.floor(decimal);
@@ -125,64 +128,67 @@ function adicionarAulas(inputs) {
 
 
 // Adicionando um ouvinte de evento para o evento de envio do formulário
-form.addEventListener('submit', function(event) {
-    event.preventDefault();
-    alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
-    inputs = [];
+if(form) {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
+        inputs = [];
+    
+        //nome uc 0
+        inputs.push(document.getElementById('UC').value);
+        //numero aulas 1
+        inputs.push(document.getElementById('nmrAulas').value);
+       
+        //periodos possiveis 2
+        const checkboxes1 = document.querySelectorAll('input[name="periodoPossivel"]');
+        const selectedValues1 = [];
+        let selectedAny = false;
+        checkboxes1.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedValues1.push(checkbox.value);
+            }
+        });    
+        if(selectedAny) 
+            inputs.push(selectedValues1);
+        else
+            inputs.push(null);
+    
+        //dias da semana possiveis 3
+        const checkboxes2 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
+        const selectedValues2 = [];
+        let selectedAnyDay = false;
+        checkboxes2.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedValues2.push(checkbox.value);
+                selectedAnyDay = true;
+            }
+        });        
+        if(selectedAnyDay) 
+            inputs.push(selectedValues2);
+        else
+            inputs.push(null);
+    
+    
+        //preferencia sala 4
+        const preferenciaSalaSelect = document.getElementById("preferenciaSala1");
+        const selectedOptions = preferenciaSalaSelect.selectedOptions;
+        inputs.push(Array.from(selectedOptions).map(option => option.value));
+    
+        //salas inaceitaveis 5
+        const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+        const selectedOptionsInaceitaveis = salasInaceitaveis.selectedOptions;
+        inputs.push(Array.from(selectedOptionsInaceitaveis).map(option => option.value));
+    
+        //numero alunos 6
+        inputs.push(document.getElementById('input8').value);
+    
+        //nome curso 7
+        inputs.push(document.getElementById('Licenciatura').value)
+    
+        adicionarAulas(inputs);
+    });
+}
 
-    //nome uc 0
-    inputs.push(document.getElementById('input1').value);
-    //numero aulas 1
-    inputs.push(document.getElementById('input2').value);
-   
-    //periodos possiveis 2
-    const checkboxes1 = document.querySelectorAll('input[name="periodoPossivel"]');
-    const selectedValues1 = [];
-    let selectedAny = false;
-    checkboxes1.forEach(function(checkbox) {
-        if (checkbox.checked) {
-            selectedValues1.push(checkbox.value);
-        }
-    });    
-    if(selectedAny) 
-        inputs.push(selectedValues1);
-    else
-        inputs.push(null);
-
-    //dias da semana possiveis 3
-    const checkboxes2 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
-    const selectedValues2 = [];
-    let selectedAnyDay = false;
-    checkboxes2.forEach(function(checkbox) {
-        if (checkbox.checked) {
-            selectedValues2.push(checkbox.value);
-            selectedAnyDay = true;
-        }
-    });        
-    if(selectedAnyDay) 
-        inputs.push(selectedValues2);
-    else
-        inputs.push(null);
-
-
-    //preferencia sala 4
-    const preferenciaSalaSelect = document.getElementById("preferenciaSala");
-    const selectedOptions = preferenciaSalaSelect.selectedOptions;
-    inputs.push(Array.from(selectedOptions).map(option => option.value));
-
-    //salas inaceitaveis 5
-    const salasInaceitaveis = document.getElementById('salasInaceitaveis');
-    const selectedOptionsInaceitaveis = salasInaceitaveis.selectedOptions;
-    inputs.push(Array.from(selectedOptionsInaceitaveis).map(option => option.value));
-
-    //numero alunos 6
-    inputs.push(document.getElementById('input8').value);
-
-    //nome curso 7
-    inputs.push(document.getElementById('Licenciatura').value)
-
-    adicionarAulas(inputs);
-});
 
 
 // Fazendo uma solicitação HTTP para carregar o arquivo JSON
@@ -197,7 +203,41 @@ fetch('../Horário.json')
         console.error('Ocorreu um erro ao carregar o arquivo JSON:', error);
     });
 
-fetch('CaracterizacaoDasSalas.json')
+
+
+function initializeSelectOptionsSalas() {
+    tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
+    nomesSalas = salas.map(room => room['Nome sala']);
+
+    const preferenciaSala1 = document.getElementById('preferenciaSala1');
+    const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+
+    // Adicionar cada tipo de sala existente aos respetivos inputs
+    tiposDeSala.forEach(tipoDeSala => {
+        const optionTipoSala = document.createElement('option');
+        optionTipoSala.textContent = tipoDeSala;
+        preferenciaSala1.appendChild(optionTipoSala);
+
+        const OptionTipoSalaInaceitavel = document.createElement('option');
+        OptionTipoSalaInaceitavel.textContent = tipoDeSala;
+        salasInaceitaveis.appendChild(OptionTipoSalaInaceitavel);
+    });
+
+    
+    // Adicionar cada sala existente no json com a Caracterização das Salas aos respetivos inputs
+    nomesSalas.forEach(nomeSala => {
+        const optionPreferencia1 = document.createElement('option');
+        optionPreferencia1.textContent = nomeSala;
+        preferenciaSala1.appendChild(optionPreferencia1);
+
+        const optionSalasInaceitaveis = document.createElement('option');
+        optionSalasInaceitaveis.textContent = nomeSala;
+        salasInaceitaveis.appendChild(optionSalasInaceitaveis);
+    });
+}
+
+
+fetch(pathJsonSalas)
     .then(response => {
         // Verificar se o request foi bem sucedido
         if (!response.ok) {
@@ -205,93 +245,19 @@ fetch('CaracterizacaoDasSalas.json')
         }
 
         // Parse the JSON data
+        console.log(response.json);
         return response.json();
     })
 
     .then(data => {
 
-        jsonSalas = data;
+        salas = data;
+        console.log(salas)
 
-        // Obter todas as salas
-        const nomesSalas = jsonSalas.map(room => room['Nome sala']);
-        const preferenciaSala = document.getElementById('preferenciaSala');
-        const salasInaceitaveis = document.getElementById('salasInaceitaveis');
-
-        nomesSalas.forEach(nomeSala => {
-            const optionPreferencia1 = document.createElement('option')
-            optionPreferencia1.type = 'checkbox';
-            optionPreferencia1.textContent = nomeSala;
-            preferenciaSala.appendChild(optionPreferencia1);
-
-            const optionSalasInaceitaveis = document.createElement('option');
-            optionSalasInaceitaveis.type = 'checkbox';
-            optionSalasInaceitaveis.textContent = nomeSala;
-            salasInaceitaveis.appendChild(optionSalasInaceitaveis);
-        });    
-
-
-    })
-    .catch(error => {
-        console.error(`Error loading ${pathJsonSalas}:`, error);
-    });
-
-
-var nomesSalas;
-    var salas;
-    var tiposDeSala;
-    const pathJsonSalas = 'CaracterizacaoDasSalas.json';    
-    fetch(pathJsonSalas)
-        .then(response => {
-            // Verificar se o request foi bem sucedido
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${pathJsonSalas}: ${response.statusText}`);
-            }
-
-            // Parse the JSON data
-            return response.json();
-        })
-
-        .then(data => {
-
-                salas = data;
-
-            function initializeSelectOptionsSalas() {
-        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
-        nomesSalas = salas.map(room => room['Nome sala']);
-
-        const preferenciaSala1 = document.getElementById('preferenciaSala1');
-        const salasInaceitaveis = document.getElementById('salasInaceitaveis');
-
-        // Adicionar cada tipo de sala existente aos respetivos inputs
-        tiposDeSala.forEach(tipoDeSala => {
-            const optionTipoSala = document.createElement('option');
-            optionTipoSala.textContent = tipoDeSala;
-            preferenciaSala1.appendChild(optionTipoSala);
-
-            const OptionTipoSalaInaceitavel = document.createElement('option');
-            OptionTipoSalaInaceitavel.textContent = tipoDeSala;
-            salasInaceitaveis.appendChild(OptionTipoSalaInaceitavel);
-        });
-
-        
-        // Adicionar cada sala existente no json com a Caracterização das Salas aos respetivos inputs
-        nomesSalas.forEach(nomeSala => {
-            const optionPreferencia1 = document.createElement('option');
-            optionPreferencia1.textContent = nomeSala;
-            preferenciaSala1.appendChild(optionPreferencia1);
-
-            const optionSalasInaceitaveis = document.createElement('option');
-            optionSalasInaceitaveis.textContent = nomeSala;
-            salasInaceitaveis.appendChild(optionSalasInaceitaveis);
-        });
-    }
-
-initializeSelectOptionsSalas();
-
-
+        initializeSelectOptionsSalas();
 })
 .catch(error => {
-    console.error(`Error loading ${pathJsonSalas}:`, error);
+console.error(`Error loading ${pathJsonSalas}:`, error);
 });
 
 
