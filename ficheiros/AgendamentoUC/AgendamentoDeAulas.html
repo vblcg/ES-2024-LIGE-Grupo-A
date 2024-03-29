@@ -38,7 +38,7 @@
 
         <div class="input-container">
         <label for="semanaSemestre">Semana do semestre a começar a UC:</label>
-        <input type="number" id="semanaSemestre" name="semanaSemestre"><br><br>
+        <input type="number" id="semanaSemestre" name="semanaSemestre" max="21" min="1"><br><br>
         </div>
 
         <br>
@@ -77,15 +77,17 @@
             <button type="button" class="btn btn-secondary" id="addPreferenceBtn">Adicionar Preferência</button>
             
         </div>
-
-        </div><br>
-
         <div class="form-group">
+            <div id="salasInaceitaveis-container">
             <p>Salas Inaceitáveis:</p>
-            <select class="form-select" id='salasInaceitaveis' name="salasInaceitaveis[]"
-                aria-label="Default select example" multiple>
+            <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
+                <option selected>Indique as salas inaceitáveis</option>
             </select>
-        </div><br>
+            </div>
+            <button type="button" class="btn btn-secondary" id="addSalaInaceitavel">Adicionar salas inaceitáveis</button>
+        </div>
+    
+</div>
 
         
 
