@@ -55,4 +55,10 @@ input[type="submit"]:hover {
     width: 300px;
 }
 
+.form-group {
+    display: inline-block;
+    vertical-align: top; /* Isso garante que os elementos fiquem alinhados no topo */
+    margin-right: 100%; /* Adicione um espaçamento entre os elementos */
+}
+
 
