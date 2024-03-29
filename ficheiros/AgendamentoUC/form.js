@@ -18,6 +18,7 @@ function adicionarAulas(inputs) {
     diasSemanaInput = inputs[3];
     salasInaceitaveis = inputs[5];
     numeroAlunos = inputs[6];
+    nomeCurso = inputs[7];
 
     const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
 
@@ -36,15 +37,6 @@ function adicionarAulas(inputs) {
     if(numeroAlunos == null) 
         numeroAlunos = 0;
     let salasDisponiveis = jsonSalas.map(room => room['Nome sala']);
-    let filteredSalas = [];
-    jsonSalas.forEach(entry => {
-        if(parseFloat(entry['Capacidade Normal']) >= numeroAlunos && salasDisponiveis.includes(entry['Nome sala']))
-            filteredSalas.push((entry['Nome sala']));
-    });
-
-    //FILTRO SALAS INACEITAVEIS
-    salasDisponiveis = filteredSalas;
-    salasDisponiveis = salasDisponiveis.filter(entry => !salasInaceitaveis.includes(entry));
 
     semanaSemestre = 1; //ATENÇÃO VAI PASSAR A SER INPUT 
     for(let semana = 0; semana < numeroAulas; semana++) {
@@ -76,6 +68,15 @@ function adicionarAulas(inputs) {
                     min += decimalParaHora((1.3 * horaCount));
                     max += decimalParaHora((1.3 * horaCount));
                 }
+
+                let filteredSalas = [];
+                jsonSalas.forEach(entry => {
+                    if(parseFloat(entry['Capacidade Normal']) >= numeroAlunos && salasDisponiveis.includes(entry['Nome sala']))
+                        filteredSalas.push((entry['Nome sala']));
+                });
+
+                //FILTRO SALAS INACEITAVEIS
+                filteredSalas = filteredSalas.filter(entry => !salasInaceitaveis.includes(entry));
                 
                 //FILTRO DIA DA SEMANA
                 filteredJson = jsonData.filter(entry => diaSemanaString == entry['Dia da Semana']);
@@ -87,17 +88,17 @@ function adicionarAulas(inputs) {
                 filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
                 filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);            
                 salasOcupadas = filteredJson.map(room => room['Sala atribuida a aula']);
-                salasDisponiveisFinal = salasDisponiveis.filter(entry => !salasOcupadas.includes(entry));
+                filteredSalas = filteredSalas.filter(entry => !salasOcupadas.includes(entry));
 
                 console.log(filteredJson);
                 //console.log(salasOcupadas);
-                console.log(salasDisponiveisFinal);
+                console.log(filteredSalas);
                 //FAZER VERIFICACAO NAS SALAS DISPONIVEIS SE HA ALGUMA QUE CORRESPONDE A PREFERENCIA
-                console.log("SALA ATRIBUIDA: " + salasDisponiveisFinal[0]);
+                console.log("SALA ATRIBUIDA: " + filteredSalas[0]);
                 //NAO ESTA COMPLETO ATENÇÃO
-                if(salasDisponiveisFinal.length > 0) {
+                if(filteredSalas.length > 0) {
                     const novaAula = {
-                        "Curso": "",
+                        "Curso": nomeCurso,
                         "UC": inputs[0],
                         "Turno": "1",
                         "Turma": "",
@@ -109,7 +110,7 @@ function adicionarAulas(inputs) {
                         "Semana do ano": "",
                         "Semana do semestre": semanaSemestre,
                         "Caracteristicas da sala pedida para a aula": "",
-                        "Sala atribuida a aula": salasDisponiveisFinal[0]
+                        "Sala atribuida a aula": filteredSalas[0]
                       };
                       slotsDisponiveis.push(novaAula);
                       exist = true;
@@ -118,9 +119,8 @@ function adicionarAulas(inputs) {
                 semanaSemestre++;
             }     
         }
-        
-        //slotsDisponiveis.push(novaAula);
     }
+    console.log(slotsDisponiveis);
 }
 
 
@@ -177,6 +177,9 @@ form.addEventListener('submit', function(event) {
 
     //numero alunos 6
     inputs.push(document.getElementById('input8').value);
+
+    //nome curso 7
+    inputs.push(document.getElementById('Licenciatura').value)
 
     adicionarAulas(inputs);
 });
