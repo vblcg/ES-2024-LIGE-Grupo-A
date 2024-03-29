@@ -67,10 +67,16 @@
 
 
         <div class="form-group">
-            <p>Preferência de Salas:</p>
-            <select class="form-select" id="preferenciaSala" name="preferenciaSala" aria-label="Default select example"
-                multiple>
-            </select>
+            <p class="label_input">Preferência de sala</p>
+            <div id="preferencias-container">
+                <p>Preferência nº1:</p>
+                <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
+                    <option selected>Escolha uma Preferência</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-secondary" id="addPreferenceBtn">Adicionar Preferência</button>
+            
+        </div>
 
         </div><br>
 
@@ -120,7 +126,27 @@
                     optionSalasInaceitaveis.textContent = nomeSala;
                     salasInaceitaveis.appendChild(optionSalasInaceitaveis);
                 });
+                
+                let preferenceCount = 1;
+        let inaceitavelCount = 1;
 
+        addButton.addEventListener('click', function () {
+            preferenceCount++;
+
+            // Adiciona um novo input para as salas preferidas
+            const preferenceDiv = document.createElement('div');
+            preferenceDiv.classList.add('form-group');
+            preferenceDiv.innerHTML = `
+                <p>Preferência nº${preferenceCount}:</p>
+                <select class="form-select" id="preferenciaSala${preferenceCount}" aria-label="Default select example">
+                    <option selected>Escolha uma Preferência</option>
+                </select>
+            `;
+
+            preferencesContainer.appendChild(preferenceDiv);
+
+            const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`);
+        })
 
             })
             .catch(error => {
