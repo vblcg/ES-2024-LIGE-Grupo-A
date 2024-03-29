@@ -109,25 +109,62 @@
 
                 const salas = data;
 
-                // Obter todas as salas
-                const nomesSalas = salas.map(room => room['Nome sala']);
+                function initializeSelectOptionsSalas() {
+            tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
+            nomesSalas = salas.map(room => room['Nome sala']);
 
-                const preferenciaSala = document.getElementById('preferenciaSala');
+            const preferenciaSala1 = document.getElementById('preferenciaSala1');
+            const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+
+            // Adicionar cada tipo de sala existente aos respetivos inputs
+            tiposDeSala.forEach(tipoDeSala => {
+                const optionTipoSala = document.createElement('option');
+                optionTipoSala.textContent = tipoDeSala;
+                preferenciaSala1.appendChild(optionTipoSala);
+
+                const OptionTipoSalaInaceitavel = document.createElement('option');
+                OptionTipoSalaInaceitavel.textContent = tipoDeSala;
+                salasInaceitaveis.appendChild(OptionTipoSalaInaceitavel);
+            });
+
+            
+            // Adicionar cada sala existente no json com a Caracterização das Salas aos respetivos inputs
+            nomesSalas.forEach(nomeSala => {
+                const optionPreferencia1 = document.createElement('option');
+                optionPreferencia1.textContent = nomeSala;
+                preferenciaSala1.appendChild(optionPreferencia1);
+
+                const optionSalasInaceitaveis = document.createElement('option');
+                optionSalasInaceitaveis.textContent = nomeSala;
+                salasInaceitaveis.appendChild(optionSalasInaceitaveis);
+            });
+        }
+
+    initializeSelectOptionsSalas();
 
 
-                const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+    })
+    .catch(error => {
+        console.error(`Error loading ${pathJsonSalas}:`, error);
+    });
 
-                nomesSalas.forEach(nomeSala => {
-                    const optionPreferencia1 = document.createElement('option');
-                    optionPreferencia1.textContent = nomeSala;
-                    preferenciaSala.appendChild(optionPreferencia1);
+    
 
-                    const optionSalasInaceitaveis = document.createElement('option');
-                    optionSalasInaceitaveis.textContent = nomeSala;
-                    salasInaceitaveis.appendChild(optionSalasInaceitaveis);
-                });
-                
-                let preferenceCount = 1;
+    /**
+     *  Adiciona um evento de click ao botão para adicionar mais uma preferência de sala e ao botão
+     *  para adicionar mais uma sala inaceitável. Este evento adiciona mais um input de prefrência ou
+     *  de sala inaceitável, consoante o botão clicado. Este input irá conter os tipos de sala e as
+     *  salas existentes no ficheiro json da caracterização das salas.
+     *  
+    */
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButton = document.getElementById('addPreferenceBtn');
+        const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');;
+
+        const preferencesContainer = document.getElementById('preferencias-container');
+        const inaceitavelCointainer = document.getElementById('salasInaceitaveis-container');
+
+        let preferenceCount = 1;
         let inaceitavelCount = 1;
 
         addButton.addEventListener('click', function () {
@@ -146,16 +183,91 @@
             preferencesContainer.appendChild(preferenceDiv);
 
             const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`);
-        })
 
+            // Adiciona as opções de tipo de sala ao novo input criado
+            tiposDeSala.forEach(tipoDeSala => {
+                const optionTipoSala = document.createElement('option');
+                optionTipoSala.textContent = tipoDeSala;
+                novaPref.appendChild(optionTipoSala);
             })
-            .catch(error => {
-                console.error(`Error loading ${pathJsonSalas}:`, error);
+
+            // Adiciona as opções com as salas existentes ao novo input criado
+            nomesSalas.forEach(nomeSala => {
+                const optionSalas = document.createElement('option');
+                optionSalas.textContent = nomeSala;
+                novaPref.appendChild(optionSalas);
             });
+        });
+
+        addButtonSalasIn.addEventListener('click', function () {
+            inaceitavelCount++;
+
+            // Adiciona um novo input para as salas inaceitáveis
+            const inaceitavelDiv = document.createElement('div');
+            inaceitavelDiv.classList.add('form-group');
+            inaceitavelDiv.innerHTML = `
+                <p>Sala inaceitável nº${inaceitavelCount}:</p>
+                <select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
+                    <option selected>Escolha uma sala inaceitável</option>
+                </select>
+            `;
+
+            inaceitavelCointainer.appendChild(inaceitavelDiv);
+
+            const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`);
+
+            // Adiciona as opções de tipo de sala ao novo input criado
+            tiposDeSala.forEach(tipoDeSala => {
+                const optionTipoSala = document.createElement('option');
+                optionTipoSala.textContent = tipoDeSala;
+                novaPref.appendChild(optionTipoSala);
+            })
+
+            // Adiciona as opções com as salas existentes ao novo input criado
+            nomesSalas.forEach(nomeSala => {
+                const optionSalas = document.createElement('option');
+                optionSalas.textContent = nomeSala;
+                novaInaceitavel.appendChild(optionSalas);
+            });
+        });
+    });
+
+    
+
+     
     </script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const guardarButton = document.getElementById('guardarButton');
 
-    <script src="form.js"></script>
+            guardarButton.addEventListener('click', function (event) {
+                event.preventDefault(); 
 
+                var semanaPrefValue = document.getElementById('semanaPref').value;
+                var diaDaSemanaPrefValue = document.getElementById('diaDaSemanaPref').value.toLowerCase();
+                //var alturaDoDiaPrefValue = document.getElementById('alturaDoDiaPref').value.toLowerCase();
+                var preferenciaSala1Value = document.getElementById('preferenciaSala1').value.toLowerCase();
+                var salasInaceitaveisValue = document.getElementById('salasInaceitaveis').value.toLowerCase();
+
+                var filteredData = horario.filter(function (item) {
+                    var semanaSemestre = item['Semana do semestre'];
+                    var diaDaSemana = item['Dia da Semana'].toLowerCase();
+                    //var horaInicio = item['Hora Inicio da Aula'].toLowerCase();
+                    var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
+                    var salaAtribuida = item['Sala atribuida a aula'].toLowerCase();
+
+                    return semanaSemestre === semanaPrefValue &&
+                        diaDaSemana.includes(diaDaSemanaPrefValue) &&
+                        //horaInicio.includes(alturaDoDiaPrefValue) &&
+                        (caracteristicasSala.includes(preferenciaSala1Value) || salaAtribuida.includes(preferenciaSala1Value)) &&
+                        !salasInaceitaveisValue.includes(salaAtribuida);
+                });
+
+                console.log(filteredData);
+            });
+        });
+
+    </script>
+    </div>
 </body>
-
 </html>
