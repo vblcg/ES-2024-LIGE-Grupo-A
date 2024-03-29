@@ -25,9 +25,18 @@
             <input type="text" id="Licenciatura" name="Licenciatura" required><br><br>
         </div>
         
-        <label for="input2">Número de aulas da UC a serem marcadas no horário:</label>
+        <br>
+        <div class="input-container">
+        <label for="input2">Número de aulas:</label>
         <input type="number" id="input2" name="input2" max="40" min ="1" required><br><br>
+        </div>
 
+        <div class="input-container">
+        <label for="input8">Número máximo de alunos:</label>
+        <input type="number" id="input8" name="input7"><br><br>
+        </div>
+
+        <br>
         <label for="input4">Períodos em que é <strong>possível</strong> alocar as aulas:</label><br>
         <input type="checkbox" id="manha" name="periodoPossivel" value="8-12.30">
         <label for="manha">Manhã (8:00 - 12:30)</label><br>
@@ -67,8 +76,7 @@
             </select>
         </div><br>
 
-        <label for="input8">Número de Alunos:</label>
-        <input type="number" id="input8" name="input7"><br><br>
+        
 
         <input type="submit" value="Submit">
     </form>

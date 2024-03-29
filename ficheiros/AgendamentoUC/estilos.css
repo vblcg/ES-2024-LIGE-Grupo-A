@@ -31,6 +31,8 @@ input[type="number"] {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    display: block;
+    
 }
 
 input[type="submit"] {
@@ -49,6 +51,6 @@ input[type="submit"]:hover {
 .input-container {
     display: inline-block;
     vertical-align: top;
-    margin-right: 150px; /* Espaço entre os inputs */
+    margin-right: 30px; /* Espaço entre os inputs */
 }
 
