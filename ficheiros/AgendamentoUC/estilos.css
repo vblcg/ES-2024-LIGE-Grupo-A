@@ -22,6 +22,7 @@ input[type="text"] {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    display: block;
 }
 
 input[type="number"] {
@@ -44,3 +45,10 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #45a049;
 }
+
+.input-container {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 150px; /* Espaço entre os inputs */
+}
+
