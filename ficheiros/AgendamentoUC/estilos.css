@@ -12,7 +12,7 @@ h1 {
 
 #userInputForm {
     width: 50%;
-    margin: 0 auto;
+    margin-left: 33%;
 }
 
 input[type="text"] {
