@@ -37,13 +37,13 @@
 
         <div class="input-container">
         <label for="semanaSemestre">Semana do semestre a começar a UC:</label>
-        <input type="number" id="semanaSemestre" name="semanaSemestre" max="21" min="1">
+        <input type="number" id="semanaSemestre" name="semanaSemestre" max="21" min="1" value="1">
         </div>
 
         <br>
 
         <label for="input4">Períodos em que é <strong>possível</strong> alocar as aulas:</label><br>
-        <input type="checkbox" id="manha" name="periodoPossivel" value="8-12.30">
+        <input type="checkbox" id="manha" name="periodoPossivel" value="8.0-12.30">
         <label for="manha">Manhã (8:00 - 12:30)</label><br>
         <input type="checkbox" id="tarde" name="periodoPossivel" value="12.30-18.30">
         <label for="tarde">Tarde (12:30 - 18:30)</label><br>
@@ -69,10 +69,12 @@
         <div class="form-group">
             <div id="preferencias-container">
                 <p>Preferência de Sala:</p>
-                <p>Preferência nº 1</p>
-                <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
-                    <option selected>Escolha uma Preferência</option>
-                </select>
+                <div class ="form-group">
+                    <p>Preferência nº 1</p>
+                    <select id="preferenciaSala1" aria-label="Default select example">
+                        <option selected>Escolha uma Preferência</option>
+                    </select>
+                </div>
             </div>
             <button type="button" class="btn btn-secondary" id="addPreferenceBtn">Adicionar Preferência</button>
             
@@ -80,9 +82,12 @@
         <div class="form-group">
             <div id="salasInaceitaveis-container">
             <p>Salas Inaceitáveis:</p>
-            <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
-                <option selected>Indique as salas inaceitáveis</option>
-            </select>
+                <div class = "form-group">
+                    <p>Sala inaceitável nº 1</p>
+                <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
+                    <option selected>Indique as salas inaceitáveis</option>
+                </select>
+                </div>
             </div>
             <button type="button" class="btn btn-secondary" id="addSalaInaceitavel">Adicionar salas inaceitáveis</button>
         </div>   
