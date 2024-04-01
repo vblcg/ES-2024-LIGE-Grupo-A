@@ -33,9 +33,9 @@
                 <form>
                     <div class="form-group">
                         <p class="first_label_input">Horário Preferencial:</p>
-                        <p>Semana do semestre:</p>
-                        <select class="form-select" id="semanaPref" aria-label="Default select example">
-                            <option selected>Semana a selecionar:</option>
+                        <p>Semana do semestre (obrigatório):</p>
+                        <select class="form-select" id="semanaPref" aria-label="Default select example" required>
+                            <option selected>Semana a selecionar</option>
                             <option value="1">1ª Semana</option>
                             <option value="2">2ª Semana</option>
                             <option value="3">3ª Semana</option>
@@ -58,21 +58,21 @@
                             <option value="20">20ª Semana</option>
                             <option value="21">21ª Semana</option>
                         </select>
-                        <p>Dia da semana:</p>
-                        <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example">
-                            <option selected>Dia da semana a selecionar:</option>
+                        <p>Dia da semana (obrigatório):</p>
+                        <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example" required>
+                            <option selected>Dia da semana a selecionar</option>
                             <option value="Seg">Segunda-feira</option>
                             <option value="Ter">Terça-feira</option>
                             <option value="Qua">Quarta-feira</option>
                             <option value="Qui">Quinta-feira</option>
                             <option value="Sex">Sexta-feira</option>
                         </select>
-                        <p>Altura do dia:</p>
-                        <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example">
-                            <option selected>Altura do dia a selecionar:</option>
-                            <option>Manhã (8:00 - 13:00)</option>
-                            <option>Tarde (13:00 - 18:00)</option>
-                            <option>Noite (18:00 - 23:00)</option>
+                        <p>Altura do dia (obrigatório):</p>
+                        <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example" required>
+                            <option selected>Altura do dia a selecionar</option>
+                            <option value="8,13">Manhã (8:00 - 13:00)</option>
+                            <option value="13,18">Tarde (13:00 - 18:00)</option>
+                            <option value="18,23">Noite (18:00 - 23:00)</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -114,6 +114,7 @@
         var salas;
         var tiposDeSala;
         var horario;
+        var aulaAMudar;
 
         /**
          * Esconder e Mostrar colunas
@@ -232,11 +233,16 @@
         return true;
     }
 
+    /**
+     * Adiciona o botão para alterar aula a cada linha e guarda os respetivos dados
+     * da linha na variável "aulaAMudar"
+     */
     var alterarAulaButton = function(cell, formatterParams, onRendered) {
         var button = document.createElement("button");
         button.innerHTML = "Alterar aula";
         button.classList.add("alterar-aula-button");
         button.addEventListener("click", function() {
+            aulaAMudar = cell.getRow().getData();
             $('#myModal').modal('show');
         });
         return button;
@@ -264,15 +270,6 @@
 
         horario = data;
 
-        function concatenateColumns(jsonData, column1, column2) {
-            const concatenatedValues = [];
-            jsonData.forEach(item => {
-                concatenatedValues.push(item[column1] + '-' + item[column2]);
-            });
-            return concatenatedValues;
-        }
-
-
         table = new Tabulator("#table-horario", {
         height:"700px",
         layout:"fitDataTable",
@@ -287,7 +284,7 @@
             {title: "Turma", field:"Turma", headerFilter:"input"},
             {title: "Inscritos no Turno", field:"Inscritos no Turno", headerFilter:"input", sorter:"number",headerFilter:minMaxFilterEditor, headerFilterFunc:minMaxFilterFunction, headerFilterLiveFilter:false},
             {title: "Dia da Semana", field:"Dia da Semana", editor:"list", width:100 ,headerFilter:true, headerFilterParams:{values:{"Seg":"Segunda-feira", "Ter":"Terça-feira", "Qua":"Quarta-feira", "Qui":"Quinta-feira" ,"Sex":"Sexta-feira", "Sab":"Sábado", "Dom":"Domingo"}}},
-            {title: "Hora Início da Aula", field:"Hora Início da Aula",editor:"list", headerFilter:true, headerFilterParams:{values:{"08:00":"08:00", "08:30":"08:30", "09:00":"09:00", "09:30":"09:30", "10:00":"10:00", "10:30":"10:30", "11:00":"11:00", "11:30":"11:30", "12:00":"12:00", "12:30":"12:30", "13:00":"13:00", "13:30":"13:30", "14:00":"14:00", "14:30":"14:30", "15:00":"15:00", "15:30":"15:30", "16:00":"16:00", "16:30":"16:30", "17:00":"17:00", "17:30":"17:30", "18:00":"18:00", "18:30":"18:30", "19:00":"19:00", "19:30":"19:30", "20:00":"20:00", "20:30":"20:30","21:00":"21:00", "21:30":"21:30"}}},
+            {title: "Hora Início da Aula", field:"Hora Inicio da Aula",editor:"list", headerFilter:true, headerFilterParams:{values:{"08:00":"08:00", "08:30":"08:30", "09:00":"09:00", "09:30":"09:30", "10:00":"10:00", "10:30":"10:30", "11:00":"11:00", "11:30":"11:30", "12:00":"12:00", "12:30":"12:30", "13:00":"13:00", "13:30":"13:30", "14:00":"14:00", "14:30":"14:30", "15:00":"15:00", "15:30":"15:30", "16:00":"16:00", "16:30":"16:30", "17:00":"17:00", "17:30":"17:30", "18:00":"18:00", "18:30":"18:30", "19:00":"19:00", "19:30":"19:30", "20:00":"20:00", "20:30":"20:30","21:00":"21:00", "21:30":"21:30"}}},
             {title: "Hora Fim da Aula", field:"Hora Fim da Aula", editor:"list", headerFilter:true, headerFilterParams:{values:{"09:30":"09:30", "10:30":"10:30", "11:00":"11:00", "11:30":"11:30" ,"12:00":"12:00", "12:30":"12:30", "13:00":"13:00", "13:30":"13:30", "14:00":"14:00", "14:30":"14:30", "15:00":"15:00", "15:30":"15:30", "16:00":"16:00", "16:30":"16:30", "17:00":"17:00", "17:30":"17:30", "18:00":"18:00", "18:30":"18:30", "19:00":"19:00","19:30":"19:30","20:00":"20:00", "20:30":"20:30", "21:00":"21:00", "21:30":"21:30", "22:00":"22:00", "22:30":"22:30"}}},
             {title: "Data da aula", field:"Data da aula", headerFilter:"input", sorterParams:{format:"dd/MM/yy", alignEmptyValues:"top"}},
             {title: "Caracteristicas da sala pedida para a aula", field:"Caracteristicas da sala pedida para a aula", headerFilter:"input"},
@@ -298,10 +295,6 @@
 
         ],
     });
-
-
-        const horarios = concatenateColumns(data, 'Hora Início da Aula', 'Hora Fim da Aula');
-        console.log(horarios);
 
         document.addEventListener('click', function(event) {
             if (event.target.classList.contains('alterar-aula-button')) {
@@ -461,33 +454,64 @@
      
     </script>
     <script type="text/javascript">
+
         document.addEventListener('DOMContentLoaded', function () {
             const guardarButton = document.getElementById('guardarButton');
 
             guardarButton.addEventListener('click', function (event) {
                 event.preventDefault(); 
 
+
+                var curso = aulaAMudar['Curso'];
+                var uc = aulaAMudar['UC'];
+
                 var semanaPrefValue = document.getElementById('semanaPref').value;
                 var diaDaSemanaPrefValue = document.getElementById('diaDaSemanaPref').value.toLowerCase();
-                //var alturaDoDiaPrefValue = document.getElementById('alturaDoDiaPref').value.toLowerCase();
+                var alturaDoDiaPrefValue = document.getElementById('alturaDoDiaPref').value;
                 var preferenciaSala1Value = document.getElementById('preferenciaSala1').value.toLowerCase();
                 var salasInaceitaveisValue = document.getElementById('salasInaceitaveis').value.toLowerCase();
 
+                var [startHour, endHour] = alturaDoDiaPrefValue.split(',');
+
+        
+
+                // Obrigar o utilizador a preencher os 3 primeiros inputs
+                if (semanaPrefValue === 'semana a selecionar' || diaDaSemanaPrefValue === 'dia da semana a selecionar' || alturaDoDiaPrefValue.value === 'altura do dia a selecionar') {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+
+                var salasOcupadas = [];
+
+              
+
                 var filteredData = horario.filter(function (item) {
+
                     var semanaSemestre = item['Semana do semestre'];
                     var diaDaSemana = item['Dia da Semana'].toLowerCase();
-                    //var horaInicio = item['Hora Inicio da Aula'].toLowerCase();
+                    var horaInicio = item['Hora Inicio da Aula'];
                     var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
                     var salaAtribuida = item['Sala atribuida a aula'].toLowerCase();
+                    var dataAula = item['Data da aula'];
+                    //var ano = parseInt((new Date(dataAula)).getFullYear());
 
-                    return semanaSemestre === semanaPrefValue &&
-                        diaDaSemana.includes(diaDaSemanaPrefValue) &&
-                        //horaInicio.includes(alturaDoDiaPrefValue) &&
-                        (caracteristicasSala.includes(preferenciaSala1Value) || salaAtribuida.includes(preferenciaSala1Value)) &&
-                        !salasInaceitaveisValue.includes(salaAtribuida);
+                    //var anoAtual = 2023;
+
+                    var startTime = parseFloat(item['Hora Inicio da Aula'].replace(':', '.'));
+                    var endTime = parseFloat(item['Hora Fim da Aula'].replace(':', '.'));
+
+
+
+                    var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour;
+
+                    if (condicaoObrigatoria) {
+                        salasOcupadas.push(item['Sala atribuida a aula']);
+                    }
                 });
 
-                console.log(filteredData);
+                // Filtrar as salas repetidas
+                var salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+
             });
         });
 
