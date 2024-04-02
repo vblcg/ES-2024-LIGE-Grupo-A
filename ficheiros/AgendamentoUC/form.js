@@ -120,44 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return horaInteira + minutos;
     }
 
-    const fs = require('fs'); // Módulo File System do Node.js
-
-    async function escreverNoArquivo(nomeArquivo, conteudo) {
-    try {
-        // Caminho para o diretório onde o XAMPP serve os arquivos
-        const caminhoDoDiretorio = 'C:/xampp/htdocs/';
-        
-        // Escrever o conteúdo no arquivo
-        fs.writeFileSync(caminhoDoDiretorio + nomeArquivo, conteudo);
-        
-        console.log("Arquivo escrito com sucesso em " + caminhoDoDiretorio + nomeArquivo);
-    } catch (error) {
-        console.error("Ocorreu um erro ao escrever o arquivo:", error);
-    }
-    }
-
-    async function modificarArquivo(novaString) {
-    try {
-        // Ler o conteúdo do arquivo existente
-        let conteudo = await lerArquivo('slotsDisponiveis.json');
-
-        // Converter o conteúdo do arquivo para um objeto JSON
-        let slots = JSON.parse(conteudo);
-
-        // Adicionar a nova string ao JSON
-        slots.novaChave = novaString;
-
-        // Converter o objeto JSON de volta para uma string
-        conteudo = JSON.stringify(slots);
-
-        // Escrever o conteúdo modificado de volta no arquivo
-        await escreverNoArquivo('slotsDisponiveis.json', conteudo);
-
-        console.log("Arquivo modificado com sucesso!");
-    } catch (error) {
-        console.error("Ocorreu um erro ao modificar o arquivo:", error);
-    }
-    }
     //TO-DO SEMANAS DO SEMESTRE -> COMEÇO DE MARCAÇÃO FORMULARIO
     // LICENCIATURA FORMULARIO
     function adicionarAulas(inputs) {
@@ -295,7 +257,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         "Sala atribuida a aula": filteredSalas[0]
                     };
                     const jsonString = JSON.stringify(novaAula, null, 2);
-                    modificarArquivo(jsonString);
                     exist = true;
                 }
                 horaCount++;
@@ -304,11 +265,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+
+//    document.getElementById('submitButton').addEventListener('click', function() {
+  //  });
+
     // Adicionando um ouvinte de evento para o evento de envio do formulário
-    form.addEventListener('submit', function(event) {
-            event.preventDefault();
+    document.getElementById('userInputForm').addEventListener('submit', function(event) {
+        event.preventDefault();
             console.log("Entrou");
-            alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
+            //alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
             let inputs = [];
         
             //nome uc 0
@@ -367,6 +332,8 @@ document.addEventListener('DOMContentLoaded', function () {
             inputs.push(document.getElementById('semanaSemestre').value);
         
             adicionarAulas(inputs);
+            window.open('SlotsDisponiveis.html', "_blank");
+
     });
 
     // Fazendo uma solicitação HTTP para carregar o arquivo JSON
