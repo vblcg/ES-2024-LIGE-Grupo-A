@@ -110,11 +110,16 @@
     </div>
     <script type="text/javascript">
         var table; // Declarar a variável da tabela
-        var nomesSalas;
         var salas;
         var tiposDeSala;
         var horario;
         var aulaAMudar;
+        // Variável que contém todas as salas possíveis
+        var nomesSalas;
+        // Variável que vai guardar as salas ocupadas
+        var salasOcupadasFiltrado;
+        // Variável que vai guardar as salas disponívies consoante as ocupadas
+        var salasDisponíveis;
 
         /**
          * Esconder e Mostrar colunas
@@ -319,7 +324,10 @@
 
     .then(data => {
 
+
         salas = data;
+        nomesSalas = salas.map(sala => sala['Nome sala']);
+        
 
         /**
          * Adiciona tanto os tipos de sala como as próprias salas, específicados no documento
@@ -327,8 +335,7 @@
          * salas inaceitáveis.
         */
         function initializeSelectOptionsSalas() {
-            tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
-            nomesSalas = salas.map(room => room['Nome sala']);
+            tiposDeSala = Object.keys(salas[1]).slice(5);
 
             const preferenciaSala1 = document.getElementById('preferenciaSala1');
             const salasInaceitaveis = document.getElementById('salasInaceitaveis');
@@ -345,16 +352,6 @@
             });
 
             
-            // Adicionar cada sala existente no json com a Caracterização das Salas aos respetivos inputs
-            nomesSalas.forEach(nomeSala => {
-                const optionPreferencia1 = document.createElement('option');
-                optionPreferencia1.textContent = nomeSala;
-                preferenciaSala1.appendChild(optionPreferencia1);
-
-                const optionSalasInaceitaveis = document.createElement('option');
-                optionSalasInaceitaveis.textContent = nomeSala;
-                salasInaceitaveis.appendChild(optionSalasInaceitaveis);
-            });
         }
 
     initializeSelectOptionsSalas();
@@ -407,13 +404,6 @@
                 optionTipoSala.textContent = tipoDeSala;
                 novaPref.appendChild(optionTipoSala);
             })
-
-            // Adiciona as opções com as salas existentes ao novo input criado
-            nomesSalas.forEach(nomeSala => {
-                const optionSalas = document.createElement('option');
-                optionSalas.textContent = nomeSala;
-                novaPref.appendChild(optionSalas);
-            });
         });
 
         addButtonSalasIn.addEventListener('click', function () {
@@ -439,13 +429,6 @@
                 optionTipoSala.textContent = tipoDeSala;
                 novaPref.appendChild(optionTipoSala);
             })
-
-            // Adiciona as opções com as salas existentes ao novo input criado
-            nomesSalas.forEach(nomeSala => {
-                const optionSalas = document.createElement('option');
-                optionSalas.textContent = nomeSala;
-                novaInaceitavel.appendChild(optionSalas);
-            });
         });
     });
 
@@ -454,6 +437,9 @@
      
     </script>
     <script type="text/javascript">
+
+
+        
 
         document.addEventListener('DOMContentLoaded', function () {
             const guardarButton = document.getElementById('guardarButton');
@@ -480,6 +466,7 @@
                     alert('Por favor, preencha todos os campos obrigatórios.');
                     return;
                 }
+              
 
                 var salasOcupadas = [];
 
@@ -491,7 +478,7 @@
                     var diaDaSemana = item['Dia da Semana'].toLowerCase();
                     var horaInicio = item['Hora Inicio da Aula'];
                     var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
-                    var salaAtribuida = item['Sala atribuida a aula'].toLowerCase();
+                    var salaAtribuida = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
                     var dataAula = item['Data da aula'];
                     //var ano = parseInt((new Date(dataAula)).getFullYear());
 
@@ -500,17 +487,37 @@
                     var startTime = parseFloat(item['Hora Inicio da Aula'].replace(':', '.'));
                     var endTime = parseFloat(item['Hora Fim da Aula'].replace(':', '.'));
 
-
-
-                    var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour;
-
-                    if (condicaoObrigatoria) {
-                        salasOcupadas.push(item['Sala atribuida a aula']);
+                    if (preferenciaSala1Value !== "escolha uma preferência" && salasInaceitaveisValue === "indique as salas inaceitáveis"){
+                        var condicaoComPrefSemIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && salaAtribuida.includes(preferenciaSala1Value);
+                        if (condicaoComPrefSemIna) {
+                            salasOcupadas.push(item['Sala atribuida a aula']);
+                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                        }
+                    } else if(preferenciaSala1Value === "escolha uma preferência" && salasInaceitaveisValue !== "indique as salas inaceitáveis") {
+                        var condicaoSemPreComIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue);
+                        if (condicaoSemPreComIna) {
+                            salasOcupadas.push(item['Sala atribuida a aula']);
+                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                        }
+                    } else if (preferenciaSala1Value !== "escolha uma preferência" && salasInaceitaveisValue !== "indique as salas inaceitáveis"){
+                        var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue) && salaAtribuida.includes(preferenciaSala1Value);
+                        if (condicaoTotal) {
+                            salasOcupadas.push(item['Sala atribuida a aula']);
+                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                        }
+                    } else{
+                        var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour;
+                        if (condicaoObrigatoria) {
+                            salasOcupadas.push(item['Sala atribuida a aula']);
+                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                        }
                     }
+                    
                 });
 
-                // Filtrar as salas repetidas
-                var salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                console.log(salasOcupadas);
+
+                salasDisponíveis = sala
 
             });
         });
