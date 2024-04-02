@@ -39,12 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
             novaPref.appendChild(optionTipoSala);
         })
 
-        // Adiciona as opções com as salas existentes ao novo input criado
-        nomesSalas.forEach(nomeSala => {
-            const optionSalas = document.createElement('option');
-            optionSalas.textContent = nomeSala;
-            novaPref.appendChild(optionSalas);
-        });
     });
 
     addButtonSalasIn.addEventListener('click', function () {
@@ -72,12 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
             novaInaceitavel.appendChild(optionTipoSala);
         })
 
-        // Adiciona as opções com as salas existentes ao novo input criado
-        nomesSalas.forEach(nomeSala => {
-            const optionSalas = document.createElement('option');
-            optionSalas.textContent = nomeSala;
-            novaInaceitavel.appendChild(optionSalas);
-        });
     });
 
     function initializeSelectOptionsSalas() {
@@ -100,15 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
         
         // Adicionar cada sala existente no json com a Caracterização das Salas aos respetivos inputs
-        nomesSalas.forEach(nomeSala => {
-            const optionPreferencia1 = document.createElement('option');
-            optionPreferencia1.textContent = nomeSala;
-            preferenciaSala1.appendChild(optionPreferencia1);
-    
-            const optionSalasInaceitaveis = document.createElement('option');
-            optionSalasInaceitaveis.textContent = nomeSala;
-            salasInaceitaveis.appendChild(optionSalasInaceitaveis);
-        });
     }
      
     fetch(pathJsonSalas)
