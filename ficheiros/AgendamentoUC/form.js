@@ -1,16 +1,18 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     const addButton = document.getElementById('addPreferenceBtn');
-    const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');;
+    const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');
     const preferencesContainer = document.getElementById('preferencias-container');
     const inaceitavelCointainer = document.getElementById('salasInaceitaveis-container');
     const form = document.getElementById('userInputForm');
-    const pathJsonSalas = 'CaracterizacaoDasSalas.json';    
+    const pathJsonSalas = 'CaracterizacaoDasSalas.json';  
+    const slotsJson = 'slotsDisponiveis.json';  
     let preferenceCount = 1;
     let inaceitavelCount = 1;
     let jsonData;
-    var nomesSalas;
-    var salas;
-    var tiposDeSala;
+    let nomesSalas;
+    let salas;
+    let tiposDeSala;
 
     addButton.addEventListener('click', function () {
         preferenceCount++;
@@ -136,32 +138,69 @@ document.addEventListener('DOMContentLoaded', function () {
     function decimalParaHora(decimal) {
         let horaInteira = Math.floor(decimal);
         let minutos = Math.round((decimal - horaInteira) * 60);
-        return hora + minutos;
+        return horaInteira + minutos;
     }
 
+    const fs = require('fs'); // Módulo File System do Node.js
+
+    async function escreverNoArquivo(nomeArquivo, conteudo) {
+    try {
+        // Caminho para o diretório onde o XAMPP serve os arquivos
+        const caminhoDoDiretorio = 'C:/xampp/htdocs/';
+        
+        // Escrever o conteúdo no arquivo
+        fs.writeFileSync(caminhoDoDiretorio + nomeArquivo, conteudo);
+        
+        console.log("Arquivo escrito com sucesso em " + caminhoDoDiretorio + nomeArquivo);
+    } catch (error) {
+        console.error("Ocorreu um erro ao escrever o arquivo:", error);
+    }
+    }
+
+    async function modificarArquivo(novaString) {
+    try {
+        // Ler o conteúdo do arquivo existente
+        let conteudo = await lerArquivo('slotsDisponiveis.json');
+
+        // Converter o conteúdo do arquivo para um objeto JSON
+        let slots = JSON.parse(conteudo);
+
+        // Adicionar a nova string ao JSON
+        slots.novaChave = novaString;
+
+        // Converter o objeto JSON de volta para uma string
+        conteudo = JSON.stringify(slots);
+
+        // Escrever o conteúdo modificado de volta no arquivo
+        await escreverNoArquivo('slotsDisponiveis.json', conteudo);
+
+        console.log("Arquivo modificado com sucesso!");
+    } catch (error) {
+        console.error("Ocorreu um erro ao modificar o arquivo:", error);
+    }
+    }
     //TO-DO SEMANAS DO SEMESTRE -> COMEÇO DE MARCAÇÃO FORMULARIO
     // LICENCIATURA FORMULARIO
     function adicionarAulas(inputs) {
-        let slotsDisponiveis = [];
         let filteredJson = jsonData;
-        numeroAulas = inputs[1];
-        periodos = inputs[2];
-        diasSemanaInput = inputs[3];
-        salasInaceitaveis = inputs[5];
-        numeroAlunos = inputs[6];
-        nomeCurso = inputs[7];
+        let numeroAulas = inputs[1];
+        let periodos = inputs[2];
+        let diasSemanaInput = inputs[3];
+        let salasInaceitaveis = inputs[5];
+        let numeroAlunos = inputs[6];
+        let nomeCurso = inputs[7];
 
         const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
 
         //INICIALIZAÇÃO PARAMETROS SEMANA -> diaSemanaString ex: "Seg", diaSemanaNumero -> para aceder aos arrays, inputsDias -> para verificar se já se viram todos os dias de input
-        if(diasSemanaInput != null) {
-            diaSemanaString = diasSemanaInput[0];
-            diaSemanaNumero = 0;
-            inputsDias = diasSemanaInput.length;
+        if (diasSemanaInput != null) {
+            var diaSemanaString = diasSemanaInput[0];
+            var diaSemanaNumero = 0;
+            var inputsDias = diasSemanaInput.length;
         } else {
-            diaSemanaString = diasDaSemana[0];
-            diaSemanaNumero = 0;
-            inputsDias = 0;
+            var diaSemanaString = diasDaSemana[0];
+            var diaSemanaNumero = 0;
+            var inputsDias = 0;
         }
 
         //FILTRO CAPACIDADE
@@ -169,18 +208,18 @@ document.addEventListener('DOMContentLoaded', function () {
             numeroAlunos = 0;
         let salasDisponiveis = salas.map(room => room['Nome sala']);
 
-        semanaSemestre = parseInt(inputs[8]); 
+        var semanaSemestre = parseInt(inputs[8]); 
         for(let semana = 0; semana < numeroAulas; semana++) {
-            exist = false;
-            horaCount = 1;
+            var exist = false;
+            var horaCount = 1;
              //VER SE HA ALGUMA DAS SALAS PREFERIDAS AQUI
             if(periodos == null) {
-                min = 8.0;
-                max = 9.30;
+                var min = 8.0;
+                var max = 9.30;
             } else {
-                min = parseFloat(periodos[0].split("-")[0]);
-                max = parseFloat(periodos[0].split("-")[1]);
-                countPeriodosInput = 1;
+                var min = parseFloat(periodos[0].split("-")[0]);
+                var max = parseFloat(periodos[0].split("-")[1]);
+                var countPeriodosInput = 1;
             }
             while(!exist) {
                 if(semanaSemestre >= parseInt(inputs[8])+15) {
@@ -204,24 +243,26 @@ document.addEventListener('DOMContentLoaded', function () {
                         semanaSemestre += 1;
                         diaSemanaNumero = 0;
                     }
-                } else if(min + 1.3 > max && countPeriodosInput < periodos.length && periodos != null){
-                    min = parseFloat(periodos[countPeriodosInput].split("-")[0]);
-                    max = parseFloat(periodos[countPeriodosInput].split("-")[1]);
-                    countPeriodosInput ++;
-                } else if(countPeriodosInput >= periodos.length && periodos != null){
-                    diaSemanaNumero += 1;
-                    min = parseFloat(periodos[0].split("-")[0]);
-                    max = parseFloat(periodos[0].split("-")[1]);
-                    if(diasSemanaInput != null && diaSemanaNumero < inputsDias) {
-                        diaSemanaString = diasSemanaInput[diaSemanaNumero]; //SE AINDA HOUVER MAIS DIAS SELECIONADOS PARA VERIFICAR
-                    } else if(diasSemanaInput == null) {
-                        diaSemanaString = diasDaSemana[diaSemanaNumero]; //SE NÃO SE TIVEREM SELECIONADO DIAS
-                    } else if(semanaSemestre >= 15) { 
-                        alert("Não há slots suficientes para as condições pedidas. Tente novamente.");
-                        break;
-                    } else {
-                        semanaSemestre += 1;
-                        diaSemanaNumero = 0;
+                } else if(periodos != null){
+                    if(min + 1.3 > max && countPeriodosInput < periodos.length) {
+                        min = parseFloat(periodos[countPeriodosInput].split("-")[0]);
+                        max = parseFloat(periodos[countPeriodosInput].split("-")[1]);
+                        countPeriodosInput ++;
+                    } else if(countPeriodosInput >= periodos.length){
+                        diaSemanaNumero += 1;
+                        min = parseFloat(periodos[0].split("-")[0]);
+                        max = parseFloat(periodos[0].split("-")[1]);
+                        if(diasSemanaInput != null && diaSemanaNumero < inputsDias) {
+                            diaSemanaString = diasSemanaInput[diaSemanaNumero]; //SE AINDA HOUVER MAIS DIAS SELECIONADOS PARA VERIFICAR
+                        } else if(diasSemanaInput == null) {
+                            diaSemanaString = diasDaSemana[diaSemanaNumero]; //SE NÃO SE TIVEREM SELECIONADO DIAS
+                        } else if(semanaSemestre >= 15) { 
+                            alert("Não há slots suficientes para as condições pedidas. Tente novamente.");
+                            break;
+                        } else {
+                            semanaSemestre += 1;
+                            diaSemanaNumero = 0;
+                        }
                     }
                 } else if(periodos == null){
                     min += decimalParaHora((1.3 * horaCount));
@@ -248,11 +289,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 //FILTRO POR SLOT
                 filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
                 filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);            
-                salasOcupadas = filteredJson.map(room => room['Sala atribuida a aula']);
+                var salasOcupadas = filteredJson.map(room => room['Sala atribuida a aula']);
                 filteredSalas = filteredSalas.filter(entry => !salasOcupadas.includes(entry));
 
                 //PREFERÊNCIA AULAS
-                salaAlocada = filteredSalas[0];
+                var salaAlocada = filteredSalas[0];
                 if(filteredSalas.filter(entry => inputs[4].includes(entry)).length != 0) {
                     salaAlocada = filteredSalas.filter(entry => inputs[4].includes(entry))[0];
                 }
@@ -274,14 +315,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         "Caracteristicas da sala pedida para a aula": "",
                         "Sala atribuida a aula": filteredSalas[0]
                     };
-                    slotsDisponiveis.push(novaAula);
+                    const jsonString = JSON.stringify(novaAula, null, 2);
+                    modificarArquivo(jsonString);
                     exist = true;
                 }
                 horaCount++;
                 semanaSemestre++;
             }     
         }
-        console.log(slotsDisponiveis);
     }
 
     // Adicionando um ouvinte de evento para o evento de envio do formulário
@@ -289,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             console.log("Entrou");
             alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
-            inputs = [];
+            let inputs = [];
         
             //nome uc 0
             inputs.push(document.getElementById('UC').value);
