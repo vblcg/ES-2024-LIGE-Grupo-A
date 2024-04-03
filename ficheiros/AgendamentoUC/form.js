@@ -3,20 +3,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');
     const preferencesContainer = document.getElementById('preferencias-container');
     const inaceitavelCointainer = document.getElementById('salasInaceitaveis-container');
-    const form = document.getElementById('userInputForm');
     const pathJsonSalas = 'CaracterizacaoDasSalas.json';  
-    const slotsJson = 'slotsDisponiveis.json';  
     let preferenceCount = 1;
     let inaceitavelCount = 1;
     let jsonData;
-    let nomesSalas;
     let salas;
     let tiposDeSala;
 
     addButton.addEventListener('click', function () {
         preferenceCount++;
-
-        // Adiciona um novo input para as salas preferidas
         const preferenceDiv = document.createElement('div');
         preferenceDiv.classList.add('form-group');
         preferenceDiv.innerHTML = `<div class="form-group">
@@ -24,14 +19,10 @@ document.addEventListener('DOMContentLoaded', function () {
             <select class="form-select" id="preferenciaSala${preferenceCount}" aria-label="Default select example">
                 <option selected>Escolha uma Preferência</option>
             </select>
-            </div>
-        `;
+            </div>`;
 
         preferencesContainer.appendChild(preferenceDiv);
-
         const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`);
-
-        // Adiciona as opções de tipo de sala ao novo input criado
         tiposDeSala.forEach(tipoDeSala => {
             const optionTipoSala = document.createElement('option');
             optionTipoSala.textContent = tipoDeSala;
@@ -42,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     addButtonSalasIn.addEventListener('click', function () {
         inaceitavelCount++;
-
         // Adiciona um novo input para as salas inaceitáveis
         const inaceitavelDiv = document.createElement('div');
         inaceitavelDiv.classList.add('form-group');
@@ -51,20 +41,16 @@ document.addEventListener('DOMContentLoaded', function () {
             <select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
                 <option selected>Escolha uma sala inaceitável</option>
             </select>
-            </div>
-        `;
+            </div>`;
 
         inaceitavelCointainer.appendChild(inaceitavelDiv);
-
         const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`);
 
-        // Adiciona as opções de tipo de sala ao novo input criado
         tiposDeSala.forEach(tipoDeSala => {
             const optionTipoSala = document.createElement('option');
             optionTipoSala.textContent = tipoDeSala;
             novaInaceitavel.appendChild(optionTipoSala);
         })
-
     });
 
     function initializeSelectOptionsSalas() {
@@ -88,13 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
      
     fetch(pathJsonSalas)
         .then(response => {
-            // Verificar se o request foi bem sucedido
             if (!response.ok) {
                 throw new Error(`Failed to fetch ${pathJsonSalas}: ${response.statusText}`);
             }
-    
-            // Parse the JSON data
-            console.log(response.json);
             return response.json();
         })
     
@@ -109,15 +91,12 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error(`Error loading ${pathJsonSalas}:`, error);
     });
 
-
     function decimalParaHora(decimal) {
         let horaInteira = Math.floor(decimal);
         let minutos = decimal - horaInteira;
         if(minutos == 0.6) return Math.round(horaInteira); else return decimal;
     }
 
-    //TO-DO SEMANAS DO SEMESTRE -> COMEÇO DE MARCAÇÃO FORMULARIO
-    // LICENCIATURA FORMULARIO
     function adicionarAulas(inputs) {
         let filteredJson = jsonData;
         let numeroAulas = inputs[1];
@@ -140,8 +119,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var diaSemanaNumero = 0;
             var inputsDias = 0;
         }
-
-        //FILTRO CAPACIDADE
         if(numeroAlunos == null) 
             numeroAlunos = 0;
         let salasDisponiveis = salas.map(room => room['Nome sala']);
@@ -160,10 +137,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 var countPeriodosInput = 1;
             }
             while(!exist) {
-                if(semanaSemestre >= parseInt(inputs[8])+15) {
+                if (semanaSemestre >= parseInt(inputs[8]) + 15) {
                     alert("Não é possível marcar o número de aulas pedido. Tente novamente.");
                     break;
                 }
+                getNextSlot();
+                getNextPeriod();
                 //QUANDO SE VIU TODOS OS SLOTS DO DIA
                 if(max + (1.67 * horaCount) >= 23.00 && periodos == null) {
                     min = 8.0;
@@ -210,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     min = decimalParaHora(min + 1.3);
                 }
 
+                //FILTRO CAPACIDADE
                 let filteredSalas = [];
                 salas.forEach(entry => {
                     if(parseFloat(entry['Capacidade Normal']) >= numeroAlunos && salasDisponiveis.includes(entry['Nome sala']))
@@ -271,11 +251,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
-//    document.getElementById('submitButton').addEventListener('click', function() {
-  //  });
-
-    // Adicionando um ouvinte de evento para o evento de envio do formulário
     document.getElementById('userInputForm').addEventListener('submit', function(event) {
         event.preventDefault();
             console.log("Entrou");
@@ -317,7 +292,6 @@ document.addEventListener('DOMContentLoaded', function () {
             else
                 inputs.push(null);
         
-        
             //preferencia sala 4
             const preferenciaSalaSelect = document.getElementById("preferenciaSala1");
             const selectedOptions = preferenciaSalaSelect.selectedOptions;
@@ -353,6 +327,4 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
             console.error('Ocorreu um erro ao carregar o arquivo JSON:', error);
         });
-
-
 });
