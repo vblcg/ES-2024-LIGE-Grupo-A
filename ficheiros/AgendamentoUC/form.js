@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const addButton = document.getElementById('addPreferenceBtn');
     const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function initializeSelectOptionsSalas() {
-        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
+        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD (Bring Your Own Device)', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
         nomesSalas = salas.map(room => room['Nome sala']);
     
         const preferenciaSala1 = document.getElementById('preferenciaSala1');
@@ -85,9 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
             OptionTipoSalaInaceitavel.textContent = tipoDeSala;
             salasInaceitaveis.appendChild(OptionTipoSalaInaceitavel);
         });
-    
-        
-        // Adicionar cada sala existente no json com a Caracterização das Salas aos respetivos inputs
     }
      
     fetch(pathJsonSalas)
@@ -116,8 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function decimalParaHora(decimal) {
         let horaInteira = Math.floor(decimal);
-        let minutos = Math.round((decimal - horaInteira) * 60);
-        return horaInteira + minutos;
+        let minutos = decimal - horaInteira;
+        if(minutos == 0.6) return Math.round(horaInteira); else return decimal;
     }
 
     //TO-DO SEMANAS DO SEMESTRE -> COMEÇO DE MARCAÇÃO FORMULARIO
@@ -127,10 +123,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let numeroAulas = inputs[1];
         let periodos = inputs[2];
         let diasSemanaInput = inputs[3];
+        let preferencias = inputs[4];
         let salasInaceitaveis = inputs[5];
-        let numeroAlunos = inputs[6];
+        var numeroAlunos = inputs[6];
         let nomeCurso = inputs[7];
-
+        var preferencia = null;
         const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
 
         //INICIALIZAÇÃO PARAMETROS SEMANA -> diaSemanaString ex: "Seg", diaSemanaNumero -> para aceder aos arrays, inputsDias -> para verificar se já se viram todos os dias de input
@@ -184,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         semanaSemestre += 1;
                         diaSemanaNumero = 0;
                     }
-                } else if(periodos != null){
+                } else if(periodos != null){ //adicionar algo senao else nunca e lido
                     if(min + 1.3 > max && countPeriodosInput < periodos.length) {
                         min = parseFloat(periodos[countPeriodosInput].split("-")[0]);
                         max = parseFloat(periodos[countPeriodosInput].split("-")[1]);
@@ -208,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if(periodos == null){
                     min += decimalParaHora((1.3 * horaCount));
                     max += decimalParaHora((1.3 * horaCount));
+                    horaCount ++;
                 } else {
                     min = decimalParaHora(min + 1.3);
                 }
@@ -215,11 +213,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 let filteredSalas = [];
                 salas.forEach(entry => {
                     if(parseFloat(entry['Capacidade Normal']) >= numeroAlunos && salasDisponiveis.includes(entry['Nome sala']))
-                        filteredSalas.push((entry['Nome sala']));
+                        filteredSalas.push(entry);
                 });
+                console.log(filteredSalas);
 
                 //FILTRO SALAS INACEITAVEIS
-                filteredSalas = filteredSalas.filter(entry => !salasInaceitaveis.includes(entry));
+                filteredSalas = filteredSalas.filter(entry => !salasInaceitaveis.includes(entry['Caracteristicas da sala pedida para a aula']));
+                console.log(filteredSalas);
                 
                 //FILTRO DIA DA SEMANA
                 filteredJson = jsonData.filter(entry => diaSemanaString == entry['Dia da Semana']);
@@ -231,16 +231,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 filteredJson = filteredJson.filter(entry => min <= parseFloat(entry["Hora Inicio da Aula"].split(':')[0] + '.' + entry["Hora Inicio da Aula"].split(':')[1]));
                 filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);            
                 var salasOcupadas = filteredJson.map(room => room['Sala atribuida a aula']);
-                filteredSalas = filteredSalas.filter(entry => !salasOcupadas.includes(entry));
+                filteredSalas = filteredSalas.filter(entry => !salasOcupadas.includes(entry['Nome sala']));
+                console.log(filteredSalas);
 
-                //PREFERÊNCIA AULAS
-                var salaAlocada = filteredSalas[0];
-                if(filteredSalas.filter(entry => inputs[4].includes(entry)).length != 0) {
-                    salaAlocada = filteredSalas.filter(entry => inputs[4].includes(entry))[0];
-                }
-                console.log("SALA ATRIBUIDA: " + filteredSalas[0]);
                 //NAO ESTA COMPLETO ATENÇÃO
                 if(filteredSalas.length > 0) {
+                    //PREFERÊNCIA AULAS
+                    var salaAlocada = filteredSalas[0];
+                    for(let pref = 0; pref < preferencias.length; pref ++) {
+                        console.log(preferencias[pref]);
+                        if(filteredSalas.filter(entry => entry[preferencias[pref]] == 1).length > 0) {
+                            salaAlocada = filteredSalas.filter(entry => entry[preferencias[pref]] == 1)[0];
+                            preferencia = preferencias[pref];
+                        }
+                    }
+                    
                     const novaAula = {
                         "Curso": nomeCurso,
                         "UC": inputs[0],
@@ -253,9 +258,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         "Data da aula": "",
                         "Semana do ano": "",
                         "Semana do semestre": semanaSemestre,
-                        "Caracteristicas da sala pedida para a aula": "",
-                        "Sala atribuida a aula": filteredSalas[0]
+                        "Caracteristicas da sala pedida para a aula": preferencia,
+                        "Sala atribuida a aula": salaAlocada['Nome sala'],
                     };
+                    console.log(novaAula);
                     const jsonString = JSON.stringify(novaAula, null, 2);
                     exist = true;
                 }
