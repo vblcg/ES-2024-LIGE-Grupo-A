@@ -117,9 +117,10 @@
         // Variável que contém todas as salas possíveis
         var nomesSalas;
         // Variável que vai guardar as salas ocupadas
-        var salasOcupadasFiltrado;
         // Variável que vai guardar as salas disponívies consoante as ocupadas
-        var salasDisponiveis;
+        var salasDisponiveis = [];
+        var caracteristaDasSalas;
+        var salasPreferidas = [];
 
         /**
          * Esconder e Mostrar colunas
@@ -446,15 +447,25 @@
             guardarButton.addEventListener('click', function (event) {
                 event.preventDefault(); 
 
+                caracteristaDasSalas = salas;
+
+                caracteristaDasSalas.forEach(function(obj) {
+                    delete obj["Edifício"];
+                    delete obj['Capacidade Normal'];
+                    delete obj['Nº características'];
+                    delete obj['Capacidade Exame'];
+                    delete obj['Capacidade Normal'];
+                });
+
 
                 var curso = aulaAMudar['Curso'];
                 var uc = aulaAMudar['UC'];
 
                 var semanaPrefValue = document.getElementById('semanaPref').value;
-                var diaDaSemanaPrefValue = document.getElementById('diaDaSemanaPref').value.toLowerCase();
+                var diaDaSemanaPrefValue = document.getElementById('diaDaSemanaPref').value;
                 var alturaDoDiaPrefValue = document.getElementById('alturaDoDiaPref').value;
-                var preferenciaSala1Value = document.getElementById('preferenciaSala1').value.toLowerCase();
-                var salasInaceitaveisValue = document.getElementById('salasInaceitaveis').value.toLowerCase();
+                var preferenciaSala1Value = document.getElementById('preferenciaSala1').value;
+                var salasInaceitaveisValue = document.getElementById('salasInaceitaveis').value;
 
                 var [startHour, endHour] = alturaDoDiaPrefValue.split(',');
 
@@ -473,10 +484,10 @@
                 var filteredData = horario.filter(function (item) {
 
                     var semanaSemestre = item['Semana do semestre'];
-                    var diaDaSemana = item['Dia da Semana'].toLowerCase();
+                    var diaDaSemana = item['Dia da Semana'];
                     var horaInicio = item['Hora Inicio da Aula'];
-                    var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
-                    var salaAtribuida = item['Caracteristicas da sala pedida para a aula'].toLowerCase();
+                    var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'];
+                    var salaAtribuida = item['Caracteristicas da sala pedida para a aula'];
                     var dataAula = item['Data da aula'];
                     //var ano = parseInt((new Date(dataAula)).getFullYear());
 
@@ -485,38 +496,53 @@
                     var startTime = parseFloat(item['Hora Inicio da Aula'].replace(':', '.'));
                     var endTime = parseFloat(item['Hora Fim da Aula'].replace(':', '.'));
 
-                    if (preferenciaSala1Value !== "escolha uma preferência" && salasInaceitaveisValue === "indique as salas inaceitáveis"){
+                    // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
+                    if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
                         var condicaoComPrefSemIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && salaAtribuida.includes(preferenciaSala1Value);
                         if (condicaoComPrefSemIna) {
                             salasOcupadas.push(item['Sala atribuida a aula']);
-                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                            salasOcupadas = [...new Set(salasOcupadas)];
                         }
 
-                        // Para obter as salas disponíveis devemos usar a variável salas, para
-                        // podermos pesquisar pela caracterista da sala, ou seja, se tem ou não "X"
-                    } else if(preferenciaSala1Value === "escolha uma preferência" && salasInaceitaveisValue !== "indique as salas inaceitáveis") {
+                        caracteristaDasSalas.filter(function(item) {
+                            var condicao = item[preferenciaSala1Value] === 1;
+                            if (condicao){
+                                salasPreferidas.push(item['Nome sala']);
+                                salasPreferidas  = [...new Set(salasPreferidas)];
+                            }
+                        });
+
+                        salasDisponiveis = salasPreferidas.filter(function(sala) {
+                            return !salasOcupadas.includes(sala);
+                        });
+
+
+                        // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
+                    } else if(preferenciaSala1Value === "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
                         var condicaoSemPreComIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue);
                         if (condicaoSemPreComIna) {
                             salasOcupadas.push(item['Sala atribuida a aula']);
-                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                            salasOcupadas = [...new Set(salasOcupadas)];
                         }
 
-                        // Para obter as salas disponíveis devemos usar a variável salas, para
-                        // podermos pesquisar pela caracterista da sala, ou seja, se tem ou não "X"
-                    } else if (preferenciaSala1Value !== "escolha uma preferência" && salasInaceitaveisValue !== "indique as salas inaceitáveis"){
+                        
+
+                        // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
+                    } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
                         var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue) && salaAtribuida.includes(preferenciaSala1Value);
                         if (condicaoTotal) {
                             salasOcupadas.push(item['Sala atribuida a aula']);
-                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                            salasOcupadas = [...new Set(salasOcupadas)];
                         }
 
-                        // Para obter as salas disponíveis devemos usar a variável salas, para
-                        // podermos pesquisar pela caracterista da sala, ou seja, se tem ou não "X"
+                        
+
+                        // Condição quando o utilizador apenas indica os inputs obrigatórios
                     } else{
                         var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour;
                         if (condicaoObrigatoria) {
                             salasOcupadas.push(item['Sala atribuida a aula']);
-                            salasOcupadasFiltrado = [...new Set(salasOcupadas)];
+                            salasOcupadas = [...new Set(salasOcupadas)];
                         }
                         
                         // Obter todas as salas que estão disponíveis (todas menos as ocupadas)
@@ -526,6 +552,7 @@
                 });
 
                 console.log(salasDisponiveis);
+
 
             });
         });
