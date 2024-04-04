@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -147,7 +148,7 @@ public class Extract{
                             "Hora Inicio da Aula", "Hora Fim da Aula", "Data da aula", 
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8)); 
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), Charset.defaultCharset())); 
             FileWriter writer = new FileWriter(new File(outputFile))) {
 
             writer.write("[\n");
