@@ -2,9 +2,13 @@ package iscte;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,28 +19,25 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.GsonBuilder;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 
 /**
- * Esta classe tem com funcionalidade ler o ficheiro CSV que contém o horário das aulas e convertê-lo num ficheiro com formato JSON
+ * Esta classe tem com funcionalidade ler o ficheiro CSV que contem o horario das aulas e converte-lo num ficheiro com formato JSON
  */
 public class Extract{
-    private static String outputFile;
-    private static String inputFile;
+    private String outputFile;
+    private File[] inputFile;
+    private File outputJsonFile;
 
-
-    /**
-     * Main, que cria uma instância da classe Extract, com o ficheiro CSV de input e o ficheiro JSON de output desejado e invoca a função
-     * de conversão
-     *
-     * @param args Argumento não usado
-     */
     public static void main(String[] args) {
-        Extract teste = new Extract("HorarioDeExemplo.csv", "output.json");
-        teste.readCsvUsingBufferReader();
+        String inputFile = "HorarioDeExemplo.csv";
+        String outputFile = "output.json";
+
+        File[] file = new File[1];
+        file[0] = new File(inputFile);
+        
+        Extract extract = new Extract(file, outputFile);
+
+        extract.readCsvUsingBufferReader();
     }
 
     /**
@@ -45,24 +46,43 @@ public class Extract{
      * @param inputFile String que representa o ficheiro CSV de input.
      * @param outputFile String que representa o ficheiro de output.
      */
-    public Extract(String inputFile, String outputFile) {
+    public Extract(File[] inputFile, String outputFile) {
         this.outputFile = outputFile;
         this.inputFile = inputFile;
+        this.outputJsonFile = new File(outputFile);
+    }
+
+    /** 
+     * @return File
+     */
+    public File getOutputJsonFile() {
+        return outputJsonFile;
     }
 
     /**
      * Obtém o path do ficheiro de output.
      * @return O path do ficheiro de ouput.
      */
-    public static String getOutputFile() {
+    public String getOutputFile() {
         return outputFile;
     }
+
 
     /**
      * Obtém o path do ficheiro de input.
      * @return O path do ficheiro de input.
      */
-    public static String getInputFile() {
+    public String getInputFile() {
+        return inputFile[0].getPath();
+    }
+
+    /**
+     * Obtém o array de objetos File representando os arquivos CSV de entrada.
+     *
+     * @return Um array de objetos File representando os arquivos CSV de entrada.
+     */
+
+     public File[] getHolder() {
         return inputFile;
     }
 
@@ -70,7 +90,7 @@ public class Extract{
      * @param data Data no formato "DD/MM/AAAA"
      * @return Número da semana do ano da "data"
      */
-    public static int getSemanaAno(String data){
+    public int getSemanaAno(String data){
         int semana_do_ano = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date dataAula;
@@ -93,7 +113,7 @@ public class Extract{
      * @return  Numero da semana do semestre calculado com base na data "02/09/2022"
      * Temporario
      */
-    public static long getSemanaSemestre(String data) {
+    public long getSemanaSemestre(String data) {
         
         // Define SimpleDateFormat object with pattern
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -118,10 +138,10 @@ public class Extract{
             // Calculate the difference in weeks
             if (givenDateCal.get(Calendar.MONTH) >= Calendar.SEPTEMBER || givenDateCal.get(Calendar.MONTH) == Calendar.JANUARY) {
                 long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateFirstSemester.getTimeInMillis();
-                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
+                diffInWeeks = (long) (Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7)) + 1);
             } else {
                 long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateSecondSemester.getTimeInMillis();
-                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
+                diffInWeeks = (long) (Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7)) + 1);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -133,14 +153,14 @@ public class Extract{
      * um ficheiro JSON. Calcula também a semana do ano e a semana do semestre, recorrendo à data das aulas, e adiciona
      * esta informação extra a cada registo do ficheiro JSON.
      */
-    public static void readCsvUsingBufferReader(){
+    public void readCsvUsingBufferReader(){
 
         String line = "";
         String[] colunas = {"Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana", 
-                            "Hora Início da Aula", "Hora Fim da Aula", "Data da aula", 
+                            "Hora Inicio da Aula", "Hora Fim da Aula", "Data da aula", 
                             "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula"};
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); 
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getHolder()[0]), Charset.defaultCharset())); 
             FileWriter writer = new FileWriter(new File(outputFile))) {
 
             writer.write("[\n");
