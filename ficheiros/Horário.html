@@ -121,6 +121,7 @@
         var salasDisponiveis = [];
         var caracteristaDasSalas;
         var salasPreferidas = [];
+        var salasInaceitaveisSelec = [];
 
         /**
          * Esconder e Mostrar colunas
@@ -440,6 +441,20 @@
     <script type="text/javascript">
 
 
+
+        /**
+         * Verifica se um array está vazio.
+         * @param {Array} array - O array a ser verificado.
+         * @returns {boolean} - Retorna verdadeiro se o array estiver vazio, caso contrário, retorna falso.
+         */
+        function checkIfEmpty(array) {
+            if (array.length === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         
         document.addEventListener('DOMContentLoaded', function () {
             const guardarButton = document.getElementById('guardarButton');
@@ -508,7 +523,6 @@
                             var condicao = item[preferenciaSala1Value] === 1;
                             if (condicao){
                                 salasPreferidas.push(item['Nome sala']);
-                                salasPreferidas  = [...new Set(salasPreferidas)];
                             }
                         });
 
@@ -525,6 +539,17 @@
                             salasOcupadas = [...new Set(salasOcupadas)];
                         }
 
+                        caracteristaDasSalas.filter(function(item) {
+                            var condicao = item[salasInaceitaveisValue] === 1;
+                            if (condicao){
+                                salasInaceitaveisSelec.push(item['Nome sala']);
+                            }
+                        });
+
+                        salasDisponiveis = nomesSalas.filter(function(sala) {
+                            return !salasOcupadas.includes(sala) && !salasInaceitaveisSelec.includes(sala);
+                        });
+
                         
 
                         // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
@@ -535,7 +560,30 @@
                             salasOcupadas = [...new Set(salasOcupadas)];
                         }
 
-                        
+                        caracteristaDasSalas.filter(function(item) {
+                            var condicao = item[preferenciaSala1Value] === 1;
+                            if (condicao){
+                                salasPreferidas.push(item['Nome sala']);
+                            }
+                        });
+
+                        caracteristaDasSalas.filter(function(item) {
+                            var condicao = item[salasInaceitaveisValue] === 1;
+                            if (condicao){
+                                salasInaceitaveisSelec.push(item['Nome sala']);
+                            }
+                        });
+
+                        salasDisponiveis = salasPreferidas.filter(function(sala) {
+                            return !salasOcupadas.includes(sala);
+                        });
+
+                        // No caso de nenhuma das salas preferidas estar disponível
+                        if (checkIfEmpty(salasDisponiveis)) {
+                            salasDisponiveis = nomesSalas.filter(function(sala) {
+                                return !salasOcupadas.includes(sala) && !salasInaceitaveisSelec.includes(sala);
+                            });
+                        }
 
                         // Condição quando o utilizador apenas indica os inputs obrigatórios
                     } else{
