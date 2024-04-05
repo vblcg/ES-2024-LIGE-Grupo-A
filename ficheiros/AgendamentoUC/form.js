@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
     
             salas = data;
-            console.log(salas)
     
             initializeSelectOptionsSalas();
     })
@@ -91,12 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error(`Error loading ${pathJsonSalas}:`, error);
     });
 
+    //testado
     function decimalParaHora(decimal) {
         let horaInteira = Math.floor(decimal);
         let minutos = decimal - horaInteira;
         if(minutos == 0.6) return Math.round(horaInteira); else return decimal;
     }
 
+    //testado
     function initParametrosSemana(diasSemanaInput) {
         const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
         var diaSemanaNumero = 0;
@@ -110,12 +111,38 @@ document.addEventListener('DOMContentLoaded', function () {
         return [diaSemanaNumero, diaSemanaString, inputsDias];
     }
 
+    //testado
     function filterCapacidade(salas, numeroAlunos) {
         if(numeroAlunos != null) {
             return salas.filter(entry => parseFloat(entry['Capacidade Normal']) >= numeroAlunos);
         } else {
             return salas;
         }
+    }
+
+    function parseHour(hour) {
+        if(hour.toString().includes("."))
+            return hour.toString().replace(".", ":") + "0";
+        return hour;
+    }
+
+    function criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, semanaSemestre, preferencia, salaAlocada) {
+        const novaAula = {
+            "Curso": nomeCurso,
+            "UC": UC,
+            "Turno": 1,
+            "Turma": 1,
+            "Inscritos no Turno": parseInt(numeroAlunos),
+            "Dia da Semana": diaSemanaString,
+            "Hora Inicio da Aula": parseHour(min),
+            "Hora Fim da Aula": parseHour(max),
+            "Data da aula": "",
+            "Semana do ano": "",
+            "Semana do semestre": semanaSemestre,
+            "Caracteristicas da sala pedida para a aula": preferencia,
+            "Sala atribuida a aula": salaAlocada['Nome sala'],
+        };
+        return novaAula;
     }
 
     function adicionarAulas(inputs) {
@@ -133,8 +160,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //INICIALIZAÇÃO PARAMETROS SEMANA -> diaSemanaString ex: "Seg", diaSemanaNumero -> para aceder aos arrays, inputsDias -> para verificar se já se viram todos os dias de input
         let results = initParametrosSemana(diasSemanaInput); //Testado
-        var diaSemanaString = results[0];
-        var diaSemanaNumero = results[1];
+        var diaSemanaNumero = results[0];
+        var diaSemanaString = results[1];
         var inputsDias = results[2];
         //let salasDisponiveis = salas.map(room => room['Nome sala']);
 
@@ -155,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     alert("Não é possível marcar o número de aulas pedido. Tente novamente.");
                     break;
                 }
+                //console.log(semanaSemestre);
                 //LÓGICA SLOTS
                 if(periodos == null) {
                     if(max + (1.67 * horaCount) >= 23.00) {
@@ -207,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 //FILTRO SALAS INACEITAVEIS
                 filteredSalas = filteredSalas.filter(entry => !salasInaceitaveis.includes(entry['Caracteristicas da sala pedida para a aula']));
-                console.log(filteredSalas);
                 
                 //FILTRO DIA DA SEMANA
                 filteredJson = jsonData.filter(entry => diaSemanaString == entry['Dia da Semana']);
@@ -220,7 +247,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 filteredJson = filteredJson.filter(entry =>  parseFloat(entry["Hora Fim da Aula"].split(':')[0] + '.' + entry["Hora Fim da Aula"].split(':')[1]) <= max);            
                 var salasOcupadas = filteredJson.map(room => room['Sala atribuida a aula']);
                 filteredSalas = filteredSalas.filter(entry => !salasOcupadas.includes(entry['Nome sala']));
-                console.log(filteredSalas);
 
                 if(filteredSalas.length > 0) {
                     //PREFERÊNCIA SALAS
@@ -232,21 +258,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             preferencia = preferencias[pref];
                         }
                     }
-                    const novaAula = {
-                        "Curso": nomeCurso,
-                        "UC": UC,
-                        "Turno": "1",
-                        "Turma": "",
-                        "Inscritos no Turno": numeroAlunos,
-                        "Dia da Semana": diaSemanaString,
-                        "Hora Inicio da Aula": min,
-                        "Hora Fim da Aula": max,
-                        "Data da aula": "",
-                        "Semana do ano": "",
-                        "Semana do semestre": semanaSemestre,
-                        "Caracteristicas da sala pedida para a aula": preferencia,
-                        "Sala atribuida a aula": salaAlocada['Nome sala'],
-                    };
+                    //console.log(semanaSemestre);
+                    const novaAula = criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, semanaSemestre, preferencia, salaAlocada);
                     console.log(novaAula);
                     exist = true;
                 }
