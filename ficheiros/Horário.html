@@ -80,7 +80,7 @@
                         <div id="preferencias-container">
                             <p>Preferência nº1:</p>
                             <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
-                                <option selected>Escolha uma Preferência</option>
+                                <option selected>Escolha uma preferência</option>
                             </select>
                         </div>
                         <button type="button" class="btn btn-secondary" id="addPreferenceBtn">Adicionar Preferência</button>
@@ -601,13 +601,12 @@
                             salasOcupadas = [...new Set(salasOcupadas)];
                         }
                         
+                        console.log(salasOcupadas);
                         // Obter todas as salas que estão disponíveis (todas menos as ocupadas)
                         salasDisponiveis = nomesSalas.filter(nomeSala => !salasOcupadas.includes(nomeSala));
                     }
                     
                 });
-
-                console.log(salasDisponiveis);
 
 
             });

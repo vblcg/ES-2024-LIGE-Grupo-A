@@ -6,7 +6,7 @@ var tiposDeSala;
 var horario;
 var aulaAMudar;
 // Variável que contém todas as salas possíveis
-var nomesSalas;
+var nomesSalas = [];
 // Variável que vai guardar as salas ocupadas
 // Variável que vai guardar as salas disponívies consoante as ocupadas
 var salasDisponiveis = [];
@@ -383,7 +383,6 @@ fetch(pathJsonSalas)
 
                 var semanaSemestre = item['Semana do semestre'];
                 var diaDaSemana = item['Dia da Semana'];
-                var horaInicio = item['Hora Inicio da Aula'];
                 var caracteristicasSala = item['Caracteristicas da sala pedida para a aula'];
                 var salaAtribuida = item['Caracteristicas da sala pedida para a aula'];
                 var dataAula = item['Data da aula'];
@@ -393,6 +392,8 @@ fetch(pathJsonSalas)
 
                 var startTime = parseFloat(item['Hora Inicio da Aula'].replace(':', '.'));
                 var endTime = parseFloat(item['Hora Fim da Aula'].replace(':', '.'));
+
+                
 
                 // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
                 if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
@@ -444,15 +445,12 @@ fetch(pathJsonSalas)
                     }
 
                     caracteristaDasSalas.filter(function(item) {
-                        var condicao = item[preferenciaSala1Value] === 1;
-                        if (condicao){
+                        var condicao1 = item[preferenciaSala1Value] === 1;
+                        var condicao2 = item[salasInaceitaveisValue] === 1;
+                        if (condicao1){
                             salasPreferidas.push(item['Nome sala']);
-                        }
-                    });
-
-                    caracteristaDasSalas.filter(function(item) {
-                        var condicao = item[salasInaceitaveisValue] === 1;
-                        if (condicao){
+                        } 
+                        if (condicao2){
                             salasInaceitaveisSelec.push(item['Nome sala']);
                         }
                     });
@@ -460,6 +458,7 @@ fetch(pathJsonSalas)
                     salasDisponiveis = salasPreferidas.filter(function(sala) {
                         return !salasOcupadas.includes(sala);
                     });
+
 
                     // No caso de nenhuma das salas preferidas estar disponível
                     if (salasDisponiveis.length === 0) {
@@ -475,6 +474,7 @@ fetch(pathJsonSalas)
                         salasOcupadas.push(item['Sala atribuida a aula']);
                         salasOcupadas = [...new Set(salasOcupadas)];
                     }
+
                     
                     // Obter todas as salas que estão disponíveis (todas menos as ocupadas)
                     salasDisponiveis = nomesSalas.filter(nomeSala => !salasOcupadas.includes(nomeSala));
@@ -482,8 +482,7 @@ fetch(pathJsonSalas)
                 
             });
 
-            console.log(salasDisponiveis);
-
+              console.log(salasOcupadas); 
 
         });
     });
