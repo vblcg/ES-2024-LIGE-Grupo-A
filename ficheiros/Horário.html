@@ -384,53 +384,61 @@
         let inaceitavelCount = 1;
 
         addButton.addEventListener('click', function () {
-            preferenceCount++;
+            if(preferenceCount <= 2) {
+                preferenceCount++;
 
-            // Adiciona um novo input para as salas preferidas
-            const preferenceDiv = document.createElement('div');
-            preferenceDiv.classList.add('form-group');
-            preferenceDiv.innerHTML = `
-                <p>Preferência nº${preferenceCount}:</p>
-                <select class="form-select" id="preferenciaSala${preferenceCount}" aria-label="Default select example">
-                    <option selected>Escolha uma Preferência</option>
-                </select>
-            `;
+                // Adiciona um novo input para as salas preferidas
+                const preferenceDiv = document.createElement('div');
+                preferenceDiv.classList.add('form-group');
+                preferenceDiv.innerHTML = `
+                    <p>Preferência nº${preferenceCount}:</p>
+                    <select class="form-select" id="preferenciaSala${preferenceCount}" aria-label="Default select example">
+                        <option selected>Escolha uma Preferência</option>
+                    </select>
+                `;
 
-            preferencesContainer.appendChild(preferenceDiv);
+                preferencesContainer.appendChild(preferenceDiv);
 
-            const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`);
+                const novaPref = document.getElementById(`preferenciaSala${preferenceCount}`);
 
-            // Adiciona as opções de tipo de sala ao novo input criado
-            tiposDeSala.forEach(tipoDeSala => {
-                const optionTipoSala = document.createElement('option');
-                optionTipoSala.textContent = tipoDeSala;
-                novaPref.appendChild(optionTipoSala);
-            })
+                // Adiciona as opções de tipo de sala ao novo input criado
+                tiposDeSala.forEach(tipoDeSala => {
+                    const optionTipoSala = document.createElement('option');
+                    optionTipoSala.textContent = tipoDeSala;
+                    novaPref.appendChild(optionTipoSala);
+                })
+            } else {
+                alert('Não pode adicionar mais de 3 preferências');
+            }
         });
 
         addButtonSalasIn.addEventListener('click', function () {
-            inaceitavelCount++;
+            if(inaceitavelCount <= 2) {
+                inaceitavelCount++;
 
-            // Adiciona um novo input para as salas inaceitáveis
-            const inaceitavelDiv = document.createElement('div');
-            inaceitavelDiv.classList.add('form-group');
-            inaceitavelDiv.innerHTML = `
-                <p>Sala inaceitável nº${inaceitavelCount}:</p>
-                <select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
-                    <option selected>Escolha uma sala inaceitável</option>
-                </select>
-            `;
+                // Adiciona um novo input para as salas inaceitáveis
+                const inaceitavelDiv = document.createElement('div');
+                inaceitavelDiv.classList.add('form-group');
+                inaceitavelDiv.innerHTML = `
+                    <p>Sala inaceitável nº${inaceitavelCount}:</p>
+                    <select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
+                        <option selected>Escolha uma sala inaceitável</option>
+                    </select>
+                `;
 
-            inaceitavelCointainer.appendChild(inaceitavelDiv);
+                inaceitavelCointainer.appendChild(inaceitavelDiv);
 
-            const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`);
+                const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`);
 
-            // Adiciona as opções de tipo de sala ao novo input criado
-            tiposDeSala.forEach(tipoDeSala => {
-                const optionTipoSala = document.createElement('option');
-                optionTipoSala.textContent = tipoDeSala;
-                novaPref.appendChild(optionTipoSala);
-            })
+                // Adiciona as opções de tipo de sala ao novo input criado
+                tiposDeSala.forEach(tipoDeSala => {
+                    const optionTipoSala = document.createElement('option');
+                    optionTipoSala.textContent = tipoDeSala;
+                    novaInaceitavel.appendChild(optionTipoSala);
+                })
+            } else {
+                alert('Não pode indicar mais de 3 salas salas inaceitáveis');
+            }
         });
     });
 
