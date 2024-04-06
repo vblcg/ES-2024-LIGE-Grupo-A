@@ -404,14 +404,14 @@ fetch(pathJsonSalas)
                     }
 
 
-                    // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
+                // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
                 } else if(preferenciaSala1Value === "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
                     var condicaoSemPreComIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue);
                     if (condicaoSemPreComIna) {
                         salasOcupadas.push(item['Sala atribuida a aula']);
                     }
 
-                    // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
+                // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
                 } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
                     var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue) && salaAtribuida.includes(preferenciaSala1Value);
                     if (condicaoTotal) {
@@ -430,10 +430,12 @@ fetch(pathJsonSalas)
                 
             });
 
+            // Tornar as salas ocupadas num array com valores únicos
             salasOcupadas = [...new Set(salasOcupadas)];
 
+            // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
             if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
-            caracteristaDasSalas.filter(function(item) {
+            caracteristaDasSalas.forEach(function(item) {
                 var condicao = item[preferenciaSala1Value] === 1;
                 if (condicao){
                     salasPreferidas.push(item['Nome sala']);
@@ -443,8 +445,10 @@ fetch(pathJsonSalas)
             salasDisponiveis = salasPreferidas.filter(function(sala) {
                 return !salasOcupadas.includes(sala);
             });
+
+            // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
             } else if(preferenciaSala1Value === "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
-            caracteristaDasSalas.filter(function(item) {
+            caracteristaDasSalas.forEach(function(item) {
                 var condicao = item[salasInaceitaveisValue] === 1;
                 if (condicao){
                     salasInaceitaveisSelec.push(item['Nome sala']);
@@ -454,9 +458,11 @@ fetch(pathJsonSalas)
             salasDisponiveis = nomesSalas.filter(function(sala) {
                 return !salasOcupadas.includes(sala) && !salasInaceitaveisSelec.includes(sala);
             });
+
+            // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
             } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
 
-            caracteristaDasSalas.filter(function(item) {
+            caracteristaDasSalas.forEach(function(item) {
                 var condicao1 = item[preferenciaSala1Value] === 1;
                 var condicao2 = item[salasInaceitaveisValue] === 1;
                 if (condicao1){
@@ -478,12 +484,12 @@ fetch(pathJsonSalas)
                     return !salasOcupadas.includes(sala) && !salasInaceitaveisSelec.includes(sala);
                 });
             }
+
+            // Condição quando o utilizador apenas indica os inputs obrigatórios
             } else {
             // Obter todas as salas que estão disponíveis (todas menos as ocupadas)
             salasDisponiveis = nomesSalas.filter(nomeSala => !salasOcupadas.includes(nomeSala));
             }
-
-    
 
             console.log(salasDisponiveis); 
 
