@@ -1,9 +1,166 @@
+let horario = [{
+    "Curso": "ME",
+    "UC": "Teoria dos Jogos e dos Contratos",
+    "Turno": "01789TP01",
+    "Turma": "MEA1",
+    "Inscritos no Turno": "30",
+    "Dia da Semana": "Sex",
+    "Hora Inicio da Aula": "13:00:00",
+    "Hora Fim da Aula": "14:30:00",
+    "Data da aula": "2022/12/02",
+    "Semana do ano": 48,
+    "Semana do semestre": 13,
+    "Caracteristicas da sala pedida para a aula": "Sala Aulas Mestrado",
+    "Sala atribuida a aula": "AA2.25"
+  },{
+    "Curso": "LGRH",
+    "UC": "Comunica��o Organizacional",
+    "Turno": "02430TP02",
+    "Turma": "GRHC2",
+    "Inscritos no Turno": "29",
+    "Dia da Semana": "Sex",
+    "Hora Inicio da Aula": "09:30:00",
+    "Hora Fim da Aula": "11:00:00",
+    "Data da aula": "2022/10/07",
+    "Semana do ano": 40,
+    "Semana do semestre": 5,
+    "Caracteristicas da sala pedida para a aula": "Sala de Aulas normal",
+    "Sala atribuida a aula": ""
+},]
+
+  let salas = [
+    {
+      "Edifício": "Ala Autónoma (ISCTE-IUL)",
+      "Nome sala": "Auditório Afonso de Barros",
+      "Capacidade Normal": "80",
+      "Capacidade Exame": "39",
+      "Nº características": "4",
+      "Anfiteatro aulas": "",
+      "Apoio técnico eventos": "",
+      "Arq 1": "",
+      "Arq 2": "",
+      "Arq 3": "",
+      "Arq 4": "",
+      "Arq 5": "",
+      "Arq 6": "",
+      "Arq 9": "",
+      "BYOD (Bring Your Own Device)": "",
+      "Focus Group": "",
+      "Horário sala visível portal público": 1,
+      "Laboratório de Arquictetura de Computadores I": "",
+      "Laboratório de Arquictetura de Computadores II": "",
+      "Laboratório de Base de Engenharia": "",
+      "Laboratório de Eletrónica": "",
+      "Laboratório de Informática": "",
+      "Laboratório de Jornalismo": "",
+      "Laboratório de Redes de Computadores I": "",
+      "Laboratório de Redes de Computadores II": "",
+      "Laboratório de Telecomunicações": "",
+      "Sala Aulas Mestrado": 1,
+      "Sala Aulas Mestrado Plus": 1,
+      "Sala NEE": "",
+      "Sala Provas": "",
+      "Sala Reunião": "",
+      "Sala de Arquitetura": "",
+      "Sala de Aulas normal": 1,
+      "Videoconferência": "",
+      "Átrio": ""
+    },
+    {
+      "Edifício": "Ala Autónoma (ISCTE-IUL)",
+      "Nome sala": "Auditório Silva Leal",
+      "Capacidade Normal": "54",
+      "Capacidade Exame": "27",
+      "Nº características": "4",
+      "Anfiteatro aulas": "",
+      "Apoio técnico eventos": "",
+      "Arq 1": "",
+      "Arq 2": "",
+      "Arq 3": "",
+      "Arq 4": "",
+      "Arq 5": "",
+      "Arq 6": "",
+      "Arq 9": "",
+      "BYOD (Bring Your Own Device)": "",
+      "Focus Group": "",
+      "Horário sala visível portal público": 1,
+      "Laboratório de Arquictetura de Computadores I": "",
+      "Laboratório de Arquictetura de Computadores II": "",
+      "Laboratório de Base de Engenharia": "",
+      "Laboratório de Eletrónica": "",
+      "Laboratório de Informática": "",
+      "Laboratório de Jornalismo": "",
+      "Laboratório de Redes de Computadores I": "",
+      "Laboratório de Redes de Computadores II": "",
+      "Laboratório de Telecomunicações": "",
+      "Sala Aulas Mestrado": 1,
+      "Sala Aulas Mestrado Plus": 1,
+      "Sala NEE": "",
+      "Sala Provas": "",
+      "Sala Reunião": "",
+      "Sala de Arquitetura": "",
+      "Sala de Aulas normal": 1,
+      "Videoconferência": "",
+      "Átrio": ""
+    },
+    {
+      "Edifício": "Ala Autónoma (ISCTE-IUL)",
+      "Nome sala": "AA2.23",
+      "Capacidade Normal": "50",
+      "Capacidade Exame": "23",
+      "Nº características": "5",
+      "Anfiteatro aulas": "",
+      "Apoio técnico eventos": "",
+      "Arq 1": "",
+      "Arq 2": "",
+      "Arq 3": "",
+      "Arq 4": "",
+      "Arq 5": "",
+      "Arq 6": "",
+      "Arq 9": "",
+      "BYOD (Bring Your Own Device)": "",
+      "Focus Group": "",
+      "Horário sala visível portal público": 1,
+      "Laboratório de Arquictetura de Computadores I": "",
+      "Laboratório de Arquictetura de Computadores II": "",
+      "Laboratório de Base de Engenharia": "",
+      "Laboratório de Eletrónica": "",
+      "Laboratório de Informática": "",
+      "Laboratório de Jornalismo": "",
+      "Laboratório de Redes de Computadores I": "",
+      "Laboratório de Redes de Computadores II": "",
+      "Laboratório de Telecomunicações": "",
+      "Sala Aulas Mestrado": 1,
+      "Sala Aulas Mestrado Plus": 1,
+      "Sala NEE": "",
+      "Sala Provas": "",
+      "Sala Reunião": "",
+      "Sala de Arquitetura": "",
+      "Sala de Aulas normal": 1,
+      "Videoconferência": "",
+      "Átrio": ""
+},]
+
+/**
+     * 
+     * @param {*} decimal 
+     * @returns 
+     * Função para usar somas de horas. Ex: 9.30 + 1.30 daria 10.60, mas pretende-se que dê 11. A função trata disso. 
+*/
 function decimalParaHora(decimal) {
     let horaInteira = Math.floor(decimal);
     let minutos = Math.round((decimal - horaInteira)*100)/100;
     if(minutos == 0.6) return Math.round(decimal); else return decimal;
 }
 
+/**
+ * 
+ * @param  diasSemanaInput 
+ * @returns 
+ * Inicializa os parâmetros referentes à semana, essenciais ao funcionamento da lógica de 
+ * atribuição de aulas. 
+ * 
+ */
 function initParametrosSemana(diasSemanaInput) {
     const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
     var diaSemanaNumero = 0;
@@ -18,6 +175,13 @@ function initParametrosSemana(diasSemanaInput) {
     return  [diaSemanaNumero, diaSemanaString, inputsDias];
 }
 
+/**
+ * 
+ * @param {*} salas 
+ * @param {*} numeroAlunos 
+ * @returns 
+ * Filtra as salas pela capacidade dada pelo utilizador, ficando apenas as que têm capacidade superior à dada.
+ */
 function filterCapacidade(salas, numeroAlunos) {
     if(numeroAlunos != null) {
         return salas.filter(entry => parseFloat(entry['Capacidade Normal']) >= numeroAlunos);
@@ -26,12 +190,32 @@ function filterCapacidade(salas, numeroAlunos) {
     }
 }
 
+/**
+ * @param hour
+ * Função para passar do formato "hh.mm" para o formato "hh:mm".
+ */
 function parseHour(hour) {
-    if(hour.includes("."))
+    if(hour.toString().includes("."))
         return hour.replace(".", ":") + "0";
     return hour;
 }
 
+
+/**
+ * 
+ * @param {*} nomeCurso 
+ * @param {*} UC 
+ * @param {*} numeroAlunos 
+ * @param {*} diaSemanaString 
+ * @param {*} min 
+ * @param {*} max 
+ * @param {*} semanaSemestre 
+ * @param {*} preferencia 
+ * @param {*} salaAlocada 
+ * @returns 
+ * 
+ * Criação de documento JSON referente ao novo slot atribuído ao utilizador.
+ */
 function criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, semanaSemestre, preferencia, salaAlocada) {
     const novaAula = {
         "Curso": nomeCurso,
@@ -51,8 +235,15 @@ function criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, m
     return novaAula;
 }
 
+
+/**
+ * 
+ * @param {*} inputs 
+ * Lógica de atribuição de slots, com aplicação de funções de filtragem de salas e slots horários, 
+ * dependendo do input do utilizador.
+ */
 function adicionarAulas(inputs) {
-    let filteredJson = jsonData;
+    let filteredJson = horario;
     let UC = inputs[0];
     let numeroAulas = inputs[1];
     let periodos = inputs[2];
@@ -85,8 +276,7 @@ function adicionarAulas(inputs) {
         }
         while(!exist) {
             if (semanaSemestre >= parseInt(inputs[8]) + 15) {
-                alert("Não é possível marcar o número de aulas pedido. Tente novamente.");
-                break;
+                throw new Error("Não há slots suficientes para as condições pedidas. Tente novamente.");
             }
             //console.log(semanaSemestre);
             //LÓGICA SLOTS
@@ -101,8 +291,7 @@ function adicionarAulas(inputs) {
                     } else if(diasSemanaInput == null) {
                         diaSemanaString = diasDaSemana[diaSemanaNumero]; //SE NÃO SE TIVEREM SELECIONADO DIAS
                     } else if(semanaSemestre >= 15) { 
-                        alert("Não há slots suficientes para as condições pedidas. Tente novamente.");
-                        break;
+                        throw new Error("Não há slots suficientes para as condições pedidas. Tente novamente.");
                     } else {
                         semanaSemestre += 1;
                         diaSemanaNumero = 0;
@@ -126,8 +315,7 @@ function adicionarAulas(inputs) {
                     } else if(diasSemanaInput == null) {
                         diaSemanaString = diasDaSemana[diaSemanaNumero]; //SE NÃO SE TIVEREM SELECIONADO DIAS
                     } else if(semanaSemestre >= 15) { 
-                        alert("Não há slots suficientes para as condições pedidas. Tente novamente.");
-                        break;
+                        throw new Error("Não há slots suficientes para as condições pedidas. Tente novamente.");
                     } else {
                         semanaSemestre += 1;
                         diaSemanaNumero = 0;
@@ -143,7 +331,7 @@ function adicionarAulas(inputs) {
             filteredSalas = filteredSalas.filter(entry => !salasInaceitaveis.includes(entry['Caracteristicas da sala pedida para a aula']));
             
             //FILTRO DIA DA SEMANA
-            filteredJson = jsonData.filter(entry => diaSemanaString == entry['Dia da Semana']);
+            filteredJson = horario.filter(entry => diaSemanaString == entry['Dia da Semana']);
             
             //FILTRO SEMANA DO SEMESTRE 
             filteredJson = filteredJson.filter(entry => entry['Semana do semestre'] == semanaSemestre);

@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error(`Error loading ${pathJsonSalas}:`, error);
     });
 
-    //testado
+    
     function decimalParaHora(decimal) {
         let horaInteira = Math.floor(decimal);
         let minutos = decimal - horaInteira;

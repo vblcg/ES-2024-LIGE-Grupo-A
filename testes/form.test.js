@@ -1,4 +1,4 @@
-const {decimalParaHora, initParametrosSemana, filterCapacidade, parseHour} = require('./functionsToTest');
+const {decimalParaHora, initParametrosSemana, filterCapacidade, parseHour, adicionarAulas} = require('./functionsToTest');
 let salas = [
     {
       "Edifício": "Ala Autónoma (ISCTE-IUL)",
@@ -112,6 +112,7 @@ let salas = [
       "Átrio": ""
     },]
 
+
 describe('Testes para a função decimalParaHora', () => {
     test('Teste de hora', () => {
         expect(decimalParaHora(9.6)).toBe(10);
@@ -153,4 +154,32 @@ describe('Testes para a função parseHour', () => {
         expect(parseHour("10.3")).toEqual("10:30");
     });
 }); 
+
+
+describe('Testes para a função adicionarAulas', () => {
+    test('Teste para número de aulas excedido', () => {
+        const inputs = ["UC1", 5, ["8:00-9:30"], ["Seg"], [], [], 30, "NomeCurso", 15];
+        expect(() => adicionarAulas(inputs)).toThrow("Não há slots suficientes para as condições pedidas. Tente novamente.");
+    });
+
+    test('Teste para não haver slots suficientes', () => {
+        const inputs = ["UC1", 5, ["8:00-9:30"], ["Seg"], [], [], 30, "NomeCurso", 14];
+        expect(() => adicionarAulas(inputs)).toThrow("Não há slots suficientes para as condições pedidas. Tente novamente.");
+    });
+
+    test('Teste para período nulo', () => {
+        const inputs = ["UC1", 5, null, ["Seg"], [], [], 30, "NomeCurso", 0];
+        // Coloque as expectativas aqui, dependendo do comportamento esperado para esse caso
+    });
+
+    test('Teste para dia da semana nulo', () => {
+        const inputs = ["UC1", 5, ["8:00-9:30"], null, [], [], 30, "NomeCurso", 0];
+        // Coloque as expectativas aqui, dependendo do comportamento esperado para esse caso
+    });
+
+    test('Teste para dia da semana vazio', () => {
+        const inputs = ["UC1", 5, ["8:00-9:30"], [], [], [], 30, "NomeCurso", 0];
+        // Coloque as expectativas aqui, dependendo do comportamento esperado para esse caso
+    });
+});
 
