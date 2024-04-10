@@ -7,17 +7,19 @@
     <link rel="stylesheet" type="text/css" href="estilos.css">
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-    <script type = "module" src="form.js"></script>
+    <script type="module" src="form.js"></script>
 </head>
 
 <body>
     <h1>Agendamento de Aulas:</h1>
 
-    <form id="userInputForm" method="POST">
+    <form id="userInputForm" method="POST" action="/submitAula">
+        <!-- O atributo "action" define a rota para enviar os dados -->
 
         <div class="input-container">
             <label for="UC">Nome da UC:</label>
             <input type="text" id="UC" name="UC" required>
+            <!-- "name" deve corresponder aos parâmetros esperados pelo servidor -->
         </div>
         
         <div class="input-container">
@@ -26,28 +28,28 @@
         </div>
         
         <div class="input-container">
-        <label for="nmrAulas">Número de aulas:</label>
-        <input type="number" id="nmrAulas" name="nmrAulas" max="40" min ="1" required>
+            <label for="nmrAulas">Número de aulas:</label>
+            <input type="number" id="nmrAulas" name="nmrAulas" max="40" min="1" required>
         </div>
 
         <div class="input-container">
-        <label for="nmrAlunos">Número de alunos:</label>
-        <input type="number" id="nmrAlunos" name="nmrAlunos" max="500" value="1">
+            <label for="nmrAlunos">Número de alunos:</label>
+            <input type="number" id="nmrAlunos" name="nmrAlunos" max="500" value="1">
         </div>
 
         <div class="input-container">
-        <label for="semanaSemestre">Semana do semestre a começar a UC:</label>
-        <input type="number" id="semanaSemestre" name="semanaSemestre" max="21" min="1" value="1">
+            <label for="semanaSemestre">Semana do semestre a começar a UC:</label>
+            <input type="number" id="semanaSemestre" name="semanaSemestre" max="21" min="1" value="1">
         </div>
 
         <br>
 
         <label for="input4">Períodos em que é <strong>possível</strong> alocar as aulas:</label><br>
-        <input type="checkbox" id="manha" name="periodoPossivel" value="8.0-12.30">
+        <input type="checkbox" id="manha" name="periodoPossivel" value="Manhã (8:00 - 12:30)">
         <label for="manha">Manhã (8:00 - 12:30)</label><br>
-        <input type="checkbox" id="tarde" name="periodoPossivel" value="12.30-18.30">
+        <input type="checkbox" id="tarde" name="periodoPossivel" value="Tarde (12:30 - 18:30)">
         <label for="tarde">Tarde (12:30 - 18:30)</label><br>
-        <input type="checkbox" id="noite" name="periodoPossivel" value="18.30-23">
+        <input type="checkbox" id="noite" name="periodoPossivel" value="Noite (18:30 - 23:00)">
         <label for="noite">Noite (18:30 - 23:00)</label><br><br>
 
 
@@ -65,37 +67,13 @@
         <input type="checkbox" value="Sab" name="diaDaSemanaPref" id="Sábado">
         <label for="sabado">Sábado</label><br>
 
+        <br>
 
-        <div class="form-group">
-            <div id="preferencias-container">
-                <p>Preferência de Tipo de Sala:</p>
-                <div class ="form-group">
-                    <p>Preferência nº 1</p>
-                    <select id="preferenciaSala1" aria-label="Default select example">
-                        <option selected>Escolha uma Preferência</option>
-                    </select>
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary" id="addPreferenceBtn">Adicionar Preferência</button>
-            
-        </div>
-        <div class="form-group">
-            <div id="salasInaceitaveis-container">
-            <p>Tipo de Salas Inaceitáveis:</p>
-                <div class = "form-group">
-                    <p>Tipo sala inaceitável nº 1</p>
-                <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
-                    <option selected>Indique o tipo de salas inaceitáveis</option>
-                </select>
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary" id="addSalaInaceitavel">Adicionar salas inaceitáveis</button>
-        </div>   
-</div>
-<br><br>
-    
-            <input type="submit" id="submitButton" value="Submit">
-        </form>        
-        </div>
-    </body>
+        <input type="submit" id="submitButton" value="Submit">
+        <!-- O botão de "submit" enviará os dados para o servidor -->
+    </form>
+
+    <!-- Aqui você pode adicionar scripts adicionais, se necessário -->
+</body>
+
 </html>

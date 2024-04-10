@@ -26,7 +26,7 @@ public class UserUploadFileTest {
         Request request = new Request.Builder().url(githubFileUrl).build();
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                
+
                 try (FileOutputStream outputStream = new FileOutputStream(downloadedFile)) {
                     outputStream.write(response.body().bytes());
                 } catch (Exception e) {
@@ -38,7 +38,6 @@ public class UserUploadFileTest {
             System.err.println("Error writing file: " + e.getMessage());
         }
 
-
         UserUploadFile userUploadFile = new UserUploadFile(new File[1], "ficheiros/Horário.json");
         userUploadFile.downloadFileFromGitHub(githubFileUrl);
         File file = userUploadFile.getFileholder()[0];
@@ -47,9 +46,8 @@ public class UserUploadFileTest {
 
     }
 
-
     @Test
-    public void testCheckCsvStructure () throws IOException {
+    public void testCheckCsvStructure() throws IOException {
         UserUploadFile userUploadFile = new UserUploadFile(new File[1], "ficheiros/Horário.json");
 
         String githubFileUrl = "https://raw.githubusercontent.com/vblcg/ES-2024-LIGE-Grupo-A/main/ficheiros/HorarioDeExemplo.csv";
@@ -73,9 +71,7 @@ public class UserUploadFileTest {
 
         userUploadFile.checkCsvStructure(downloadedFile);
 
-        assertTrue(userUploadFile.getFileholder()[0].length() == downloadedFile.length());
+        assertTrue(((Object) userUploadFile).getFileholder()[0].length() == downloadedFile.length());
     }
-    
-    
-}
 
+}

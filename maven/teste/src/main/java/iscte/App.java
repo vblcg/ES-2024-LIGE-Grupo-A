@@ -8,14 +8,14 @@ import java.io.File;
  * Depois, instancia o 'upload' de um ficheiro, atraves da interface grafica.
  */
 public class App {
-    
-    /** 
+
+    /**
      * @param args
      */
     public static void main(String[] args) {
-        File[] fileHolder = new File[1]; 
+        File[] fileHolder = new File[1];
         String jsonFile = "ficheiros/Horário.json";
-        UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile); 
+        UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile);
         XamppFileManager.saveToFileRoot(new File("ficheiros/SalasDeAulaPorTiposDeSala.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/estilos.css"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/Horário.html"));
@@ -23,6 +23,6 @@ public class App {
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/AgendamentoDeAulas.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/form.js"));
 
-        uploadFile.setVisible(true); 
+        uploadFile.setVisible(true);
     }
 }
