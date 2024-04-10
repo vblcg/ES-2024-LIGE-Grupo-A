@@ -3,72 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slots Disponíveis</title>
+    <title>Exemplo de uso do Tabulator</title>
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 </head>
 <body>
-    <h1>Dados do Curso</h1>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Curso</th>
-                <th>UC</th>
-                <th>Turno</th>
-                <th>Turma</th>
-                <th>Inscritos no Turno</th>
-                <th>Dia da Semana</th>
-                <th>Hora Início da Aula</th>
-                <th>Hora Fim da Aula</th>
-                <th>Data da Aula</th>
-                <th>Semana do Ano</th>
-                <th>Semana do Semestre</th>
-                <th>Características da Sala</th>
-                <th>Sala Atribuída</th>
-            </tr>
-        </thead>
-        <tbody id="tabela-dados">
-        </tbody>
-    </table>
-    
-    <script>
-        // Recupera os dados de localStorage
-        var cursoData = JSON.parse(localStorage.getItem('slotsData'));
-        var tableBody = document.getElementById('tabela-dados');
-
-        // Loop através de todas as entradas do cursoData
-        for (var key in cursoData) {
-            if (cursoData.hasOwnProperty(key)) {
-                var row = document.createElement('tr');
-                console.log(cursoData[key]);
-                // Cria uma célula para cada atributo do cursoData
-                var attributes = [
-                    "Curso",
-                    "UC",
-                    "Turno",
-                    "Turma",
-                    "Inscritos no Turno",
-                    "Dia da Semana",
-                    "Hora Inicio da Aula",
-                    "Hora Fim da Aula",
-                    "Data da Aula",
-                    "Semana do Ano",
-                    "Semana do semestre",
-                    "Caracteristicas da sala pedida para a aula",
-                    "Sala atribuida a aula"
-                ];
-
-                // Itera sobre cada atributo e adiciona uma célula à linha
-                attributes.forEach(function(attribute) {
-                    var cell = document.createElement('td');
-                    cell.textContent = cursoData[key][attribute];
-                    console.log(cursoData[key][attribute]);
-                    row.appendChild(cell);
-                });
-
-                // Adiciona a linha à tabela
-                tableBody.appendChild(row);
-            }
-        }
-    </script>
+    <div id="tabela-dados"></div>
+    <script type="text/javascript" src="visualizacaoSlots.js"></script>
 </body>
 </html>

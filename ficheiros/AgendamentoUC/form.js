@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function parseHour(hour) {
         if(hour.toString().includes("."))
             return hour.toString().replace(".", ":") + "0";
-        return hour.toString();
+        return hour;
     }
 
     function criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, semanaSemestre, preferencia, salaAlocada) {
