@@ -11,95 +11,39 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Extract {
-    private String outputFile;
     private File[] inputFile;
     private File outputJsonFile;
 
-    public Extract(File[] inputFile, String outputFile) {
-        this.outputFile = outputFile;
+    public Extract(File[] inputFile) {
         this.inputFile = inputFile;
-        this.outputJsonFile = new File(outputFile);
+        this.outputJsonFile = new File("Aulas.json"); // Define o arquivo de saída como "Aulas.json"
     }
 
     public File getOutputJsonFile() {
         return outputJsonFile;
     }
 
-    public String getOutputFile() {
-        return outputFile;
-    }
-
-    public String getInputFile() {
-        return inputFile[0].getPath();
-    }
-
-    public File[] getHolder() {
-        return inputFile;
-    }
-
-    public int getSemanaAno(String data) {
-        int semana_do_ano = 0;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date dataAula;
-        try {
-            dataAula = dateFormat.parse(data);
-            Calendar calendar = Calendar.getInstance(Locale.getDefault());
-            calendar.setFirstDayOfWeek(Calendar.MONDAY);
-            calendar.setTime(dataAula);
-            semana_do_ano = calendar.get(Calendar.WEEK_OF_YEAR);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return -1;
-        }
-        return semana_do_ano;
-    }
-
-    public long getSemanaSemestre(String data) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        long diffInWeeks = 0;
-
-        try {
-            Date givenDate = sdf.parse(data);
-            Calendar referenceDateFirstSemester = Calendar.getInstance();
-            referenceDateFirstSemester.setTime(sdf.parse("01/09/2022"));
-            Calendar referenceDateSecondSemester = Calendar.getInstance();
-            referenceDateSecondSemester.setTime(sdf.parse("01/02/2023"));
-            Calendar givenDateCal = Calendar.getInstance();
-            givenDateCal.setTime(givenDate);
-
-            if (givenDateCal.get(Calendar.MONTH) >= Calendar.SEPTEMBER
-                    || givenDateCal.get(Calendar.MONTH) == Calendar.JANUARY) {
-                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateFirstSemester.getTimeInMillis();
-                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
-            } else {
-                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateSecondSemester.getTimeInMillis();
-                diffInWeeks = (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return diffInWeeks;
-    }
-
     public void readCsvUsingBufferReader() {
-        String line = "";
+        String line;
         String[] colunas = { "Curso", "UC", "Turno", "Turma", "Inscritos no Turno", "Dia da Semana",
                 "Hora Inicio da Aula", "Hora Fim da Aula", "Data da aula",
                 "Caracteristicas da sala pedida para a aula", "Sala atribuida a aula" };
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(getHolder()[0]), StandardCharsets.UTF_8));
-                FileWriter writer = new FileWriter(new File(outputFile))) {
+                new InputStreamReader(new FileInputStream(inputFile[0]), StandardCharsets.UTF_8));
+                FileWriter writer = new FileWriter(outputJsonFile)) {
 
             writer.write("[\n");
 
-            line = reader.readLine();
-            boolean isLastRecord = false;
+            line = reader.readLine(); // Lê a primeira linha (cabeçalho) do arquivo CSV
+            boolean isFirstLine = true;
 
             while ((line = reader.readLine()) != null) {
-                isLastRecord = !reader.ready();
+                if (!isFirstLine) {
+                    writer.write(",\n"); // Adiciona vírgula se não for a primeira linha de dados
+                }
 
-                String[] infoAula = line.split(";");
+                String[] infoAula = line.split(";"); // Divide a linha em colunas usando ";"
                 Map<String, Object> jsonMap = new LinkedHashMap<>();
 
                 for (int i = 0; i < colunas.length; i++) {
@@ -111,37 +55,31 @@ public class Extract {
                         } catch (NumberFormatException e) {
                             jsonMap.put(colunas[i], null);
                         }
-                    }
-                    if ("Data da aula".equals(colunas[i])) {
-                        if (value == null || value.equals("")) {
-                            jsonMap.put(colunas[i], value);
-                            jsonMap.put("Semana do ano", null);
-                        } else {
+                    } else if ("Data da aula".equals(colunas[i])) {
+                        if (!value.isEmpty()) {
                             String[] split_date = value.split("/");
                             String data_invertida = split_date[2] + "/" + split_date[1] + "/" + split_date[0];
 
-                            int semana_ano_func = getSemanaAno(value);
                             jsonMap.put(colunas[i], data_invertida);
-                            jsonMap.put("Semana do ano", semana_ano_func);
-
-                            long semana_semestre_func = getSemanaSemestre(value);
-                            jsonMap.put(colunas[i], data_invertida);
-                            jsonMap.put("Semana do semestre", semana_semestre_func);
+                            jsonMap.put("Semana do ano", getSemanaAno(value));
+                            jsonMap.put("Semana do semestre", getSemanaSemestre(value));
+                        } else {
+                            jsonMap.put(colunas[i], "");
+                            jsonMap.put("Semana do ano", null);
+                            jsonMap.put("Semana do semestre", null);
                         }
                     } else {
                         jsonMap.put(colunas[i], value);
                     }
                 }
 
-                String gson = (new GsonBuilder().setPrettyPrinting().create().toJson(jsonMap));
-                if (isLastRecord) {
-                    writer.write(gson + "\n");
-                } else {
-                    writer.write(gson + ",\n");
-                }
+                String gson = new GsonBuilder().setPrettyPrinting().create().toJson(jsonMap);
+                writer.write(gson);
+
+                isFirstLine = false;
             }
 
-            writer.write("]\n");
+            writer.write("\n]\n");
             System.out.println("Arquivo JSON gerado com sucesso.");
 
         } catch (IOException e) {
@@ -163,16 +101,52 @@ public class Extract {
         reservation.put("Caracteristicas da sala pedida para a aula", aula.getCaracteristicasSala());
         reservation.put("Sala atribuida a aula", aula.getSalaAtribuida());
 
-        addRoomReservation(reservation);
-    }
-
-    private void addRoomReservation(Map<String, Object> reservation) {
-        try (Writer writer = new FileWriter(outputJsonFile, true)) {
+        try (FileWriter writer = new FileWriter(outputJsonFile, true)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(reservation, writer);
             writer.write("\n");
+            System.out.println("Reserva de sala adicionada com sucesso.");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private int getSemanaAno(String data) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date dataAula = dateFormat.parse(data);
+            Calendar calendar = Calendar.getInstance(Locale.getDefault());
+            calendar.setFirstDayOfWeek(Calendar.MONDAY);
+            calendar.setTime(dataAula);
+            return calendar.get(Calendar.WEEK_OF_YEAR);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    private long getSemanaSemestre(String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date givenDate = sdf.parse(data);
+            Calendar referenceDateFirstSemester = Calendar.getInstance();
+            referenceDateFirstSemester.setTime(sdf.parse("01/09/2022"));
+            Calendar referenceDateSecondSemester = Calendar.getInstance();
+            referenceDateSecondSemester.setTime(sdf.parse("01/02/2023"));
+            Calendar givenDateCal = Calendar.getInstance();
+            givenDateCal.setTime(givenDate);
+
+            if (givenDateCal.get(Calendar.MONTH) >= Calendar.SEPTEMBER
+                    || givenDateCal.get(Calendar.MONTH) == Calendar.JANUARY) {
+                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateFirstSemester.getTimeInMillis();
+                return (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
+            } else {
+                long diffInMillies = givenDateCal.getTimeInMillis() - referenceDateSecondSemester.getTimeInMillis();
+                return (long) Math.ceil((TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 }
