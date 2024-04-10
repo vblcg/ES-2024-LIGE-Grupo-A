@@ -17,8 +17,12 @@ public class App {
         String jsonFile = "ficheiros/Horário.json";
         UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile); 
         XamppFileManager.saveToFileRoot(new File("ficheiros/SalasDeAulaPorTiposDeSala.html"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/estilos.css"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/Horário.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/CaracterizacaoDasSalas.json"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/AgendamentoDeAulas.html"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/form.js"));
+
         uploadFile.setVisible(true); 
     }
 }
