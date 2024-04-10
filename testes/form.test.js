@@ -115,7 +115,7 @@ let salas = [
 
 describe('Testes para a função decimalParaHora', () => {
     test('Teste de hora', () => {
-        expect(decimalParaHora(9.6)).toBe(10);
+        expect(decimalParaHora(10.60)).toBe(11);
     });
     test('Qualquer outro input', () => {
         expect(decimalParaHora(9.3)).toBe(9.3);
