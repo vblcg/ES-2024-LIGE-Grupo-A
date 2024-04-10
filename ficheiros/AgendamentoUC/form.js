@@ -330,8 +330,8 @@ document.addEventListener('DOMContentLoaded', function () {
             inputs.push(document.getElementById('semanaSemestre').value);
         
             adicionarAulas(inputs);
-            window.location.bref = ('aulasSubmetidas.html')
-            //window.open('aulasSubmetidas', "_blank");
+            //window.location.bref = ('aulasSubmetidas.html')
+            window.open('SlotsDisponiveis.html', "_blank");
 
     });
 
