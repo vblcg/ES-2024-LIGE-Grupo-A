@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1712601891885" clover="3.2.0">
-  <project timestamp="1712601891885" name="All files">
+<coverage generated="1712848728187" clover="3.2.0">
+  <project timestamp="1712848728187" name="All files">
     <metrics statements="105" coveredstatements="76" conditionals="42" coveredconditionals="22" methods="16" coveredmethods="10" elements="163" coveredelements="108" complexity="0" loc="105" ncloc="105" packages="1" files="1" classes="1"/>
     <file name="functionsToTest.js" path="C:\Users\pedro\ES-2024-LIGE-Grupo-A\testes\functionsToTest.js">
       <metrics statements="105" coveredstatements="76" conditionals="42" coveredconditionals="22" methods="16" coveredmethods="10"/>

@@ -23,7 +23,7 @@ public class App {
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/AgendamentoDeAulas.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/form.js"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/SlotsDisponiveis.html"));
-        XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/visualizacaoSlotsx.js"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/visualizacaoSlots.js"));
 
 
         uploadFile.setVisible(true); 
