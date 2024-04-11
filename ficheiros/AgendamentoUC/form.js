@@ -182,12 +182,12 @@ document.addEventListener('DOMContentLoaded', function () {
             while(!exist) {
                 if (semanaSemestre >= parseInt(inputs[8]) + 15) {
                     alert("Não é possível marcar o número de aulas pedido. Tente novamente.");
-                    break;
+                    return;
                 }
                 //console.log(semanaSemestre);
                 //LÓGICA SLOTS
                 if(periodos == null) {
-                    if(max + (1.67 * horaCount) >= 23.00) {
+                    if(decimalParaHora(max + (1.67 * horaCount)) >= 23.00) {
                         min = 8.0;
                         max = 9.30;
                         horaCount = 0; 
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             diaSemanaString = diasDaSemana[diaSemanaNumero]; //SE NÃO SE TIVEREM SELECIONADO DIAS
                         } else if(semanaSemestre >= 15) { 
                             alert("Não há slots suficientes para as condições pedidas. Tente novamente.");
-                            break;
+                            return;
                         } else {
                             semanaSemestre += 1;
                             diaSemanaNumero = 0;
@@ -213,8 +213,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         min = parseFloat(periodos[countPeriodosInput].split("-")[0]);
                         max = parseFloat(periodos[countPeriodosInput].split("-")[1]);
                         countPeriodosInput ++;
+                        diaSemanaNumero ++;
                     } else if(countPeriodosInput >= periodos.length){
-                        diaSemanaNumero += 1;
                         min = parseFloat(periodos[0].split("-")[0]);
                         max = parseFloat(periodos[0].split("-")[1]);
                         if(diasSemanaInput != null && diaSemanaNumero < inputsDias) {
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             diaSemanaString = diasDaSemana[diaSemanaNumero]; //SE NÃO SE TIVEREM SELECIONADO DIAS
                         } else if(semanaSemestre >= 15) { 
                             alert("Não há slots suficientes para as condições pedidas. Tente novamente.");
-                            break;
+                            return;
                         } else {
                             semanaSemestre += 1;
                             diaSemanaNumero = 0;
@@ -252,19 +252,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if(filteredSalas.length > 0) {
                     //PREFERÊNCIA SALAS
-                    var salaAlocada = filteredSalas[0];
-                    for(let pref = 0; pref < preferencias.length; pref ++) {
-                        console.log(preferencias[pref]);
-                        if(filteredSalas.filter(entry => entry[preferencias[pref]] == 1).length > 0) {
-                            salaAlocada = filteredSalas.filter(entry => entry[preferencias[pref]] == 1)[0];
-                            preferencia = preferencias[pref];
+                    if(preferencias[0] != "Escolha uma Preferência") {
+                        for(let pref = 0; pref < preferencias.length; pref ++) {
+                            var alocada = false;
+                            if(preferencias[pref] != null && filteredSalas.filter(entry => entry[preferencias[pref]] == 1).length > 0) {
+                                salaAlocada = filteredSalas.filter(entry => entry[preferencias[pref]] == 1)[0];
+                                preferencia = preferencias[pref];
+                                alocada = true;
+                            }
                         }
+                        if(!alocada) {
+                            alert("Não há salas disponíveis para as preferências dadas.")
+                            return;
+                        }
+                    } else {
+                        var salaAlocada = filteredSalas[0];
                     }
+                   
+                    
                     //console.log(semanaSemestre);
-                    const novaAula = criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, semanaSemestre, preferencia, salaAlocada);
+                    const novaAula = criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, decimalParaHora(min+1.3), semanaSemestre, preferencia, salaAlocada);
                     slots.push(novaAula);
                     console.log(novaAula);
                     exist = true;
+                }else{
+                    alert("Não há salas disponíveis. Tente de novo com outros parâmetros.");
+                    return;
                 }
                 horaCount++;
                 semanaSemestre++;
@@ -334,12 +347,14 @@ document.addEventListener('DOMContentLoaded', function () {
             inputs.push(document.getElementById('semanaSemestre').value);
         
             let slots = adicionarAulas(inputs);
-            localStorage.setItem('slotsData', JSON.stringify(slots));
-            window.open('SlotsDisponiveis.html', "_blank");
+            if(slots != null) {
+                localStorage.setItem('slotsData', JSON.stringify(slots));
+                window.open('SlotsDisponiveis.html', "_blank");
+            }
+  
 
     });
 
-    // Fazendo uma solicitação HTTP para carregar o arquivo JSON
     fetch('../Horário.json')
         .then(response => response.json()) // Convertendo a resposta para JSON
         .then(data => {
