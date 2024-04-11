@@ -413,6 +413,7 @@ fetch(pathJsonSalas)
             var [startHour, endHour] = alturaDoDiaPrefValue.split(',');
 
             arrayParaFunc.push(diaDaSemanaPrefValue);
+            arrayParaFunc.push(semanaPrefValue);
 
     
 
@@ -905,7 +906,7 @@ fetch(pathJsonSalas)
             vetor.push("Carac");
             vetor.push(aula.sala);
             vetor.push(99);
-            vetor.push(99);
+            vetor.push(array[6]);
 
             var slot = createJsonEntry(vetor);
             slots.push(slot);
