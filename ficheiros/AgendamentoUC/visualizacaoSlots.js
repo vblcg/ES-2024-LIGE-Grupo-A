@@ -21,3 +21,17 @@ var table = new Tabulator("#tabela-dados", {
         { title: "Sala atribuida a aula", field: "Sala atribuida a aula" }
     ]
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('gravar').addEventListener('click', function() {
+        var data = JSON.stringify(cursoData);
+        var blob = new Blob([data], { type: 'application/json' });
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = "SlotsAtribuidos.json";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url); 
+    });
+});
