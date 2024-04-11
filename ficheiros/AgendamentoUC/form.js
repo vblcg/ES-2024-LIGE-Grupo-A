@@ -93,9 +93,10 @@ document.addEventListener('DOMContentLoaded', function () {
     
     function decimalParaHora(decimal) {
         let horaInteira = Math.floor(decimal);
-        let minutos = decimal - horaInteira;
-        if(minutos == 0.6) return Math.round(horaInteira); else return decimal;
+        let minutos = Math.round((decimal - horaInteira)*100)/100;
+        if(minutos == 0.6) return Math.round(decimal); else return decimal;
     }
+    
 
     //testado
     function initParametrosSemana(diasSemanaInput) {
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let nomeCurso = inputs[7];
         var preferencia = null;
         const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+        var slots = [];
 
         //INICIALIZAÇÃO PARAMETROS SEMANA -> diaSemanaString ex: "Seg", diaSemanaNumero -> para aceder aos arrays, inputsDias -> para verificar se já se viram todos os dias de input
         let results = initParametrosSemana(diasSemanaInput); //Testado
@@ -202,8 +204,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             diaSemanaNumero = 0;
                         }
                     } else {
-                        min += decimalParaHora((1.3 * horaCount));
-                        max += decimalParaHora((1.3 * horaCount));
+                        min = decimalParaHora((1.3 * horaCount)+min);
+                        max = decimalParaHora((1.3 * horaCount)+max);
                         horaCount ++;
                     }
                 } else { 
@@ -260,6 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     //console.log(semanaSemestre);
                     const novaAula = criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, semanaSemestre, preferencia, salaAlocada);
+                    slots.push(novaAula);
                     console.log(novaAula);
                     exist = true;
                 }
@@ -267,6 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 semanaSemestre++;
             }     
         }
+        return slots;
     }
 
     document.getElementById('userInputForm').addEventListener('submit', function(event) {
@@ -329,8 +333,8 @@ document.addEventListener('DOMContentLoaded', function () {
             //semana semestre começo 8
             inputs.push(document.getElementById('semanaSemestre').value);
         
-            adicionarAulas(inputs);
-            //window.location.bref = ('aulasSubmetidas.html')
+            let slots = adicionarAulas(inputs);
+            localStorage.setItem('slotsData', JSON.stringify(slots));
             window.open('SlotsDisponiveis.html', "_blank");
 
     });

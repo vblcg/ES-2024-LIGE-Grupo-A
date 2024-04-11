@@ -196,7 +196,7 @@ function filterCapacidade(salas, numeroAlunos) {
  */
 function parseHour(hour) {
     if(hour.toString().includes("."))
-        return hour.replace(".", ":") + "0";
+        return hour.toString().replace(".", ":") + "0";
     return hour;
 }
 
