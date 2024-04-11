@@ -338,6 +338,37 @@ fetch(pathJsonSalas)
         }
     }
 
+    /**
+     * Cria um novo registo de aula em formato json.
+     * @param {Array} inputArray - Array com os valores dos parâmetros de uma aula.
+     * @returns {Object} - O objeto json que representa o registo de uma aula
+     */
+    function createJsonEntry(inputArray){
+        const jsonObject = {};
+        const columnsArray = [
+            "Curso",
+            "UC",
+            "Turno",
+            "Turma",
+            "Inscritos no Turno",
+            "Dia da Semana",
+            "Hora Início da Aula",
+            "Hora Fim da Aula",
+            "Data da aula",
+            "Caracteristicas da sala pedida para a aula",
+            "Sala atribuida a aula",
+            "Semana do ano",
+            "Semana do semestre",
+            "Alterar aula"
+        ];
+
+        columnsArray.forEach((title, index) => {
+            jsonObject[title] = inputArray[index];
+        });
+
+        return jsonObject;
+    }
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const guardarButton = document.getElementById('guardarButton');
@@ -398,31 +429,46 @@ fetch(pathJsonSalas)
                 // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
                 if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
                     var condicaoComPrefSemIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && salaAtribuida.includes(preferenciaSala1Value);
-                    if (condicaoComPrefSemIna) {
-                        salasOcupadas.push(item['Sala atribuida a aula']);
-                        salasOcupadas = [...new Set(salasOcupadas)];
+                    if (condicaoComPrefSemIna && item['Sala atribuida a aula'] !== '') {
+                        salasOcupadas.push({
+                            sala: item['Sala atribuida a aula'],
+                            HoraInicio: item['Hora Inicio da Aula'],
+                            horaFim: item['Hora Fim da Aula']
+                        });
                     }
 
 
                 // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
                 } else if(preferenciaSala1Value === "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
                     var condicaoSemPreComIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue);
-                    if (condicaoSemPreComIna) {
-                        salasOcupadas.push(item['Sala atribuida a aula']);
+                    if (condicaoSemPreComIna && item['Sala atribuida a aula'] !== '') {
+                        salasOcupadas.push({
+                            sala: item['Sala atribuida a aula'],
+                            HoraInicio: item['Hora Inicio da Aula'],
+                            horaFim: item['Hora Fim da Aula']
+                        });
                     }
 
                 // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
                 } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
                     var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue) && salaAtribuida.includes(preferenciaSala1Value);
-                    if (condicaoTotal) {
-                        salasOcupadas.push(item['Sala atribuida a aula']);
+                    if (condicaoTotal && item['Sala atribuida a aula'] !== '') {
+                        salasOcupadas.push({
+                            sala: item['Sala atribuida a aula'],
+                            HoraInicio: item['Hora Inicio da Aula'],
+                            horaFim: item['Hora Fim da Aula']
+                        });
                     }
 
                     // Condição quando o utilizador apenas indica os inputs obrigatórios
                 } else{
                     var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour;
-                    if (condicaoObrigatoria) {
-                        salasOcupadas.push(item['Sala atribuida a aula']);
+                    if (condicaoObrigatoria && item['Sala atribuida a aula'] !== '') {
+                        salasOcupadas.push({
+                            sala: item['Sala atribuida a aula'],
+                            HoraInicio: item['Hora Inicio da Aula'],
+                            horaFim: item['Hora Fim da Aula']
+                        });
                     }
 
                     
@@ -430,9 +476,73 @@ fetch(pathJsonSalas)
                 
             });
 
-            // Tornar as salas ocupadas num array com valores únicos
-            salasOcupadas = [...new Set(salasOcupadas)];
+            var horasDeAula = [];
 
+            if(startHour == 8 && endHour == 13){
+                horasDeAula = [
+                    {"start": "08:00:00", "end": "09:30:00"},
+                    {"start": "9:30:00", "end": "11:00:00"},
+                    {"start": "11:00:00", "end": "12:30:00"},
+                ];
+            } else if(startHour == 13 && endHour == 18){
+                horasDeAula = [
+                    {"start": "13:00:00", "end": "14:30:00"},
+                    {"start": "14:30:00", "end": "16:00:00"},
+                    {"start": "16:00:00", "end": "17:30:00"},
+                ];
+            } else if(startHour == 18 && endHour == 23){
+                horasDeAula = [
+                    {"start": "18:00:00", "end": "19:30:00"},
+                    {"start": "19:30:00", "end": "21:00:00"},
+                    {"start": "21:00:00", "end": "22:30:00"},
+                ]
+            }
+
+            console.log(salasOcupadas);
+
+            const aggregatedsalasOcupadas = {};
+
+            salasOcupadas.forEach(row => {
+                // Verificar se a sala já existe no array "aggregatedsalasOcupadas"
+                if (!(row.sala in aggregatedsalasOcupadas)) {
+                    // Se a sala não existir no "aggregatedsalasOcupadas", adiconá-la com os valores atuais
+                    aggregatedsalasOcupadas[row.sala] = {
+                        sala: row.sala,
+                        HoraInicio: [row.HoraInicio],
+                        horaFim: [row.horaFim] 
+                    };
+                } else {
+                    // Se a sala já existir, adicionar a HoraInicio e horaFim atual aos respetivos arrays
+                    aggregatedsalasOcupadas[row.sala].HoraInicio.push(row.HoraInicio);
+                    aggregatedsalasOcupadas[row.sala].horaFim.push(row.horaFim);
+                }
+            });
+
+            // Array que vai conter uma lista da sala, com os horários em que está ocupada
+            const aggregatedsalasOcupadasArray = Object.values(aggregatedsalasOcupadas);
+
+            console.log(aggregatedsalasOcupadasArray);
+
+            aggregatedsalasOcupadasArray.forEach(room => {
+                console.log(`Sala: ${room.sala}`);
+            
+                console.log("HoraInicio:");
+                room.HoraInicio.forEach((horaInicio, index) => {
+                    console.log(`${index + 1}. ${horaInicio}`);
+                });
+
+                console.log("horaFim:");
+                room.horaFim.forEach((horaFim, index) => {
+                    console.log(`${index + 1}. ${horaFim}`);
+                });
+
+                console.log("------------------------");
+            });
+
+
+
+            /** 
+            
             // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
             if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
             caracteristaDasSalas.forEach(function(item) {
@@ -488,10 +598,14 @@ fetch(pathJsonSalas)
             // Condição quando o utilizador apenas indica os inputs obrigatórios
             } else {
             // Obter todas as salas que estão disponíveis (todas menos as ocupadas)
-            salasDisponiveis = nomesSalas.filter(nomeSala => !salasOcupadas.includes(nomeSala));
+            nomesSalas.forEach(function(item) { 
+
+
+            });
+                salasDisponiveis = nomesSalas.filter(nomeSala => !salasOcupadas.includes(nomeSala));
             }
 
-            console.log(salasDisponiveis); 
+            */
 
         });
     });
