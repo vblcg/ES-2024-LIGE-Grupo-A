@@ -371,3 +371,4 @@ module.exports = {
     criarDocumentoSlot : criarDocumentoSlot,
     adicionarAulas : adicionarAulas,
 };
+

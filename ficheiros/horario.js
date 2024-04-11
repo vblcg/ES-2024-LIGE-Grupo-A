@@ -130,7 +130,7 @@ var minMaxFilterFunction = function (headerValue, rowValue, rowData, filterParam
 * Adiciona o botão para alterar aula a cada linha e guarda os respetivos dados
 * da linha na variável "aulaAMudar"
 */
-var alterarAulaButton = function(cell, formatterParams, onRendered) {
+var alterarAulaButton = function buttonInsert(cell) {
     var button = document.createElement("button");
     button.innerHTML = "Alterar aula";
     button.classList.add("alterar-aula-button");
