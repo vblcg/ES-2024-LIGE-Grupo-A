@@ -883,6 +883,28 @@ fetch(pathJsonSalas)
     });
 
 
+    /**
+     * Obtém as características de uma determinada sala.
+     * @param {string} nomeSala - O nome da sala para obter as características.
+     * @returns {Array<string>} - Um array com as características da sala.
+     */
+    function getCaracteristica(nomeSala){
+        var caracteristica = [];
+        caracteristaDasSalas.forEach(room => {
+            if(room['Nome sala'] === nomeSala){
+                for (const prop in room) {
+                    if (room.hasOwnProperty(prop) && room[prop] === 1) {
+                        console.log(prop);
+                        caracteristica.push(prop);
+                    }
+                }
+            }
+        })
+
+        return caracteristica;
+    }
+
+
 
     /**
      * Gera slots com base nas característas das aulas e salas disponíveis.
@@ -903,7 +925,8 @@ fetch(pathJsonSalas)
             vetor.push(aula.HoraInicio);
             vetor.push(aula.horaFim);
             vetor.push("2001/01/01");
-            vetor.push("Carac");
+            // Fazer um if com o tamanho do "aaray", no casaco da característica ser indicada pelo utilizador
+            vetor.push(getCaracteristica(aula.sala));
             vetor.push(aula.sala);
             vetor.push(99);
             vetor.push(array[6]);
