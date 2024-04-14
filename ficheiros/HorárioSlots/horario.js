@@ -460,7 +460,17 @@ fetch(pathJsonSalas)
 
                 // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
                 if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
-                    arrayParaFunc.push(preferenciaSala1Value);
+                    if(checkContainerLength('preferencias-container') -1 === 3){
+                        arrayParaFunc.push(preferenciaSala1Value);
+                        arrayParaFunc.push(preferenciaSala2Value);
+                        arrayParaFunc.push(preferenciaSala3Value);
+                    } else if(checkContainerLength('preferencias-container') -1 === 2){
+                        arrayParaFunc.push(preferenciaSala1Value);
+                        arrayParaFunc.push(preferenciaSala2Value);
+                    } else {
+                        arrayParaFunc.push(preferenciaSala1Value);
+                    }
+                    
                     var condicaoComPrefSemIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && salaAtribuida.includes(preferenciaSala1Value);
                     if (condicaoComPrefSemIna && item['Sala atribuida a aula'] !== '') {
                         salasOcupadas.push({
@@ -484,7 +494,16 @@ fetch(pathJsonSalas)
 
                 // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
                 } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
-                    arrayParaFunc.push(preferenciaSala1Value);
+                    if(checkContainerLength('preferencias-container') -1 === 3){
+                        arrayParaFunc.push(preferenciaSala1Value);
+                        arrayParaFunc.push(preferenciaSala2Value);
+                        arrayParaFunc.push(preferenciaSala3Value);
+                    } else if(checkContainerLength('preferencias-container') -1 === 2){
+                        arrayParaFunc.push(preferenciaSala1Value);
+                        arrayParaFunc.push(preferenciaSala2Value);
+                    } else {
+                        arrayParaFunc.push(preferenciaSala1Value);
+                    }
                     var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue) && salaAtribuida.includes(preferenciaSala1Value);
                     if (condicaoTotal && item['Sala atribuida a aula'] !== '') {
                         salasOcupadas.push({
@@ -618,9 +637,35 @@ fetch(pathJsonSalas)
                 
 
                 caracteristaDasSalas.forEach(function(item) {
-                    var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
-                    if (condicao){
-                        salasPreferidas.push(item['Nome sala']);
+                    if(checkContainerLength('preferencias-container') -1 === 3){
+                        preferenciaSala2Value = document.getElementById('preferenciaSala2').value;
+                        var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                        var condicao2 = item[preferenciaSala2Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        var condicao3 = item[preferenciaSala3Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        if (condicao){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                        if (condicao2){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                        if (condicao3){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+
+                    } else if (checkContainerLength('preferencias-container') -1 === 2){
+                        var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                        var condicao2 = item[preferenciaSala2Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        if (condicao){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                        if (condicao2){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                    } else {
+                        var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                        if (condicao){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
                     }
                 });
 
@@ -760,12 +805,38 @@ fetch(pathJsonSalas)
             } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
 
                 caracteristaDasSalas.forEach(function(item) {
-                    var condicao1 = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
-                    var condicao2 = item[salasInaceitaveisValue] === 1;
-                    if (condicao1){
-                        salasPreferidas.push(item['Nome sala']);
-                    } 
-                    if (condicao2){
+                    var condicao4 = item[salasInaceitaveisValue] === 1;
+                    if(checkContainerLength('preferencias-container') -1 === 3){
+                        preferenciaSala2Value = document.getElementById('preferenciaSala2').value;
+                        var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                        var condicao2 = item[preferenciaSala2Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        var condicao3 = item[preferenciaSala3Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        if (condicao){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                        if (condicao2){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                        if (condicao3){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+
+                    } else if (checkContainerLength('preferencias-container') -1 === 2){
+                        var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                        var condicao2 = item[preferenciaSala2Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        if (condicao){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                        if (condicao2){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                    } else {
+                        var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                        if (condicao){
+                            salasPreferidas.push(item['Nome sala']);
+                        }
+                    }
+                    if (condicao4){
                         salasInaceitaveisSelec.push(item['Nome sala']);
                     }
                 });
@@ -825,6 +896,7 @@ fetch(pathJsonSalas)
                         }
 
                 });
+
 
                 salasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));  
                 
@@ -894,6 +966,8 @@ fetch(pathJsonSalas)
             }
 
 
+            console.log(salasAvailable)
+
             // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
             let filteredSalasAvailable = salasAvailable.filter(sala => {
             
@@ -945,19 +1019,26 @@ fetch(pathJsonSalas)
         const slots = [];
         salasAvailableInput.forEach(aula => {
             const vetor = [];
-            vetor.push(array[0]);
-            vetor.push(array[1]);
-            vetor.push(array[2]);
-            vetor.push(array[3]);
-            vetor.push(array[4]);
-            vetor.push(array[5]);
+            vetor.push(array[0]); //curso
+            vetor.push(array[1]); //uc
+            vetor.push(array[2]); //turno
+            vetor.push(array[3]); //turma
+            vetor.push(array[4]); //inscritos no turno
+            vetor.push(array[5]); //dia da semana 
             vetor.push(aula.HoraInicio);
             vetor.push(aula.horaFim);
             // Calcular a data da nova aula
-            const dataAula = getDateFunc(array[6],array[5], getSemesterFromDate(array[7]));
+            const dataAula = getDateFunc(array[6],array[5], getSemesterFromDate(array[7])); //semana pref; dia da semana; data antiga 
             vetor.push(dataAula);
             // Verificar se o utilizador específicou as características da sala
-            if(array.length > 8){
+            if(array.length > 10){
+                vetor.push(array[8]);
+                vetor.push(array[9]);
+                vetor.push(array[10]);
+            } else if(array.length > 9){
+                vetor.push(array[8]);
+                vetor.push(array[9]);
+            }else if(array.length > 8){
                 vetor.push(array[8]);
             } else {
                 vetor.push(getCaracteristica(aula.sala));
