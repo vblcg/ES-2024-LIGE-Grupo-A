@@ -152,6 +152,17 @@
         return true;
     }
 
+    var selcionarAula = function(cell, formatterParams, onRendered) {
+        var button = document.createElement("button");
+        button.innerHTML = "Selecionar aula";
+        button.classList.add("selecionar-aula-button");
+        button.addEventListener("click", function() {
+            aulaAMudar = cell.getRow().getData();
+            $('#myModal').modal('show');
+        });
+        return button;
+    };
+
 
     table = new Tabulator("#table-horario", {
     height:"700px",
@@ -173,7 +184,8 @@
         {title: "Caracteristicas da sala pedida para a aula", field:"Caracteristicas da sala pedida para a aula", headerFilter:"input"},
         {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
         {title: "Semana do ano", field:"Semana do ano", headerFilter: "input"},
-        {title: "Semana do semestre", field:"Semana do semestre", headerFilter:"input"}
+        {title: "Semana do semestre", field:"Semana do semestre", headerFilter:"input"},
+        {title: "Alterar aula", field: "Alterar aula", formatter: selcionarAula, headerSort:false}
 
     ],
     }); 

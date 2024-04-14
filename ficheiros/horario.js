@@ -393,7 +393,8 @@ fetch(pathJsonSalas)
             var uc = aulaAMudar['UC'];
             var turno = aulaAMudar['Turno'];
             var turma = aulaAMudar['Turma'];
-            var inscritos_no_turno = aulaAMudar['Turma'];
+            var inscritos_no_turno = aulaAMudar['Inscritos no Turno'];
+            var dataAntiga = aulaAMudar['Data da aula'];
 
             var arrayParaFunc = [];
             arrayParaFunc.push(curso);
@@ -414,6 +415,7 @@ fetch(pathJsonSalas)
 
             arrayParaFunc.push(diaDaSemanaPrefValue);
             arrayParaFunc.push(semanaPrefValue);
+            arrayParaFunc.push(dataAntiga);
 
     
 
@@ -445,6 +447,7 @@ fetch(pathJsonSalas)
 
                 // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
                 if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
+                    arrayParaFunc.push(preferenciaSala1Value);
                     var condicaoComPrefSemIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && salaAtribuida.includes(preferenciaSala1Value);
                     if (condicaoComPrefSemIna && item['Sala atribuida a aula'] !== '') {
                         salasOcupadas.push({
@@ -468,6 +471,7 @@ fetch(pathJsonSalas)
 
                 // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
                 } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
+                    arrayParaFunc.push(preferenciaSala1Value);
                     var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue) && salaAtribuida.includes(preferenciaSala1Value);
                     if (condicaoTotal && item['Sala atribuida a aula'] !== '') {
                         salasOcupadas.push({
@@ -925,11 +929,17 @@ fetch(pathJsonSalas)
             vetor.push(array[5]);
             vetor.push(aula.HoraInicio);
             vetor.push(aula.horaFim);
-            vetor.push("2001/01/01");
-            // Fazer um if com o tamanho do "aaray", no casaco da característica ser indicada pelo utilizador
-            vetor.push(getCaracteristica(aula.sala));
+            // Calcular a data da nova aula
+            const dataAula = getDateFunc(array[6],array[5], getSemesterFromDate(array[7]));
+            vetor.push(dataAula);
+            // Verificar se o utilizador específicou as características da sala
+            if(array.length > 8){
+                vetor.push(array[8]);
+            } else {
+                vetor.push(getCaracteristica(aula.sala));
+            }
             vetor.push(aula.sala);
-            vetor.push(99);
+            vetor.push(getWeekOfYear(dataAula));
             vetor.push(array[6]);
 
             var slot = createJsonEntry(vetor);
@@ -941,6 +951,99 @@ fetch(pathJsonSalas)
 
     }
 
+    /**
+     * Função que calcula a semana do ano com base numa data.
+     * @param {string} data - Data da aula.
+     * @returns {number} Semana do ano correspondente à data fornecida.
+     */
+    function getWeekOfYear(data) {
+        const dateParts = data.split('/');
+    
+        const year = parseInt(dateParts[0]);
+        const month = parseInt(dateParts[1]) - 1; // Month is zero-based
+        const day = parseInt(dateParts[2]);
+    
+        const date = new Date(year, month, day);
+        if (isNaN(date.getTime())) {
+            console.error("Data inválida.");
+            return -1;
+        }
+    
+        const inicioAno = new Date(year, 0, 1);
+        const diff = date - inicioAno;
+        const semanaAno = Math.floor(diff / (7 * 24 * 60 * 60 * 1000));
 
+        return semanaAno + 1;
+    }
+
+
+    /**
+     * Função que calcula o semestre com base na data da aula a substituir.
+     * @param {String} date - Data da aula a substituir.
+     * @returns {string} O semestre correspondente à data fornecida ("first" para o primeiro semestre ou "second" para o segundo semestre).
+     */
+    function getSemesterFromDate(date) {
+        let newDate;
+        if(date == null){
+            newDate = new Date();
+        } else {
+            const dateParts = date.split('/');
+        newDate = new Date(`${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`);
+        }
+        const referenceDateFirstSemester = new Date('2022-09-01');
+        const referenceDateSecondSemester = new Date('2023-02-01');
     
-    
+        if (newDate >= referenceDateFirstSemester && newDate < referenceDateSecondSemester) {
+            return "first";
+        } else {
+            return "second";
+        }
+    }
+
+
+    /**
+     * Calcula a data da nova aula com base no número da semana, dia da semana e semestre.
+     * @param {number} weekNumber - Número da semana.
+     * @param {string} dayOfWeek - Dia da semana.
+     * @param {string} semester - O semestre ("first" para o primeiro semestre ou "second" para o segundo semestre).
+     * @returns {string} A data da nova aula.
+     */
+    function getDateFunc(weekNumber, dayOfWeek, semester) {
+        const weekDays = {
+            "Seg": 1,
+            "Ter": 2,
+            "Qua": 3,
+            "Qui": 4,
+            "Sex": 5
+        };
+
+        let referenceDate;
+        if (semester === 'first') {
+            referenceDate = new Date('2022-09-01');
+        } else if (semester === 'second') {
+            referenceDate = new Date('2023-02-01');
+        } else {
+            return null; // Invalid semester input
+        }
+
+        const resultDate = new Date(referenceDate);
+        resultDate.setDate(resultDate.getDate() + (weekNumber - 1) * 7);
+
+        const day = weekDays[dayOfWeek];
+        if (!day) {
+            return null; // Invalid day of the week input
+        }
+
+        resultDate.setDate(resultDate.getDate() + (day - resultDate.getDay() + 7) % 7);
+
+        const year = resultDate.getFullYear();
+        const month = String(resultDate.getMonth() + 1).padStart(2, '0');
+        const dayOfMonth = String(resultDate.getDate()).padStart(2, '0');
+
+        return `${year}/${month}/${dayOfMonth}`;
+    }
+        
+
+
+        
+        
