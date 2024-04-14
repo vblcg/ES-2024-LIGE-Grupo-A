@@ -45,7 +45,7 @@ var cursoData = JSON.parse(localStorage.getItem('slotsData'));
 
 document.addEventListener("DOMContentLoaded", function () {
   
-  fetch("../Horário.json")
+  fetch("Horário.json")
     .then((response) => {
       // Verificar se o request foi bem sucedido
       if (!response.ok) {
@@ -206,7 +206,25 @@ document.addEventListener("DOMContentLoaded", function () {
             field: "Semana do semestre",
             headerFilter: "input",
           },
-          { title: "Alterar aula", field: "Alterar aula", headerSort: false },
+          { title: "Alterar aula", field: "Alterar aula", headerSort: false,
+            formatter: function(cell, formatterParams, onRendered) {
+            if (cursoData.includes(cell.getValue())) {
+              var acceptBtn = "<button class='accept-btn'>Accept</button>";
+              var modifyBtn = "<button class='modify-btn'>Modify</button>";
+              var deleteBtn = "<button class='delete-btn'>Delete</button>";
+              return acceptBtn + modifyBtn + deleteBtn;
+            } else {
+              var modifyBtn = "<button class='modify-btn'>Modify</button>";
+              return "";
+            }
+          },
+          cellClick: function(e, cell) {
+            if (e.target.classList.contains("accept-btn")) {
+            } else if (e.target.classList.contains("modify-btn")) {
+            } else if (e.target.classList.contains("delete-btn")) {
+          }
+          },
+        }
         ],
       });
     })

@@ -192,14 +192,16 @@ function filterCapacidade(salas, numeroAlunos) {
 
 /**
  * @param hour
- * Função para passar do formato "hh.mm" para o formato "hh:mm".
+ * Função para passar do formato "hh.mm" para o formato "hh:mm:ss".
  */
 function parseHour(hour) {
     if(hour.toString().includes("."))
-        return hour.toString().replace(".", ":") + "0";
-    return hour;
+        return hour.toString().replace(".", ":") + "0:00";
+    else if(hour.toString().includes(":"))
+        return hour.toString() + "0:00";
+    else 
+        return hour.toString() + ":00:00";
 }
-
 
 /**
  * 

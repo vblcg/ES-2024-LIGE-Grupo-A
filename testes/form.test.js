@@ -150,10 +150,13 @@ describe('Testes para a função filterCapacidade', () => {
 
 describe('Testes para a função parseHour', () => {  
     test('Teste com valor errado', () => {
-        expect(parseHour("100")).toEqual("100");
+        expect(parseHour("100")).toEqual("100:00:00");
     });
     test('Teste para substituir "." por ":"', () => {
-        expect(parseHour("10.3")).toEqual("10:30");
+        expect(parseHour("10.3")).toEqual("10:30:00");
+    });
+    test('Teste valor sem "." ', () => {
+        expect(parseHour("10")).toEqual("10:00:00");
     });
 }); 
 
