@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       table = new Tabulator("#tabela-dados", {
         height: "700px",
-        layout: "fitDataTable",
+        layout: "fitDataFill",
         pagination: "local",
         resizableRows: true,
         movableColumns: true,
@@ -82,11 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           { title: "Turma", field: "Turma", headerFilter: "input" },
           {
-            title: "Inscritos no Turno",
+            title: "Nº alunos",
             field: "Inscritos no Turno",
             headerFilter: "input",
             sorter: "number",
             headerFilterLiveFilter: false,
+            width: 95
           },
           {
             title: "Dia da Semana",
@@ -107,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
           },
           {
-            title: "Hora Início da Aula",
+            title: "Hora de Início",
             field: "Hora Inicio da Aula",
             editor: "list",
             headerFilter: true,
@@ -145,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
           },
           {
-            title: "Hora Fim da Aula",
+            title: "Hora de Fim",
             field: "Hora Fim da Aula",
             editor: "list",
             headerFilter: true,
@@ -187,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sorterParams: { format: "dd/MM/yy", alignEmptyValues: "top" },
           },
           {
-            title: "Caracteristicas da sala pedida para a aula",
+            title: "Caracteristicas da sala",
             field: "Caracteristicas da sala pedida para a aula",
             headerFilter: "input",
           },
@@ -205,6 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
             title: "Semana do semestre",
             field: "Semana do semestre",
             headerFilter: "input",
+            width: 100
           },
           { title: "Alterar aula", field: "Alterar aula", headerSort: false,
             formatter: function(cell, formatterParams, onRendered) {
