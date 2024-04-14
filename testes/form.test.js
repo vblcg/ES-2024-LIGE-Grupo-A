@@ -1,4 +1,6 @@
 const {decimalParaHora, initParametrosSemana, filterCapacidade, parseHour, adicionarAulas} = require('./functionsToTest');
+const {checkIfEmpty, createJsonEntry} = require('./functionsToTestHorario');
+
 let salas = [
     {
       "Edifício": "Ala Autónoma (ISCTE-IUL)",
@@ -115,7 +117,10 @@ let salas = [
 
 describe('Testes para a função decimalParaHora', () => {
     test('Teste de hora', () => {
-        expect(decimalParaHora(9.6)).toBe(10);
+        expect(decimalParaHora(10.60)).toBe(11);
+    });
+    test('Teste de várias horas incrementadas', () => {
+        expect(decimalParaHora(11.9)).toBe(12.3);
     });
     test('Qualquer outro input', () => {
         expect(decimalParaHora(9.3)).toBe(9.3);
@@ -148,10 +153,13 @@ describe('Testes para a função filterCapacidade', () => {
 
 describe('Testes para a função parseHour', () => {  
     test('Teste com valor errado', () => {
-        expect(parseHour("100")).toEqual("100");
+        expect(parseHour("100")).toEqual("100:00:00");
     });
     test('Teste para substituir "." por ":"', () => {
-        expect(parseHour("10.3")).toEqual("10:30");
+        expect(parseHour("10.3")).toEqual("10:30:00");
+    });
+    test('Teste valor sem "." ', () => {
+        expect(parseHour("10")).toEqual("10:00:00");
     });
 }); 
 
@@ -183,3 +191,50 @@ describe('Testes para a função adicionarAulas', () => {
     });
 });
 
+describe('Testes para a função checkIfEmpty', () => {  
+    test('Teste com valor errado', () => {
+        const array1 = [1,2,3];
+        expect(checkIfEmpty(array1)).toEqual(false);
+    });
+    test('Teste com o valor correto', () => {
+        const array2 = [];
+        expect(checkIfEmpty(array2)).toEqual(true);    
+    });
+}); 
+
+describe('Testes para a função createJsonEntry', () => {  
+    test('Teste com array de inputs', () => {
+        const inputArray = [
+            "ME",                   
+            "Teoria dos Jogos e dos Contratos", 
+            "01789TP01",
+            "MEA1",
+            "30",
+            "Sex",
+            "13:00:00",
+            "14:30:00",
+            "2022/12/02",
+            "Sala Aulas Mestrado",
+            "AA2.25",
+            48,
+            14
+        ];
+
+          jsonArray = {
+            "Curso": "ME",
+            "UC": "Teoria dos Jogos e dos Contratos",
+            "Turno": "01789TP01",
+            "Turma": "MEA1",
+            "Inscritos no Turno": "30",
+            "Dia da Semana": "Sex",
+            "Hora Início da Aula": "13:00:00",
+            "Hora Fim da Aula": "14:30:00",
+            "Data da aula": "2022/12/02",
+            "Caracteristicas da sala pedida para a aula": "Sala Aulas Mestrado",
+            "Sala atribuida a aula": "AA2.25",
+            "Semana do ano": 48,
+            "Semana do semestre": 14
+        }
+        expect(createJsonEntry(inputArray)).toEqual(jsonArray);
+    });
+}); 

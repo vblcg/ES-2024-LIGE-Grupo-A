@@ -8,6 +8,7 @@
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
     <script type = "module" src="form.js"></script>
+    
 </head>
 
 <body>
@@ -26,13 +27,18 @@
         </div>
         
         <div class="input-container">
-        <label for="nmrAulas">Número de aulas:</label>
+        <label for="nmrAulas">Número de semanas de aulas:</label>
         <input type="number" id="nmrAulas" name="nmrAulas" max="40" min ="1" required>
         </div>
 
         <div class="input-container">
+            <label for="nmrAulas">Número de Aulas por Semana:</label>
+            <input type="number" id="nmrAulasSemana" name="nmrAulasSemana" max="6" min ="1" required>
+        </div>
+
+        <div class="input-container">
         <label for="nmrAlunos">Número de alunos:</label>
-        <input type="number" id="nmrAlunos" name="nmrAlunos" max="500" value="1">
+        <input type="number" id="nmrAlunos" name="nmrAlunos" max="500" min="1" value="1">
         </div>
 
         <div class="input-container">

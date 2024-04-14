@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1712601891885" clover="3.2.0">
-  <project timestamp="1712601891885" name="All files">
-    <metrics statements="105" coveredstatements="76" conditionals="42" coveredconditionals="22" methods="16" coveredmethods="10" elements="163" coveredelements="108" complexity="0" loc="105" ncloc="105" packages="1" files="1" classes="1"/>
-    <file name="functionsToTest.js" path="C:\Users\pedro\ES-2024-LIGE-Grupo-A\testes\functionsToTest.js">
+<coverage generated="1712854014344" clover="3.2.0">
+  <project timestamp="1712854014344" name="All files">
+    <metrics statements="114" coveredstatements="85" conditionals="44" coveredconditionals="24" methods="19" coveredmethods="13" elements="177" coveredelements="122" complexity="0" loc="114" ncloc="114" packages="1" files="2" classes="2"/>
+    <file name="functionsToTest.js" path="C:\Users\joaol\OneDrive\Documentos\GitHub\ES-2024-LIGE-Grupo-A\testes\functionsToTest.js">
       <metrics statements="105" coveredstatements="76" conditionals="42" coveredconditionals="22" methods="16" coveredmethods="10"/>
       <line num="1" count="1" type="stmt"/>
       <line num="31" count="1" type="stmt"/>
@@ -109,6 +109,18 @@
       <line num="360" count="1" type="stmt"/>
       <line num="361" count="1" type="stmt"/>
       <line num="366" count="1" type="stmt"/>
+    </file>
+    <file name="functionsToTestHorario.js" path="C:\Users\joaol\OneDrive\Documentos\GitHub\ES-2024-LIGE-Grupo-A\testes\functionsToTestHorario.js">
+      <metrics statements="9" coveredstatements="9" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
+      <line num="7" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="20" count="1" type="stmt"/>
+      <line num="21" count="1" type="stmt"/>
+      <line num="37" count="1" type="stmt"/>
+      <line num="38" count="13" type="stmt"/>
+      <line num="41" count="1" type="stmt"/>
+      <line num="44" count="1" type="stmt"/>
     </file>
   </project>
 </coverage>

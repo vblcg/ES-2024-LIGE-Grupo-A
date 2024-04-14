@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Salas ISCTE</title>
+  <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet" />
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+</head>
+
+<body>
+  <div id="Filtro Localização">
+    <label for="location-filter">Filtrar por localização:</label>
+    <select id="location-filter">
+      <option value="" hidden></option>
+      <option value="Edifício Sedas Nunes (ISCTE-IUL)">
+        Edifício I (ISCTE-IUL)
+      </option>
+      <option value="Edifício II (ISCTE-IUL)">
+        Edifício II (ISCTE-IUL)</option>
+      <option value="Polidesportivo (ISCTE-IUL)">
+        Polidesportivo (ISCTE-IUL)
+      </option>
+      <option value="Ala Autónoma (ISCTE-IUL)">
+        Ala Autónoma (ISCTE-IUL)
+      </option>
+    </select>
+
+    <button id="clear-filter">Limpar Filtro</button>
+  </div>
+
+  <div id="Filtro Horário">
+    <button id="time-filter-button">
+      Filtrar por disponibilidade horária
+    </button>
+    <input type="date" id="data-horario" name="dataHorario" hidden="true" max="2022-12-31"/>
+    <select id="select-timeslot" hidden="true">
+      <option value="" hidden></option>
+      <option value="08:00:00-09:30:00">8:00-9:30</option>
+      <option value="09:30:00-11:00:00">9:30-11:00</option>
+      <option value="11:00:00-12:30:00">11:00-12:30</option>
+      <option value="13:00:00-14:30:00">13:00-14:30</option>
+      <option value="14:00:00-16:00:00">14:00-16:00</option>
+      <option value="14:30:00-16:00:00">14:30-16:00</option>
+      <option value="16:00:00-17:30:00">16:00-17:30</option>
+      <option value="16:30:00-18:00:00">16:30-18:00</option>
+      <option value="17:30:00-19:00:00">17:30-19:00</option>
+      <option value="18:00:00-19:00:00">18:00-19:00</option>
+      <option value="18:00:00-20:00:00">18:00-20:00</option>
+      <option value="18:30:00-21:30:00">18:30-21:30</option>
+      <option value="19:00:00-20:30:00">19:00-20:30</option>
+      <option value="19:30:00-21:00:00">19:30-21:00</option>
+      <option value="20:00:00-21:00:00">20:00-21:00</option>
+      <option value="20:00:00-22:00:00">20:00-22:00</option>
+      <option value="20:30:00-22:30:00">20:30-22:30</option>
+      <option value="21:00:00-22:30:00">21:00-22:30</option>
+    </select>
+  </div>
+
+  <div id="table-horario">
+    <script type="text/javascript">
+      const pathJson = "http://localhost/CaracterizacaoDasSalas.json";
+      const pathHorario = "http://localhost/Horário.json";
+      var day_set = false;
+      var timeslot_set = false;
+      var day;
+      var timeslot;
+      let jsonHorario;
+      let jsonSalas;
+      var salasIndisponiveis;
+      var salasDisponiveis ;
+
+      var minMaxFilterEditor = function (
+        cell,
+        onRendered,
+        success,
+        cancel,
+        editorParams
+      ) {
+        var end;
+        var container = document.createElement("span");
+        var start = document.createElement("input");
+        start.setAttribute("type", "number");
+        start.setAttribute("placeholder", "Min");
+        start.setAttribute("min", 0);
+        start.setAttribute("max", 300);
+        start.style.padding = "4px";
+        start.style.width = "50%";
+        start.style.boxSizing = "border-box";
+
+        start.value = cell.getValue();
+
+        function buildValues() {
+          success({
+            start: start.value,
+            end: end.value,
+          });
+        }
+
+        function keypress(e) {
+          if (e.keyCode == 13) {
+            buildValues();
+          }
+
+          if (e.keyCode == 27) {
+            cancel();
+          }
+        }
+
+        end = start.cloneNode();
+        end.setAttribute("placeholder", "Max");
+
+        start.addEventListener("change", buildValues);
+        start.addEventListener("blur", buildValues);
+        start.addEventListener("keydown", keypress);
+
+        end.addEventListener("change", buildValues);
+        end.addEventListener("blur", buildValues);
+        end.addEventListener("keydown", keypress);
+
+        container.appendChild(start);
+        container.appendChild(end);
+
+        return container;
+      };
+
+      var minMaxFilterFunction = function (
+        headerValue,
+        rowValue,
+        rowData,
+        filterParams
+      ) {
+        if (rowValue !== null && rowValue !== undefined) {
+          if (headerValue.start !== "") {
+            if (headerValue.end !== "") {
+              return (
+                rowValue >= parseFloat(headerValue.start) &&
+                rowValue <= parseFloat(headerValue.end)
+              );
+            } else {
+              return rowValue >= parseFloat(headerValue.start);
+            }
+          } else {
+            if (headerValue.end !== "") {
+              return rowValue <= parseFloat(headerValue.end);
+            }
+          }
+        }
+
+        return true;
+      };
+
+
+      function readHorario() {
+        fetch(pathHorario)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to fetch JSON: ${response.statusText}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            jsonHorario = data;
+          })
+          .catch((error) => {
+            console.error("Error fetching JSON:", error);
+          });
+      }
+
+      function readSalas() {
+        fetch(pathJson)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to fetch JSON: ${response.statusText}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            jsonSalas = data;
+          })
+          .catch((error) => {
+            console.error("Error fetching JSON:", error);
+          });
+      }
+
+      function filterDate(day, timeslot) {
+        return queryJSON(day, timeslot);
+      }
+
+      function queryJSON(day, timeslot) {
+        salasDisponiveis = [];
+        salasIndisponiveis = [];
+        for (let i = 0; i < jsonHorario.length; i++) {
+          const currentDate = formatDateJson(jsonHorario[i]["Data da aula"]);
+          const currentTimeslotInicio = jsonHorario[i]["Hora Inicio da Aula"];
+          const currentTimeslotFim = jsonHorario[i]["Hora Fim da Aula"];
+          const currentTimeSlot = currentTimeslotInicio + "-" + currentTimeslotFim;
+          if ((currentDate == day && currentTimeSlot == timeslot)) {
+            salasIndisponiveis.push(jsonHorario[i]["Sala atribuida a aula"]);
+          }
+        }
+        for (let j = 0; j < jsonSalas.length; j++) {
+          if (!salasIndisponiveis.includes(jsonSalas[j]["Nome sala"])) {
+            salasDisponiveis.push(jsonSalas[j]["Nome sala"]);
+          }
+        }
+        return salasDisponiveis;
+      }
+
+      function formatDateJson(inputDate) {
+      // Split the input date string by '/'
+      var parts = inputDate.split('/');
+      
+      // Rearrange the parts to form the desired format
+      var formattedDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+      
+      return formattedDate;
+    }
+
+      function formatDate(inputDate) {
+        const parts = inputDate.split('-');
+        const formattedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+        const day = formattedDate.getDate();
+        const month = formattedDate.getMonth() + 1;
+        const year = formattedDate.getFullYear();
+        const paddedDay = day < 10 ? '0' + day : day;
+        const paddedMonth = month < 10 ? '0' + month : month;
+        const formattedDateString = `${paddedDay}/${paddedMonth}/${year}`;
+        return formattedDateString;
+      }
+
+      fetch(pathJson)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch ${pathJson}: ${response.statusText}`
+            );
+          }
+          return response.json();
+        })
+
+        .then((data) => {
+          var table = new Tabulator("#table-horario", {
+            width: "1000",
+            layout: "fitData",
+            data: data,
+            pagination: true,
+            paginationSize: 20,
+            columns: [
+              { title: "Edifício", field: "Edifício", headerFilter: true },
+              { title: "Nome sala", field: "Nome sala", headerFilter: true },
+              {
+                title: "Capacidade Normal",
+                field: "Capacidade Normal",
+                headerFilter: true,
+                sorter: "number",
+                headerFilter: minMaxFilterEditor,
+                headerFilterFunc: minMaxFilterFunction,
+                headerFilterLiveFilter: false,
+              },
+              {
+                title: "Capacidade Exame",
+                field: "Capacidade Exame",
+                headerFilter: true,
+                sorter: "number",
+                headerFilter: minMaxFilterEditor,
+                headerFilterFunc: minMaxFilterFunction,
+                headerFilterLiveFilter: false,
+              },
+              {
+                title: "Nº características",
+                field: "Nº características",
+                headerFilter: true,
+              },
+              {
+                title: "Anfiteatro aulas",
+                field: "Anfiteatro aulas",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Apoio técnico eventos",
+                field: "Apoio técnico eventos",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Arq 1",
+                field: "Arq 1",
+                headerFilter: true,
+                formatter: "tickCross",
+                sorter: "boolean",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Arq 2",
+                field: "Arq 2",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Arq 3",
+                field: "Arq 3",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Arq 4",
+                field: "Arq 4",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Arq 5",
+                field: "Arq 5",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Arq 6",
+                field: "Arq 6",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Arq 9",
+                field: "Arq 9",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "BYOD (Bring Your Own Device)",
+                field: "BYOD (Bring Your Own Device)",
+                headerFilter: true,
+                formatter: "tickCross",
+                sorter: "boolean",
+                editor: true,
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Focus Group",
+                field: "Focus Group",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Arquictetura de Computadores I",
+                field: "Laboratório de Arquictetura de Computadores I",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Arquictetura de Computadores II",
+                field: "Laboratório de Arquictetura de Computadores II",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Base de Engenharia",
+                field: "Laboratório de Base de Engenharia",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Eletrónica",
+                field: "Laboratório de Eletrónica",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Informática",
+                field: "Laboratório de Informática",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Jornalismo",
+                field: "Laboratório de Jornalismo",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Redes de Computadores I",
+                field: "Laboratório de Redes de Computadores I",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Redes de Computadores II",
+                field: "Laboratório de Redes de Computadores II",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Laboratório de Telecomunicações",
+                field: "Laboratório de Telecomunicações",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Sala Aulas Mestrado",
+                field: "Sala Aulas Mestrado",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Sala Aulas Mestrado Plus",
+                field: "Sala Aulas Mestrado Plus",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Sala NEE",
+                field: "Sala NEE",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Sala Provas",
+                field: "Sala Provas",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Sala Reunião",
+                field: "Sala Reunião",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Sala de Arquitetura",
+                field: "Sala de Arquitetura",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Sala de Aulas normal",
+                field: "Sala de Aulas normal",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Videoconferência",
+                field: "Videoconferência",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+              {
+                title: "Átrio",
+                field: "Átrio",
+                headerFilter: true,
+                formatter: "tickCross",
+                formatterParams: { allowEmpty: true },
+              },
+            ],
+          });
+
+          document
+            .getElementById("location-filter")
+            .addEventListener("change", function () {
+              const selectedLocation = this.value;
+              table.setFilter("Edifício", "like", selectedLocation);
+            });
+
+          document.getElementById("clear-filter").addEventListener("click", function () {
+            document.getElementById("location-filter").value = ""; // Limpa o seletor de localização
+            document.getElementById("select-timeslot").selectedIndex = -1;
+            document.getElementById("data-horario").value = "";
+            day_set=false;
+            timeslot_set=false;
+            table.clearFilter();
+          });
+
+          document.getElementById("time-filter-button").addEventListener("click", function () {
+            document.getElementById("select-timeslot").hidden = false;
+            document.getElementById("data-horario").hidden = false;
+            document.getElementById("time-filter-button").hidden = true;
+            readHorario();
+            readSalas();
+          });
+
+          document.getElementById("data-horario").addEventListener("change", function () {
+            day_set = true;
+            day = formatDate(this.value);
+            if (day_set && timeslot_set) {
+              filter = filterDate(day, timeslot);
+              table.setFilter("Nome sala", "in", filter);
+            }
+          });
+
+
+          document.getElementById("select-timeslot").addEventListener("change", function () {
+            timeslot = this.value;
+            timeslot_set = true;
+            if (day_set && timeslot_set) {
+              filter = filterDate(day, timeslot);
+              table.setFilter("Nome sala", "in", filter);
+            }
+          });
+        })
+
+        .catch((error) => {
+          console.error(`Error loading ${pathJson}:`, error);
+        });
+    </script>
+  </div>
+</body>
+
+</html>

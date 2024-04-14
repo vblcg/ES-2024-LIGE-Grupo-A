@@ -150,9 +150,10 @@ let horario = [{
 function decimalParaHora(decimal) {
     let horaInteira = Math.floor(decimal);
     let minutos = Math.round((decimal - horaInteira)*100)/100;
-    if(minutos == 0.6) return Math.round(decimal); else return decimal;
+    if(minutos == 0.6) return Math.round(decimal);
+    else if(minutos == 0.9) return (Math.round(decimal) + 0.3);
+    else return decimal;
 }
-
 /**
  * 
  * @param  diasSemanaInput 
@@ -192,14 +193,16 @@ function filterCapacidade(salas, numeroAlunos) {
 
 /**
  * @param hour
- * Função para passar do formato "hh.mm" para o formato "hh:mm".
+ * Função para passar do formato "hh.mm" para o formato "hh:mm:ss".
  */
 function parseHour(hour) {
     if(hour.toString().includes("."))
-        return hour.replace(".", ":") + "0";
-    return hour;
+        return hour.toString().replace(".", ":") + "0:00";
+    else if(hour.toString().includes(":"))
+        return hour.toString() + "0:00";
+    else 
+        return hour.toString() + ":00:00";
 }
-
 
 /**
  * 
@@ -371,3 +374,4 @@ module.exports = {
     criarDocumentoSlot : criarDocumentoSlot,
     adicionarAulas : adicionarAulas,
 };
+
