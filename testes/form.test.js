@@ -119,6 +119,9 @@ describe('Testes para a função decimalParaHora', () => {
     test('Teste de hora', () => {
         expect(decimalParaHora(10.60)).toBe(11);
     });
+    test('Teste de várias horas incrementadas', () => {
+        expect(decimalParaHora(11.9)).toBe(12.3);
+    });
     test('Qualquer outro input', () => {
         expect(decimalParaHora(9.3)).toBe(9.3);
     });
