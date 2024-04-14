@@ -1,50 +1,50 @@
 var jsonData;
 var minMaxFilterFunction = function (
-    headerValue,
-    rowValue,
-    rowData,
-    filterParams
-    ) {
-    // Aplica o filtro apenas a valores que não sejam null e que estejam definidos
-    if (rowValue !== null && rowValue !== undefined) {
-        if (headerValue.start !== "") {
-        if (headerValue.end !== "") {
-            // Filtro para valores de min e max definidos
-            return (
-            rowValue >= parseFloat(headerValue.start) &&
-            rowValue <= parseFloat(headerValue.end)
-            );
-        } else {
-            // Filtro se apenas o valor de min estiver difinido
-            return rowValue >= parseFloat(headerValue.start);
-        }
-        } else {
-        if (headerValue.end !== "") {
-            // Filtro se apenas o valor de max estiver difinido
-            return rowValue <= parseFloat(headerValue.end);
-        }
-        }
+  headerValue,
+  rowValue,
+  rowData,
+  filterParams
+) {
+  // Aplica o filtro apenas a valores que não sejam null e que estejam definidos
+  if (rowValue !== null && rowValue !== undefined) {
+    if (headerValue.start !== "") {
+      if (headerValue.end !== "") {
+        // Filtro para valores de min e max definidos
+        return (
+          rowValue >= parseFloat(headerValue.start) &&
+          rowValue <= parseFloat(headerValue.end)
+        );
+      } else {
+        // Filtro se apenas o valor de min estiver difinido
+        return rowValue >= parseFloat(headerValue.start);
+      }
+    } else {
+      if (headerValue.end !== "") {
+        // Filtro se apenas o valor de max estiver difinido
+        return rowValue <= parseFloat(headerValue.end);
+      }
     }
-    return true;
+  }
+  return true;
 };
 
 function convertJsonToCsv(data) {
-    var headers = Object.keys(data[0]);
-    var csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += headers.join(",") + "\n";
-    data.forEach(function (row) {
-        var values = headers.map(function (header) {
-            return row[header];
-        });
-        csvContent += values.join(",") + "\n";
+  var headers = Object.keys(data[0]);
+  var csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += headers.join(",") + "\n";
+  data.forEach(function (row) {
+    var values = headers.map(function (header) {
+      return row[header];
     });
+    csvContent += values.join(",") + "\n";
+  });
 
-    return csvContent;
+  return csvContent;
 }
 var cursoData = JSON.parse(localStorage.getItem('slotsData'));
 
 document.addEventListener("DOMContentLoaded", function () {
-  
+
   fetch("Horário.json")
     .then((response) => {
       // Verificar se o request foi bem sucedido
@@ -206,25 +206,42 @@ document.addEventListener("DOMContentLoaded", function () {
             field: "Semana do semestre",
             headerFilter: "input",
           },
-          { title: "Alterar aula", field: "Alterar aula", headerSort: false,
-            formatter: function(cell, formatterParams, onRendered) {
-            if (cursoData.includes(cell.getValue())) {
-              var acceptBtn = "<button class='accept-btn'>Accept</button>";
-              var modifyBtn = "<button class='modify-btn'>Modify</button>";
-              var deleteBtn = "<button class='delete-btn'>Delete</button>";
-              return acceptBtn + modifyBtn + deleteBtn;
-            } else {
-              var modifyBtn = "<button class='modify-btn'>Modify</button>";
-              return "";
-            }
-          },
-          cellClick: function(e, cell) {
-            if (e.target.classList.contains("accept-btn")) {
-            } else if (e.target.classList.contains("modify-btn")) {
-            } else if (e.target.classList.contains("delete-btn")) {
+          {
+            title: "Alterar aula", field: "Alterar aula", headerSort: false,
+            formatter: function (cell, formatterParams, onRendered) {
+              var cursoData = JSON.parse(localStorage.getItem('slotsData'));
+              // Verifica se o valor da célula corresponde a alguma UC em cursoData
+              if (cursoData && cursoData.some(item => item.UC === cell.getRow().getData().UC)) {
+                var acceptBtn = "<button class='accept-btn'>Accept</button>";
+                var modifyBtn = "<button class='modify-btn'>Modify</button>";
+                var deleteBtn = "<button class='delete-btn'>Delete</button>";
+                return acceptBtn + modifyBtn + deleteBtn;
+              } else {
+                return "";
+              }
+            },
+            cellClick: function (e, cell) {
+              if (e.target.classList.contains("accept-btn")) {
+                var confirmacao = confirm("Tem a certeza que quer aceitar?");
+                if (confirmacao) {
+                  cell.getElement().innerHTML = "";
+                }
+              } else if (e.target.classList.contains("modify-btn")) {
+              
+              } else if (e.target.classList.contains("delete-btn")) {
+                var confirmacao = confirm("Tem a certeza que quer apagar a aula? Não há volta a dar depois se der merda já bateste");
+                if (confirmacao) {
+                  var rowData = cell.getRow().getData(); 
+                  var rowIndex = cell.getRow().getIndex(); 
+                  cell.getRow().delete(); 
+                  cursoData.splice(rowIndex, 1);
+                  localStorage.setItem('slotsData', JSON.stringify(cursoData)); 
+                  alert("Aula excluída com sucesso!");
+                }
+
+              }
+            },
           }
-          },
-        }
         ],
       });
     })
@@ -232,27 +249,27 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error(`Error loading ${"../Horário.json"}:`, error);
     });
 
-    document.getElementById("gravarJSON").addEventListener("click", function () {
-        var data = JSON.stringify(horario);
-        var blob = new Blob([data], { type: "application/json" });
-        var url = window.URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
-        a.download = "SlotsAtribuidos.json";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-      });
-    
-      document.getElementById("gravarCSV").addEventListener("click", function () {
-        var csvContent = convertJsonToCsv(horario);
-        var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-        var url = window.URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
-        a.download = "SlotsAtribuidos.csv";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-    });
+  document.getElementById("gravarJSON").addEventListener("click", function () {
+    var data = JSON.stringify(horario);
+    var blob = new Blob([data], { type: "application/json" });
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "SlotsAtribuidos.json";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("gravarCSV").addEventListener("click", function () {
+    var csvContent = convertJsonToCsv(horario);
+    var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "SlotsAtribuidos.csv";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  });
 });
