@@ -382,10 +382,8 @@ fetch(pathJsonSalas)
 
             caracteristaDasSalas.forEach(function(obj) {
                 delete obj["Edifício"];
-                delete obj['Capacidade Normal'];
                 delete obj['Nº características'];
                 delete obj['Capacidade Exame'];
-                delete obj['Capacidade Normal'];
             });
 
 
@@ -424,6 +422,10 @@ fetch(pathJsonSalas)
                 alert('Por favor, preencha todos os campos obrigatórios.');
                 return;
             }
+
+            horario.forEach(aula => {
+                
+            });
           
 
             var salasOcupadas = [];
@@ -881,7 +883,18 @@ fetch(pathJsonSalas)
                 
             }
 
-            var slotsProxHTML = generateSlots(arrayParaFunc,salasAvailable);
+
+            // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
+            let filteredSalasAvailable = salasAvailable.filter(sala => {
+            
+                let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+            
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+
+                return capacidadeNormal >= inscritos_no_turno;
+            });
+
+            var slotsProxHTML = generateSlots(arrayParaFunc,filteredSalasAvailable);
             localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
             window.open('../MudarAula/slotsASelecionar.html', "_blank");
 
