@@ -171,15 +171,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var diaSemanaString = results[1];
         var inputsDias = results[2];
 
-        for(let aulas = 0; aulas < numeroAulas; aulas++) {
+        for(let aulas = 0; aulas < aulasSemana; aulas++) {
             var semanaSemestre = parseInt(inputs[8]); 
             var filteredJson = jsonData;
-            for(let semana = 0; semana < aulasSemana; semana++) {
+            for(let semana = 0; semana < numeroAulas; semana++) {
                 var exist = false;
                 var horaCount = 1;
                 if(periodos == null) {
-                    var min = decimalParaHora(8.0 + (semana*1.3));
-                    var max = decimalParaHora(9.30 + (semana*1.3));
+                    var min = decimalParaHora(8.0 + (aulas*1.3));
+                    var max = decimalParaHora(9.30 + (aulas*1.3));
                 } else {
                     var min = parseFloat(periodos[0].split("-")[0]);
                     var max = parseFloat(periodos[0].split("-")[1]);
