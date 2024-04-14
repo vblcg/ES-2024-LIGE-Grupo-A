@@ -409,6 +409,17 @@ fetch(pathJsonSalas)
             var preferenciaSala1Value = document.getElementById('preferenciaSala1').value;
             var salasInaceitaveisValue = document.getElementById('salasInaceitaveis').value;
 
+            let preferenciaSala2Value;
+            let preferenciaSala3Value;
+
+
+            if(checkContainerLength('preferencias-container') - 1 === 2){
+                preferenciaSala2Value = document.getElementById('preferenciaSala2').value;
+            } else if(checkContainerLength('preferencias-container') - 1 === 3){
+                preferenciaSala2Value = document.getElementById('preferenciaSala2').value;
+                preferenciaSala3Value = document.getElementById('preferenciaSala3').value;
+            }
+
             var [startHour, endHour] = alturaDoDiaPrefValue.split(',');
 
             arrayParaFunc.push(diaDaSemanaPrefValue);
@@ -418,7 +429,7 @@ fetch(pathJsonSalas)
     
 
             // Obrigar o utilizador a preencher os 3 primeiros inputs
-            if (semanaPrefValue === 'semana a selecionar' || diaDaSemanaPrefValue === 'dia da semana a selecionar' || alturaDoDiaPrefValue.value === 'altura do dia a selecionar') {
+            if (semanaPrefValue === 'Semana a selecionar' || diaDaSemanaPrefValue === 'Sia da semana a selecionar' || alturaDoDiaPrefValue.value === 'Altura do dia a selecionar') {
                 alert('Por favor, preencha todos os campos obrigatórios.');
                 return;
             }
@@ -484,7 +495,7 @@ fetch(pathJsonSalas)
                     }
 
                     // Condição quando o utilizador apenas indica os inputs obrigatórios
-                } else{
+                } else {
                     var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour;
                     if (condicaoObrigatoria && item['Sala atribuida a aula'] !== '') {
                         salasOcupadas.push({
@@ -498,6 +509,7 @@ fetch(pathJsonSalas)
                 }
                 
             });
+
 
             const aggregatedsalasOcupadas = {};
 
@@ -519,6 +531,7 @@ fetch(pathJsonSalas)
 
             // Array que vai conter uma lista da sala, com os horários em que está ocupada
             const aggregatedsalasOcupadasArray = Object.values(aggregatedsalasOcupadas);
+
 
 
             aggregatedsalasOcupadasArray.forEach(room => {
@@ -597,230 +610,227 @@ fetch(pathJsonSalas)
                 }
             });
 
+
+
             
             // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
             if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
                 
-            caracteristaDasSalas.forEach(function(item) {
-                var condicao = item[preferenciaSala1Value] === 1;
-                if (condicao){
-                    salasPreferidas.push(item['Nome sala']);
-                }
-            });
 
-            nomesSalas.forEach(room => {
-                if(!salasAvailable.some(record => record.sala === room)){
-                    if(startHour == 8 && endHour == 13){
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '08:00:00',
-                            horaFim: '09:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '09:30:00',
-                            horaFim: '11:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '11:00:00',
-                            horaFim: '12:30:00'
-                        })
-                    } else if (startHour == 13 && endHour == 18){
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '13:00:00',
-                            horaFim: '14:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '14:30:00',
-                            horaFim: '16:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '16:00:00',
-                            horaFim: '17:30:00'
-                        })
-                        
-                    } else if(startHour == 18 && endHour == 23) {
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '18:00:00',
-                            horaFim: '19:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '19:30:00',
-                            horaFim: '21:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '21:00:00',
-                            horaFim: '22:30:00'
-                        })
+                caracteristaDasSalas.forEach(function(item) {
+                    var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                    if (condicao){
+                        salasPreferidas.push(item['Nome sala']);
                     }
+                });
+
+
+
+                salasPreferidas.forEach(room => {
+                    if(!salasAvailable.some(record => record.sala === room)){
+                        if(startHour == 8 && endHour == 13){
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '08:00:00',
+                                horaFim: '09:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '09:30:00',
+                                horaFim: '11:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '11:00:00',
+                                horaFim: '12:30:00'
+                            })
+                        } else if (startHour == 13 && endHour == 18){
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '13:00:00',
+                                horaFim: '14:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '14:30:00',
+                                horaFim: '16:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '16:00:00',
+                                horaFim: '17:30:00'
+                            })
+                            
+                        } else if(startHour == 18 && endHour == 23) {
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '18:00:00',
+                                horaFim: '19:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '19:30:00',
+                                horaFim: '21:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '21:00:00',
+                                horaFim: '22:30:00'
+                            })
+                        }
                     }
 
-            });
-
-            salasAvailable = salasAvailable.filter(record => salasPreferidas.includes(record.sala));
-
-            
-            if (salasAvailable.length === 0) {
-                alert("Não exite nenhuma vaga para as salas preferidas indicadas");
-            }
+                });
 
 
             // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
             } else if(preferenciaSala1Value === "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
 
-            caracteristaDasSalas.forEach(function(item) {
-                var condicao = item[salasInaceitaveisValue] === 1;
-                if (condicao){
-                    salasInaceitaveisSelec.push(item['Nome sala']);
+                caracteristaDasSalas.forEach(function(item) {
+                    var condicao = item[salasInaceitaveisValue] === 1;
+                    if (condicao){
+                        salasInaceitaveisSelec.push(item['Nome sala']);
+                    }
+                });
+
+                nomesSalas.forEach(room => {
+                    if(!salasAvailable.some(record => record.sala === room)){
+                        if(startHour == 8 && endHour == 13){
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '08:00:00',
+                                horaFim: '09:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '09:30:00',
+                                horaFim: '11:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '11:00:00',
+                                horaFim: '12:30:00'
+                            })
+                        } else if (startHour == 13 && endHour == 18){
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '13:00:00',
+                                horaFim: '14:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '14:30:00',
+                                horaFim: '16:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '16:00:00',
+                                horaFim: '17:30:00'
+                            })
+                            
+                        } else if(startHour == 18 && endHour == 23) {
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '18:00:00',
+                                horaFim: '19:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '19:30:00',
+                                horaFim: '21:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '21:00:00',
+                                horaFim: '22:30:00'
+                            })
+                        }
+                        }
+
+                });
+
+                salasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));
+
+                if (salasAvailable.length === 0) {
+                    alert("Não exite nenhuma vaga para as salas preferidas indicadas");
                 }
-            });
-
-            nomesSalas.forEach(room => {
-                if(!salasAvailable.some(record => record.sala === room)){
-                    if(startHour == 8 && endHour == 13){
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '08:00:00',
-                            horaFim: '09:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '09:30:00',
-                            horaFim: '11:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '11:00:00',
-                            horaFim: '12:30:00'
-                        })
-                    } else if (startHour == 13 && endHour == 18){
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '13:00:00',
-                            horaFim: '14:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '14:30:00',
-                            horaFim: '16:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '16:00:00',
-                            horaFim: '17:30:00'
-                        })
-                        
-                    } else if(startHour == 18 && endHour == 23) {
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '18:00:00',
-                            horaFim: '19:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '19:30:00',
-                            horaFim: '21:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '21:00:00',
-                            horaFim: '22:30:00'
-                        })
-                    }
-                    }
-
-            });
-
-            salasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));
-
-            if (salasAvailable.length === 0) {
-                alert("Não exite nenhuma vaga para as salas preferidas indicadas");
-            }
 
 
             // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
             } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
 
-            caracteristaDasSalas.forEach(function(item) {
-                var condicao1 = item[preferenciaSala1Value] === 1;
-                var condicao2 = item[salasInaceitaveisValue] === 1;
-                if (condicao1){
-                    salasPreferidas.push(item['Nome sala']);
-                } 
-                if (condicao2){
-                    salasInaceitaveisSelec.push(item['Nome sala']);
+                caracteristaDasSalas.forEach(function(item) {
+                    var condicao1 = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                    var condicao2 = item[salasInaceitaveisValue] === 1;
+                    if (condicao1){
+                        salasPreferidas.push(item['Nome sala']);
+                    } 
+                    if (condicao2){
+                        salasInaceitaveisSelec.push(item['Nome sala']);
+                    }
+                });
+
+                salasPreferidas.forEach(room => {
+                    if(!salasAvailable.some(record => record.sala === room)){
+                        if(startHour == 8 && endHour == 13){
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '08:00:00',
+                                horaFim: '09:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '09:30:00',
+                                horaFim: '11:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '11:00:00',
+                                horaFim: '12:30:00'
+                            })
+                        } else if (startHour == 13 && endHour == 18){
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '13:00:00',
+                                horaFim: '14:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '14:30:00',
+                                horaFim: '16:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '16:00:00',
+                                horaFim: '17:30:00'
+                            })
+                            
+                        } else if(startHour == 18 && endHour == 23) {
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '18:00:00',
+                                horaFim: '19:30:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '19:30:00',
+                                horaFim: '21:00:00'
+                            })
+                            salasAvailable.push({
+                                sala: room,
+                                HoraInicio: '21:00:00',
+                                horaFim: '22:30:00'
+                            })
+                        }
+                        }
+
+                });
+
+                salasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));  
+                
+                if (salasAvailable.length === 0) {
+                    alert("Não exite nenhuma vaga para as salas preferidas indicadas");
                 }
-            });
-
-            nomesSalas.forEach(room => {
-                if(!salasAvailable.some(record => record.sala === room)){
-                    if(startHour == 8 && endHour == 13){
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '08:00:00',
-                            horaFim: '09:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '09:30:00',
-                            horaFim: '11:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '11:00:00',
-                            horaFim: '12:30:00'
-                        })
-                    } else if (startHour == 13 && endHour == 18){
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '13:00:00',
-                            horaFim: '14:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '14:30:00',
-                            horaFim: '16:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '16:00:00',
-                            horaFim: '17:30:00'
-                        })
-                        
-                    } else if(startHour == 18 && endHour == 23) {
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '18:00:00',
-                            horaFim: '19:30:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '19:30:00',
-                            horaFim: '21:00:00'
-                        })
-                        salasAvailable.push({
-                            sala: room,
-                            HoraInicio: '21:00:00',
-                            horaFim: '22:30:00'
-                        })
-                    }
-                    }
-
-            });
-
-            salasAvailable = salasAvailable.filter(record => salasPreferidas.includes(record.sala));
-            salasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));  
-            
-            if (salasAvailable.length === 0) {
-                alert("Não exite nenhuma vaga para as salas preferidas indicadas");
-            }
 
             // Condição quando o utilizador apenas indica os inputs obrigatórios
             } else {
@@ -894,6 +904,7 @@ fetch(pathJsonSalas)
                 return capacidadeNormal >= inscritos_no_turno;
             });
 
+
             var slotsProxHTML = generateSlots(arrayParaFunc,filteredSalasAvailable);
             localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
             window.open('../MudarAula/slotsASelecionar.html', "_blank");
@@ -932,8 +943,8 @@ fetch(pathJsonSalas)
      */
     function generateSlots(array, salasAvailableInput){
         const slots = [];
-        const vetor = [];
         salasAvailableInput.forEach(aula => {
+            const vetor = [];
             vetor.push(array[0]);
             vetor.push(array[1]);
             vetor.push(array[2]);
@@ -956,12 +967,12 @@ fetch(pathJsonSalas)
             vetor.push(array[6]);
 
             var slot = createJsonEntry(vetor);
+
             slots.push(slot);
-        
+
         })
 
         return slots;
-
     }
 
     /**
@@ -978,7 +989,6 @@ fetch(pathJsonSalas)
     
         const date = new Date(year, month, day);
         if (isNaN(date.getTime())) {
-            console.error("Data inválida.");
             return -1;
         }
     
@@ -1055,6 +1065,23 @@ fetch(pathJsonSalas)
 
         return `${year}/${month}/${dayOfMonth}`;
     }
+
+    /**
+     * Verifica o comprimento dos elementos filhos dentro de um container identificado pelo seu ID.
+     * @param {string} containerId - O ID do container.
+     * @returns {number} O número de elementos filhos dentro do container. Retorna 0 no caso do container não ser encontrado.
+     */
+    function checkContainerLength(containerId) {
+        const container = document.getElementById(containerId);
+        if (container) {
+            const length = container.children.length;
+            return length;
+        } else {
+            return 0; // Retorna 0 para tratar o erro
+        }
+    }
+
+    
         
 
 
