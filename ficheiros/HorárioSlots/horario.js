@@ -1,5 +1,5 @@
 const pathJsonHorario = 'Horário.json';
-const pathJsonSalas = 'CaracterizacaoDasSalas.json';
+const pathJsonSalas = '../Salas/CaracterizacaoDasSalas.json';
 var table; // Declarar a variável da tabela
 var salas;
 var tiposDeSala;
@@ -883,7 +883,7 @@ fetch(pathJsonSalas)
 
             var slotsProxHTML = generateSlots(arrayParaFunc,salasAvailable);
             localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
-            window.open('slotsASelecionar.html', "_blank");
+            window.open('../MudarAula/slotsASelecionar.html', "_blank");
 
         });
     });
