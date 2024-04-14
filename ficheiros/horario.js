@@ -355,7 +355,7 @@ fetch(pathJsonSalas)
             "Turma",
             "Inscritos no Turno",
             "Dia da Semana",
-            "Hora Início da Aula",
+            "Hora Inicio da Aula",
             "Hora Fim da Aula",
             "Data da aula",
             "Caracteristicas da sala pedida para a aula",
@@ -877,7 +877,9 @@ fetch(pathJsonSalas)
                 
             }
 
-            generateSlots(arrayParaFunc,salasAvailable);
+            var slotsProxHTML = generateSlots(arrayParaFunc,salasAvailable);
+            localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
+            window.open('slotsASelecionar.html', "_blank");
 
         });
     });
@@ -894,7 +896,6 @@ fetch(pathJsonSalas)
             if(room['Nome sala'] === nomeSala){
                 for (const prop in room) {
                     if (room.hasOwnProperty(prop) && room[prop] === 1) {
-                        console.log(prop);
                         caracteristica.push(prop);
                     }
                 }
@@ -936,6 +937,10 @@ fetch(pathJsonSalas)
         
         })
 
-        console.log(slots);
+        return slots;
 
     }
+
+
+    
+    
