@@ -1,4 +1,8 @@
 var slots = JSON.parse(localStorage.getItem('slotsData'));
+var aulaAnterior = JSON.parse(localStorage.getItem('aulaAMudar'));
+
+const pathJsonHorario = '../HorárioSlots/Horário.json';
+
 
 /**
  * Esconder e Mostrar colunas
@@ -116,9 +120,41 @@ var selcionarAula = function(cell, formatterParams, onRendered) {
     button.innerHTML = "Selecionar aula";
     button.classList.add("selecionar-aula-button");
     button.addEventListener("click", function() {
-        aulaAMudar = cell.getRow().getData();
-        $('#myModal').modal('show');
-    });
+        var novaAula = cell.getRow().getData();
+        delete novaAula['Selecionar aula'];
+        console.log(novaAula);
+        fetch(pathJsonHorario)
+        .then(response => response.json()) // Parse JSON response
+        .then(data => {
+
+            var found = data.some(item => 
+                item.Curso === aulaAnterior.Curso &&
+                item.UC === aulaAnterior.UC &&
+                item.Turno === aulaAnterior.Turno &&
+                item.Turma === aulaAnterior.Turma &&
+                item["Inscritos no Turno"] === aulaAnterior["Inscritos no Turno"] &&
+                item["Dia da Semana"] === aulaAnterior["Dia da Semana"] &&
+                item["Hora Inicio da Aula"] === aulaAnterior["Hora Inicio da Aula"] &&
+                item["Hora Fim da Aula"] === aulaAnterior["Hora Fim da Aula"] &&
+                item["Data da aula"] === aulaAnterior["Data da aula"] &&
+                item["Semana do ano"] === aulaAnterior["Semana do ano"] &&
+                item["Semana do semestre"] === aulaAnterior["Semana do semestre"] &&
+                item["Caracteristicas da sala pedida para a aula"] === aulaAnterior["Caracteristicas da sala pedida para a aula"] &&
+                item["Sala atribuida a aula"] === aulaAnterior["Sala atribuida a aula"]
+            );
+
+            if (found) {
+                // Mudar a variável para a nova aula selecionada
+                console.log("Registo encontrado");
+            } else {
+                console.log("Registo não encontrado");
+            }
+           
+        })
+        .catch(error => {
+            console.error("Error fetching JSON:", error);
+        });
+        });
     return button;
 };
 
@@ -144,7 +180,7 @@ columns: [
     {title: "Sala atribuida a aula", field:"Sala atribuida a aula", headerFilter:"input"},
     {title: "Semana do ano", field:"Semana do ano", headerFilter: "input"},
     {title: "Semana do semestre", field:"Semana do semestre", headerFilter:"input"},
-    {title: "Alterar aula", field: "Alterar aula", formatter: selcionarAula, headerSort:false}
+    {title: "Selecionar aula", field: "Selecionar aula", formatter: selcionarAula, headerSort:false}
 
 ],
 }); 

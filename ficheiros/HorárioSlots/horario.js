@@ -434,10 +434,6 @@ fetch(pathJsonSalas)
             alert('Por favor, preencha todos os campos obrigatórios.');
             return;
         }
-
-        horario.forEach(aula => {
-            
-        });
       
 
         var salasOcupadas = [];
@@ -468,7 +464,7 @@ fetch(pathJsonSalas)
                     salasOcupadas.push({
                         sala: item['Sala atribuida a aula'],
                         HoraInicio: item['Hora Inicio da Aula'],
-                        horaFim: item['Hora Fim da Aula']
+                        horaFim: item['Hora Fim da Aula'],
                     });
                 }
 
@@ -634,6 +630,7 @@ fetch(pathJsonSalas)
                         salasPreferidas.push(item['Nome sala']);
                     }
 
+
                 } else if (checkContainerLength('preferencias-container') - 1 === 2){
                     var condicao = item[preferenciaSala1Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas);
                     var condicao2 = item[preferenciaSala2Value] === 1 && !(item['Nome sala'] in aggregatedsalasOcupadas); 
@@ -651,6 +648,7 @@ fetch(pathJsonSalas)
                 }
             });
 
+            console.log(salasPreferidas);
 
 
             salasPreferidas.forEach(room => {
@@ -708,6 +706,11 @@ fetch(pathJsonSalas)
                 }
 
             });
+
+            salasAvailable.forEach(sala => {
+                sala['caracteristica'] = preferenciaSala1Value;
+            })
+
 
 
         // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
@@ -948,7 +951,6 @@ fetch(pathJsonSalas)
         }
 
 
-        console.log(salasAvailable)
 
         // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
         let filteredSalasAvailable = salasAvailable.filter(sala => {
@@ -963,6 +965,7 @@ fetch(pathJsonSalas)
 
         var slotsProxHTML = generateSlots(arrayParaFunc,filteredSalasAvailable);
         localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
+        localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
         window.open('../MudarAula/slotsASelecionar.html', "_blank");
 
     }
@@ -1024,7 +1027,12 @@ fetch(pathJsonSalas)
             const dataAula = getDateFunc(array[6],array[5], getSemesterFromDate(array[7])); //semana pref; dia da semana; data antiga 
             vetor.push(dataAula);
             // Verificar se o utilizador específicou as características da sala
-            vetor.push(getCaracteristica(aula.sala));
+            caracteristica = aula.caracteristica;
+            if(caracteristica == undefined){
+                vetor.push(getCaracteristica(aula.sala))
+            } else {
+                vetor.push(caracteristica);
+            }
             
             vetor.push(aula.sala);
             vetor.push(getWeekOfYear(dataAula));
