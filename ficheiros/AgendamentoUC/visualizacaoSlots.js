@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log(horario);
 
       table = new Tabulator("#tabela-dados", {
-        height: "700px",
+        height: "650px",
         layout: "fitDataFill",
         pagination: "local",
         resizableRows: true,
