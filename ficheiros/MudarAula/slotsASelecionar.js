@@ -1,6 +1,8 @@
 var slots = JSON.parse(localStorage.getItem('slotsData'));
 var aulaAnterior = JSON.parse(localStorage.getItem('aulaAMudar'));
 
+let horario = [];
+
 const pathJsonHorario = '../HorárioSlots/Horário.json';
 
 
@@ -120,41 +122,64 @@ var selcionarAula = function(cell, formatterParams, onRendered) {
     button.innerHTML = "Selecionar aula";
     button.classList.add("selecionar-aula-button");
     button.addEventListener("click", function() {
-        var novaAula = cell.getRow().getData();
-        delete novaAula['Selecionar aula'];
-        console.log(novaAula);
-        fetch(pathJsonHorario)
-        .then(response => response.json()) // Parse JSON response
-        .then(data => {
+        if (window.confirm("Este método é irreversível, deseja continuar?")) {
+            // Eliminar o botão que permite selecionar o slot
+            button.remove();
+            var novaAula = cell.getRow().getData();
+            delete novaAula['Selecionar aula'];
+            fetch(pathJsonHorario)
+            .then(response => response.json()) // Parse JSON response
+            .then(data => {
 
-            var found = data.some(item => 
-                item.Curso === aulaAnterior.Curso &&
-                item.UC === aulaAnterior.UC &&
-                item.Turno === aulaAnterior.Turno &&
-                item.Turma === aulaAnterior.Turma &&
-                item["Inscritos no Turno"] === aulaAnterior["Inscritos no Turno"] &&
-                item["Dia da Semana"] === aulaAnterior["Dia da Semana"] &&
-                item["Hora Inicio da Aula"] === aulaAnterior["Hora Inicio da Aula"] &&
-                item["Hora Fim da Aula"] === aulaAnterior["Hora Fim da Aula"] &&
-                item["Data da aula"] === aulaAnterior["Data da aula"] &&
-                item["Semana do ano"] === aulaAnterior["Semana do ano"] &&
-                item["Semana do semestre"] === aulaAnterior["Semana do semestre"] &&
-                item["Caracteristicas da sala pedida para a aula"] === aulaAnterior["Caracteristicas da sala pedida para a aula"] &&
-                item["Sala atribuida a aula"] === aulaAnterior["Sala atribuida a aula"]
-            );
+                horario = data;
 
-            if (found) {
-                // Mudar a variável para a nova aula selecionada
-                console.log("Registo encontrado");
-            } else {
-                console.log("Registo não encontrado");
-            }
-           
-        })
-        .catch(error => {
-            console.error("Error fetching JSON:", error);
-        });
-        });
+                horario.forEach((aula,index) => {
+                    if(aula.Curso === aulaAnterior.Curso &&
+                        aula.UC === aulaAnterior.UC &&
+                        aula.Turno === aulaAnterior.Turno &&
+                        aula.Turma === aulaAnterior.Turma &&
+                        aula["Inscritos no Turno"] === aulaAnterior["Inscritos no Turno"] &&
+                        aula["Dia da Semana"] === aulaAnterior["Dia da Semana"] &&
+                        aula["Hora Inicio da Aula"] === aulaAnterior["Hora Inicio da Aula"] &&
+                        aula["Hora Fim da Aula"] === aulaAnterior["Hora Fim da Aula"] &&
+                        aula["Data da aula"] === aulaAnterior["Data da aula"] &&
+                        aula["Semana do ano"] === aulaAnterior["Semana do ano"] &&
+                        aula["Semana do semestre"] === aulaAnterior["Semana do semestre"] &&
+                        aula["Caracteristicas da sala pedida para a aula"] === aulaAnterior["Caracteristicas da sala pedida para a aula"] &&
+                        aula["Sala atribuida a aula"] === aulaAnterior["Sala atribuida a aula"]) {
+                            horario.splice(index, 1);
+                            horario.push(novaAula);
+                        }
+
+                });
+
+                var data = JSON.stringify(horario);
+                var blob = new Blob([data], { type: "application/json" });
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url;
+                a.download = "HorárioAlterado.json";
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                var csvContent = convertJsonToCsv(horario);
+                var blob1 = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+                var url1 = window.URL.createObjectURL(blob1);
+                var a1 = document.createElement("a");
+                a1.href = url1;
+                a1.download = "HorárioAlterado.csv";
+                document.body.appendChild(a1);
+                a1.click();
+                window.URL.revokeObjectURL(url1);
+            
+            })
+            .catch(error => {
+                console.error("Error fetching JSON:", error);
+            });
+        }
+    });
+        
     return button;
 };
 
@@ -184,3 +209,19 @@ columns: [
 
 ],
 }); 
+
+
+function convertJsonToCsv(data) {
+    var headers = Object.keys(data[0]);
+    var csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += headers.join(",") + "\n";
+    data.forEach(function (row) {
+      var values = headers.map(function (header) {
+        return row[header];
+      });
+      csvContent += values.join(",") + "\n";
+    });
+  
+    return csvContent;
+  }
+

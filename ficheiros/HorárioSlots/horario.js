@@ -640,7 +640,8 @@ fetch(pathJsonSalas)
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '11:00:00',
-                                    horaFim: '12:30:00'
+                                    horaFim: '12:30:00',
+                                    caracteristica: ""
                                 })
                             } else if (startHour == 13 && endHour == 18){
                                 salasAvailable.push({
@@ -685,7 +686,7 @@ fetch(pathJsonSalas)
 
                 if(salasAvailable.length !== 0){
                     salasAvailable.forEach(sala => {
-                            sala['caracteristica'] = preferenciaSala1Value;
+                        sala['caracteristica'] = preferenciaSala1Value;
                     });
                 }
                 
@@ -1011,7 +1012,7 @@ fetch(pathJsonSalas)
 
             if(salasAvailable.length !== 0){
                 salasAvailable.forEach(sala => {
-                        sala['caracteristica'] = preferenciaSala1Value;
+                    sala['caracteristica'] = preferenciaSala1Value;
                 });
             }
             
@@ -1288,7 +1289,6 @@ fetch(pathJsonSalas)
 
         */
 
-
         localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
         localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
         window.open('../MudarAula/slotsASelecionar.html', "_blank");
@@ -1337,8 +1337,10 @@ fetch(pathJsonSalas)
      * @returns {Array} - Slots disponíveis para o utilizador escolher
      */
     function generateSlots(array, salasAvailableInput){
+        
         const slots = [];
         salasAvailableInput.forEach(aula => {
+            console.log(aula);
             const vetor = [];
             vetor.push(array[0]); //curso
             vetor.push(array[1]); //uc
@@ -1352,7 +1354,7 @@ fetch(pathJsonSalas)
             const dataAula = getDateFunc(array[6],array[5], getSemesterFromDate(array[7])); //semana pref; dia da semana; data antiga 
             vetor.push(dataAula);
             // Verificar se o utilizador específicou as características da sala
-            caracteristica = aula.caracteristica;
+            caracteristica = aula['caracteristica'];
             if(caracteristica == undefined){
                 vetor.push(getCaracteristica(aula.sala))
             } else {
@@ -1477,7 +1479,6 @@ fetch(pathJsonSalas)
             return 0; // Retorna 0 para tratar o erro
         }
     }
-
     
         
 
