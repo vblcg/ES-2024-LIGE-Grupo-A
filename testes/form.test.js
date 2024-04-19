@@ -1,5 +1,5 @@
 const {decimalParaHora, initParametrosSemana, filterCapacidade, parseHour, adicionarAulas} = require('./functionsToTest');
-const {checkIfEmpty, createJsonEntry} = require('./functionsToTestHorario');
+const {checkIfEmpty, createJsonEntry, getCaracteristica, generateSlots, getWeekOfYear, getDateFunc, getSemesterFromDate} = require('./functionsToTestHorario');
 
 let salas = [
     {
@@ -236,5 +236,27 @@ describe('Testes para a função createJsonEntry', () => {
             "Semana do semestre": 14
         }
         expect(createJsonEntry(inputArray)).toEqual(jsonArray);
+    });
+}); 
+
+describe('Testes para a função getWeekOfYear', () => {  
+    test('Teste com valor correto', () => {
+        const data = "2022/12/2";
+        expect(getWeekOfYear(data)).toEqual(48);
+    });
+}); 
+
+
+describe('Testes para a função getSemesterFromDate', () => {  
+    test('Teste com valor correto', () => {
+        const data = "2022/12/2";
+        expect(getSemesterFromDate(data)).toEqual("first");
+    });
+}); 
+
+
+describe('Testes para a função getDateFunc', () => {  
+    test('Teste com valor correto', () => {
+        expect(getDateFunc(14, "Sex", "first")).toEqual("2022/12/02");
     });
 }); 
