@@ -1,4 +1,32 @@
-const pathJsonHorario = 'Horário.json';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: horario.js</title>
+
+    <script src="../scripts/prettify/prettify.js"> </script>
+    <script src="../scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="../styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: horario.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const pathJsonHorario = 'Horário.json';
 const pathJsonSalas = '../Salas/CaracterizacaoDasSalas.json';
 var table; // Declarar a variável da tabela
 var salas;
@@ -109,11 +137,11 @@ var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParam
 */
 var minMaxFilterFunction = function (headerValue, rowValue, rowData, filterParams) {
     // Aplica o filtro apenas a valores que não sejam null e que estejam definidos
-    if (rowValue !== null && rowValue !== undefined) {
+    if (rowValue !== null &amp;&amp; rowValue !== undefined) {
         if (headerValue.start !== "") {
             if (headerValue.end !== "") {
                 // Filtro para valores de min e max definidos
-                return rowValue >= parseFloat(headerValue.start) && rowValue <= parseFloat(headerValue.end);
+                return rowValue >= parseFloat(headerValue.start) &amp;&amp; rowValue &lt;= parseFloat(headerValue.end);
             } else {
                 // Filtro se apenas o valor de min estiver difinido
                 return rowValue >= parseFloat(headerValue.start);
@@ -121,7 +149,7 @@ var minMaxFilterFunction = function (headerValue, rowValue, rowData, filterParam
         } else {
             if (headerValue.end !== "") {
                 // Filtro se apenas o valor de max estiver difinido
-                return rowValue <= parseFloat(headerValue.end);
+                return rowValue &lt;= parseFloat(headerValue.end);
             }
         }
     }
@@ -269,17 +297,17 @@ fetch(pathJsonSalas)
         let inaceitavelCount = 1;
 
         addButton.addEventListener('click', function () {
-            if(preferenceCount <= 2) {
+            if(preferenceCount &lt;= 2) {
                 preferenceCount++;
 
                 // Adiciona um novo input para as salas preferidas
                 const preferenceDiv = document.createElement('div');
                 preferenceDiv.classList.add('form-group');
                 preferenceDiv.innerHTML = `
-                    <p>Preferência nº${preferenceCount}:</p>
-                    <select class="form-select" id="preferenciaSala${preferenceCount}" aria-label="Default select example">
-                        <option selected>Escolha uma Preferência</option>
-                    </select>
+                    &lt;p>Preferência nº${preferenceCount}:&lt;/p>
+                    &lt;select class="form-select" id="preferenciaSala${preferenceCount}" aria-label="Default select example">
+                        &lt;option selected>Escolha uma Preferência&lt;/option>
+                    &lt;/select>
                 `;
 
                 preferencesContainer.appendChild(preferenceDiv);
@@ -299,17 +327,17 @@ fetch(pathJsonSalas)
 
         /** 
         addButtonSalasIn.addEventListener('click', function () {
-            if(inaceitavelCount <= 2) {
+            if(inaceitavelCount &lt;= 2) {
                 inaceitavelCount++;
 
                 // Adiciona um novo input para as salas inaceitáveis
                 const inaceitavelDiv = document.createElement('div');
                 inaceitavelDiv.classList.add('form-group');
                 inaceitavelDiv.innerHTML = `
-                    <p>Sala inaceitável nº${inaceitavelCount}:</p>
-                    <select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
-                        <option selected>Escolha uma sala inaceitável</option>
-                    </select>
+                    &lt;p>Sala inaceitável nº${inaceitavelCount}:&lt;/p>
+                    &lt;select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
+                        &lt;option selected>Escolha uma sala inaceitável&lt;/option>
+                    &lt;/select>
                 `;
 
                 inaceitavelCointainer.appendChild(inaceitavelDiv);
@@ -462,11 +490,11 @@ fetch(pathJsonSalas)
             
 
             // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
-            if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
+            if (preferenciaSala1Value !== "Escolha uma preferência" &amp;&amp; salasInaceitaveisValue === "Indique as salas inaceitáveis"){
         
                 
-                var condicaoComPrefSemIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && salaAtribuida.includes(preferenciaSala1Value);
-                if (condicaoComPrefSemIna && item['Sala atribuida a aula'] !== '') {
+                var condicaoComPrefSemIna = diaDaSemana.includes(diaDaSemanaPrefValue) &amp;&amp; semanaSemestre == semanaPrefValue &amp;&amp; startTime >= startHour &amp;&amp; endTime &lt;= endHour &amp;&amp; salaAtribuida.includes(preferenciaSala1Value);
+                if (condicaoComPrefSemIna &amp;&amp; item['Sala atribuida a aula'] !== '') {
                     salasOcupadas.push({
                         sala: item['Sala atribuida a aula'],
                         HoraInicio: item['Hora Inicio da Aula'],
@@ -476,9 +504,9 @@ fetch(pathJsonSalas)
 
 
             // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
-            } else if(preferenciaSala1Value === "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
-                var condicaoSemPreComIna = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue);
-                if (condicaoSemPreComIna && item['Sala atribuida a aula'] !== '') {
+            } else if(preferenciaSala1Value === "Escolha uma preferência" &amp;&amp; salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
+                var condicaoSemPreComIna = diaDaSemana.includes(diaDaSemanaPrefValue) &amp;&amp; semanaSemestre == semanaPrefValue &amp;&amp; startTime >= startHour &amp;&amp; endTime &lt;= endHour &amp;&amp; !salaAtribuida.includes(salasInaceitaveisValue);
+                if (condicaoSemPreComIna &amp;&amp; item['Sala atribuida a aula'] !== '') {
                     salasOcupadas.push({
                         sala: item['Sala atribuida a aula'],
                         HoraInicio: item['Hora Inicio da Aula'],
@@ -487,10 +515,10 @@ fetch(pathJsonSalas)
                 }
 
             // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
-            } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
+            } else if (preferenciaSala1Value !== "Escolha uma preferência" &amp;&amp; salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
                 
-                var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour && !salaAtribuida.includes(salasInaceitaveisValue) && salaAtribuida.includes(preferenciaSala1Value);
-                if (condicaoTotal && item['Sala atribuida a aula'] !== '') {
+                var condicaoTotal = diaDaSemana.includes(diaDaSemanaPrefValue) &amp;&amp; semanaSemestre == semanaPrefValue &amp;&amp; startTime >= startHour &amp;&amp; endTime &lt;= endHour &amp;&amp; !salaAtribuida.includes(salasInaceitaveisValue) &amp;&amp; salaAtribuida.includes(preferenciaSala1Value);
+                if (condicaoTotal &amp;&amp; item['Sala atribuida a aula'] !== '') {
                     salasOcupadas.push({
                         sala: item['Sala atribuida a aula'],
                         HoraInicio: item['Hora Inicio da Aula'],
@@ -500,8 +528,8 @@ fetch(pathJsonSalas)
 
                 // Condição quando o utilizador apenas indica os inputs obrigatórios
             } else {
-                var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) && semanaSemestre == semanaPrefValue && startTime >= startHour && endTime <= endHour;
-                if (condicaoObrigatoria && item['Sala atribuida a aula'] !== '') {
+                var condicaoObrigatoria = diaDaSemana.includes(diaDaSemanaPrefValue) &amp;&amp; semanaSemestre == semanaPrefValue &amp;&amp; startTime >= startHour &amp;&amp; endTime &lt;= endHour;
+                if (condicaoObrigatoria &amp;&amp; item['Sala atribuida a aula'] !== '') {
                     salasOcupadas.push({
                         sala: item['Sala atribuida a aula'],
                         HoraInicio: item['Hora Inicio da Aula'],
@@ -541,7 +569,7 @@ fetch(pathJsonSalas)
         aggregatedsalasOcupadasArray.forEach(room => {
             const horaInicioArray = room.HoraInicio;
             // Manhã
-            if(startHour == 8 && endHour == 13){
+            if(startHour == 8 &amp;&amp; endHour == 13){
                 if (!horaInicioArray.includes('08:00:00')) {
                     salasAvailable.push({
                         sala: room.sala,
@@ -565,7 +593,7 @@ fetch(pathJsonSalas)
 
                 }
             }
-            if(startHour == 13 && endHour == 18){
+            if(startHour == 13 &amp;&amp; endHour == 18){
                 if (!horaInicioArray.includes('13:00:00')) {
                     salasAvailable.push({
                         sala: room.sala,
@@ -589,7 +617,7 @@ fetch(pathJsonSalas)
                 }
             }
 
-            if(startHour == 18 && endHour == 23){
+            if(startHour == 18 &amp;&amp; endHour == 23){
                 if (!horaInicioArray.includes('18:00:00')) {
                     salasAvailable.push({
                         sala: room.sala,
@@ -618,9 +646,9 @@ fetch(pathJsonSalas)
 
         
         // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
-        if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
+        if (preferenciaSala1Value !== "Escolha uma preferência" &amp;&amp; salasInaceitaveisValue === "Indique as salas inaceitáveis"){
                 caracteristaDasSalas.forEach(function(item) {
-                    var condicao = item[preferenciaSala1Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                    var condicao = item[preferenciaSala1Value] === 1 &amp;&amp; item['Capacidade Normal'] >= inscritos_no_turno &amp;&amp; !(item['Nome sala'] in aggregatedsalasOcupadas);
 
                     if (condicao){
                         salasPreferidas.push(item['Nome sala']);
@@ -628,7 +656,7 @@ fetch(pathJsonSalas)
 
                     salasPreferidas.forEach(room => {
                         if(!salasAvailable.some(record => record.sala === room)){
-                            if(startHour == 8 && endHour == 13){
+                            if(startHour == 8 &amp;&amp; endHour == 13){
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '08:00:00',
@@ -645,7 +673,7 @@ fetch(pathJsonSalas)
                                     horaFim: '12:30:00',
                                     caracteristica: ""
                                 })
-                            } else if (startHour == 13 && endHour == 18){
+                            } else if (startHour == 13 &amp;&amp; endHour == 18){
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '13:00:00',
@@ -662,7 +690,7 @@ fetch(pathJsonSalas)
                                     horaFim: '17:30:00'
                                 })
                                 
-                            } else if(startHour == 18 && endHour == 23) {
+                            } else if(startHour == 18 &amp;&amp; endHour == 23) {
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '18:00:00',
@@ -693,11 +721,11 @@ fetch(pathJsonSalas)
                 }
                 
 
-                if(salasAvailable.length === 0 && preferenciaSala2Value !== undefined){
+                if(salasAvailable.length === 0 &amp;&amp; preferenciaSala2Value !== undefined){
                     caracteristaDasSalas.forEach(function(item) {
 
 
-                        var condicao2 = item[preferenciaSala2Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        var condicao2 = item[preferenciaSala2Value] === 1 &amp;&amp; item['Capacidade Normal'] >= inscritos_no_turno &amp;&amp; !(item['Nome sala'] in aggregatedsalasOcupadas); 
 
                         if (condicao2){
                             salasPreferidas.push(item['Nome sala']);
@@ -705,7 +733,7 @@ fetch(pathJsonSalas)
 
                         salasPreferidas.forEach(room => {
                             if(!salasAvailable.some(record => record.sala === room)){
-                                if(startHour == 8 && endHour == 13){
+                                if(startHour == 8 &amp;&amp; endHour == 13){
                                     salasAvailable.push({
                                         sala: room,
                                         HoraInicio: '08:00:00',
@@ -721,7 +749,7 @@ fetch(pathJsonSalas)
                                         HoraInicio: '11:00:00',
                                         horaFim: '12:30:00'
                                     })
-                                } else if (startHour == 13 && endHour == 18){
+                                } else if (startHour == 13 &amp;&amp; endHour == 18){
                                     salasAvailable.push({
                                         sala: room,
                                         HoraInicio: '13:00:00',
@@ -738,7 +766,7 @@ fetch(pathJsonSalas)
                                         horaFim: '17:30:00'
                                     })
                                     
-                                } else if(startHour == 18 && endHour == 23) {
+                                } else if(startHour == 18 &amp;&amp; endHour == 23) {
                                     salasAvailable.push({
                                         sala: room,
                                         HoraInicio: '18:00:00',
@@ -770,11 +798,11 @@ fetch(pathJsonSalas)
                 }
 
 
-                if(salasAvailable.length === 0 && preferenciaSala3Value !== undefined){
+                if(salasAvailable.length === 0 &amp;&amp; preferenciaSala3Value !== undefined){
                     caracteristaDasSalas.forEach(function(item) {
 
 
-                        var condicao3 = item[preferenciaSala3Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                        var condicao3 = item[preferenciaSala3Value] === 1 &amp;&amp; item['Capacidade Normal'] >= inscritos_no_turno &amp;&amp; !(item['Nome sala'] in aggregatedsalasOcupadas); 
 
                         if (condicao3){
                             salasPreferidas.push(item['Nome sala']);
@@ -782,7 +810,7 @@ fetch(pathJsonSalas)
 
                         salasPreferidas.forEach(room => {
                             if(!salasAvailable.some(record => record.sala === room)){
-                                if(startHour == 8 && endHour == 13){
+                                if(startHour == 8 &amp;&amp; endHour == 13){
                                     salasAvailable.push({
                                         sala: room,
                                         HoraInicio: '08:00:00',
@@ -798,7 +826,7 @@ fetch(pathJsonSalas)
                                         HoraInicio: '11:00:00',
                                         horaFim: '12:30:00'
                                     })
-                                } else if (startHour == 13 && endHour == 18){
+                                } else if (startHour == 13 &amp;&amp; endHour == 18){
                                     salasAvailable.push({
                                         sala: room,
                                         HoraInicio: '13:00:00',
@@ -815,7 +843,7 @@ fetch(pathJsonSalas)
                                         horaFim: '17:30:00'
                                     })
                                     
-                                } else if(startHour == 18 && endHour == 23) {
+                                } else if(startHour == 18 &amp;&amp; endHour == 23) {
                                     salasAvailable.push({
                                         sala: room,
                                         HoraInicio: '18:00:00',
@@ -854,7 +882,7 @@ fetch(pathJsonSalas)
 
 
         // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
-        } else if(preferenciaSala1Value === "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
+        } else if(preferenciaSala1Value === "Escolha uma preferência" &amp;&amp; salasInaceitaveisValue !== "Indique as salas inaceitáveis") {
 
             caracteristaDasSalas.forEach(function(item) {
                 var condicao = item[salasInaceitaveisValue] === 1;
@@ -865,7 +893,7 @@ fetch(pathJsonSalas)
 
             nomesSalas.forEach(room => {
                 if(!salasAvailable.some(record => record.sala === room)){
-                    if(startHour == 8 && endHour == 13){
+                    if(startHour == 8 &amp;&amp; endHour == 13){
                         salasAvailable.push({
                             sala: room,
                             HoraInicio: '08:00:00',
@@ -881,7 +909,7 @@ fetch(pathJsonSalas)
                             HoraInicio: '11:00:00',
                             horaFim: '12:30:00'
                         })
-                    } else if (startHour == 13 && endHour == 18){
+                    } else if (startHour == 13 &amp;&amp; endHour == 18){
                         salasAvailable.push({
                             sala: room,
                             HoraInicio: '13:00:00',
@@ -898,7 +926,7 @@ fetch(pathJsonSalas)
                             horaFim: '17:30:00'
                         })
                         
-                    } else if(startHour == 18 && endHour == 23) {
+                    } else if(startHour == 18 &amp;&amp; endHour == 23) {
                         salasAvailable.push({
                             sala: room,
                             HoraInicio: '18:00:00',
@@ -944,10 +972,10 @@ fetch(pathJsonSalas)
 
 
         // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
-        } else if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
+        } else if (preferenciaSala1Value !== "Escolha uma preferência" &amp;&amp; salasInaceitaveisValue !== "Indique as salas inaceitáveis"){
 
             caracteristaDasSalas.forEach(function(item) {
-                var condicao = item[preferenciaSala1Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas);
+                var condicao = item[preferenciaSala1Value] === 1 &amp;&amp; item['Capacidade Normal'] >= inscritos_no_turno &amp;&amp; !(item['Nome sala'] in aggregatedsalasOcupadas);
 
                 if (condicao){
                     salasPreferidas.push(item['Nome sala']);
@@ -955,7 +983,7 @@ fetch(pathJsonSalas)
 
                 salasPreferidas.forEach(room => {
                     if(!salasAvailable.some(record => record.sala === room)){
-                        if(startHour == 8 && endHour == 13){
+                        if(startHour == 8 &amp;&amp; endHour == 13){
                             salasAvailable.push({
                                 sala: room,
                                 HoraInicio: '08:00:00',
@@ -971,7 +999,7 @@ fetch(pathJsonSalas)
                                 HoraInicio: '11:00:00',
                                 horaFim: '12:30:00'
                             })
-                        } else if (startHour == 13 && endHour == 18){
+                        } else if (startHour == 13 &amp;&amp; endHour == 18){
                             salasAvailable.push({
                                 sala: room,
                                 HoraInicio: '13:00:00',
@@ -988,7 +1016,7 @@ fetch(pathJsonSalas)
                                 horaFim: '17:30:00'
                             })
                             
-                        } else if(startHour == 18 && endHour == 23) {
+                        } else if(startHour == 18 &amp;&amp; endHour == 23) {
                             salasAvailable.push({
                                 sala: room,
                                 HoraInicio: '18:00:00',
@@ -1019,11 +1047,11 @@ fetch(pathJsonSalas)
             }
             
 
-            if(salasAvailable.length === 0 && preferenciaSala2Value !== undefined){
+            if(salasAvailable.length === 0 &amp;&amp; preferenciaSala2Value !== undefined){
                 caracteristaDasSalas.forEach(function(item) {
 
 
-                    var condicao2 = item[preferenciaSala2Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                    var condicao2 = item[preferenciaSala2Value] === 1 &amp;&amp; item['Capacidade Normal'] >= inscritos_no_turno &amp;&amp; !(item['Nome sala'] in aggregatedsalasOcupadas); 
 
                     if (condicao2){
                         salasPreferidas.push(item['Nome sala']);
@@ -1031,7 +1059,7 @@ fetch(pathJsonSalas)
 
                     salasPreferidas.forEach(room => {
                         if(!salasAvailable.some(record => record.sala === room)){
-                            if(startHour == 8 && endHour == 13){
+                            if(startHour == 8 &amp;&amp; endHour == 13){
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '08:00:00',
@@ -1047,7 +1075,7 @@ fetch(pathJsonSalas)
                                     HoraInicio: '11:00:00',
                                     horaFim: '12:30:00'
                                 })
-                            } else if (startHour == 13 && endHour == 18){
+                            } else if (startHour == 13 &amp;&amp; endHour == 18){
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '13:00:00',
@@ -1064,7 +1092,7 @@ fetch(pathJsonSalas)
                                     horaFim: '17:30:00'
                                 })
                                 
-                            } else if(startHour == 18 && endHour == 23) {
+                            } else if(startHour == 18 &amp;&amp; endHour == 23) {
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '18:00:00',
@@ -1096,10 +1124,10 @@ fetch(pathJsonSalas)
             }
 
 
-            if(salasAvailable.length === 0 && preferenciaSala3Value !== undefined){
+            if(salasAvailable.length === 0 &amp;&amp; preferenciaSala3Value !== undefined){
                 caracteristaDasSalas.forEach(function(item) {
 
-                    var condicao3 = item[preferenciaSala3Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas); 
+                    var condicao3 = item[preferenciaSala3Value] === 1 &amp;&amp; item['Capacidade Normal'] >= inscritos_no_turno &amp;&amp; !(item['Nome sala'] in aggregatedsalasOcupadas); 
 
                     if (condicao3){
                         salasPreferidas.push(item['Nome sala']);
@@ -1107,7 +1135,7 @@ fetch(pathJsonSalas)
 
                     salasPreferidas.forEach(room => {
                         if(!salasAvailable.some(record => record.sala === room)){
-                            if(startHour == 8 && endHour == 13){
+                            if(startHour == 8 &amp;&amp; endHour == 13){
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '08:00:00',
@@ -1123,7 +1151,7 @@ fetch(pathJsonSalas)
                                     HoraInicio: '11:00:00',
                                     horaFim: '12:30:00'
                                 })
-                            } else if (startHour == 13 && endHour == 18){
+                            } else if (startHour == 13 &amp;&amp; endHour == 18){
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '13:00:00',
@@ -1140,7 +1168,7 @@ fetch(pathJsonSalas)
                                     horaFim: '17:30:00'
                                 })
                                 
-                            } else if(startHour == 18 && endHour == 23) {
+                            } else if(startHour == 18 &amp;&amp; endHour == 23) {
                                 salasAvailable.push({
                                     sala: room,
                                     HoraInicio: '18:00:00',
@@ -1183,7 +1211,7 @@ fetch(pathJsonSalas)
         // Obter todas as salas que estão disponíveis (todas menos as ocupadas)
             nomesSalas.forEach(room => {
                 if(!salasAvailable.some(record => record.sala === room)){
-                    if(startHour == 8 && endHour == 13){
+                    if(startHour == 8 &amp;&amp; endHour == 13){
                         salasAvailable.push({
                             sala: room,
                             HoraInicio: '08:00:00',
@@ -1199,7 +1227,7 @@ fetch(pathJsonSalas)
                             HoraInicio: '11:00:00',
                             horaFim: '12:30:00'
                         })
-                    } else if (startHour == 13 && endHour == 18){
+                    } else if (startHour == 13 &amp;&amp; endHour == 18){
                         salasAvailable.push({
                             sala: room,
                             HoraInicio: '13:00:00',
@@ -1216,7 +1244,7 @@ fetch(pathJsonSalas)
                             horaFim: '17:30:00'
                         })
                         
-                    } else if(startHour == 18 && endHour == 23) {
+                    } else if(startHour == 18 &amp;&amp; endHour == 23) {
                         salasAvailable.push({
                             sala: room,
                             HoraInicio: '18:00:00',
@@ -1273,12 +1301,12 @@ fetch(pathJsonSalas)
 
                 // Verificar se o curso já está a ter aula maquele dia
                 if (
-                    generatedSlot.Curso === slot.Curso &&
-                    //turmaATerAula &&
+                    generatedSlot.Curso === slot.Curso &amp;&amp;
+                    //turmaATerAula &amp;&amp;
                     
                     // Faz sentido validar o turno também?
-                    //generatedSlot.Turno === slot.Turno &&
-                    generatedSlot["Hora Inicio da Aula"] === slot["Hora Inicio da Aula"] &&
+                    //generatedSlot.Turno === slot.Turno &amp;&amp;
+                    generatedSlot["Hora Inicio da Aula"] === slot["Hora Inicio da Aula"] &amp;&amp;
                     generatedSlot["Data da aula"] === slot["Data da aula"]
                 ) {
                     // Remover no caso de o curso já estar a ter aulas naquele dia
@@ -1313,14 +1341,14 @@ fetch(pathJsonSalas)
     /**
      * Obtém as características de uma determinada sala.
      * @param {string} nomeSala - O nome da sala para obter as características.
-     * @returns {Array<string>} - Um array com as características da sala.
+     * @returns {Array&lt;string>} - Um array com as características da sala.
      */
     function getCaracteristica(nomeSala){
         var caracteristica = [];
         caracteristaDasSalas.forEach(room => {
             if(room['Nome sala'] === nomeSala){
                 for (const prop in room) {
-                    if (room.hasOwnProperty(prop) && room[prop] === 1) {
+                    if (room.hasOwnProperty(prop) &amp;&amp; room[prop] === 1) {
                         caracteristica.push(prop);
                     }
                 }
@@ -1417,7 +1445,7 @@ fetch(pathJsonSalas)
         const referenceDateFirstSemester = new Date('2022-09-01');
         const referenceDateSecondSemester = new Date('2023-02-01');
     
-        if (newDate >= referenceDateFirstSemester && newDate < referenceDateSecondSemester) {
+        if (newDate >= referenceDateFirstSemester &amp;&amp; newDate &lt; referenceDateSecondSemester) {
             return "first";
         } else {
             return "second";
@@ -1487,3 +1515,26 @@ fetch(pathJsonSalas)
 
         
         
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#alterarAulaButton">alterarAulaButton</a></li><li><a href="global.html#checkContainerLength">checkContainerLength</a></li><li><a href="global.html#checkIfEmpty">checkIfEmpty</a></li><li><a href="global.html#createJsonEntry">createJsonEntry</a></li><li><a href="global.html#generateSlots">generateSlots</a></li><li><a href="global.html#getCaracteristica">getCaracteristica</a></li><li><a href="global.html#getDateFunc">getDateFunc</a></li><li><a href="global.html#getPreferences">getPreferences</a></li><li><a href="global.html#getSemesterFromDate">getSemesterFromDate</a></li><li><a href="global.html#getWeekOfYear">getWeekOfYear</a></li><li><a href="global.html#minMaxFilterEditor">minMaxFilterEditor</a></li><li><a href="global.html#minMaxFilterFunction">minMaxFilterFunction</a></li><li><a href="global.html#toggleColumn">toggleColumn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 20 2024 19:50:26 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="../scripts/linenumber.js"> </script>
+</body>
+</html>

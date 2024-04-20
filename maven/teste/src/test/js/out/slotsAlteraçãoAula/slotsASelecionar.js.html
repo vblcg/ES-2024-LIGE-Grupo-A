@@ -1,4 +1,32 @@
-var slots = JSON.parse(localStorage.getItem('slotsData'));
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: slotsASelecionar.js</title>
+
+    <script src="../scripts/prettify/prettify.js"> </script>
+    <script src="../scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="../styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: slotsASelecionar.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var slots = JSON.parse(localStorage.getItem('slotsData'));
 var aulaAnterior = JSON.parse(localStorage.getItem('aulaAMudar'));
 
 let horario = [];
@@ -97,11 +125,11 @@ var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParam
 */
 var minMaxFilterFunction = function (headerValue, rowValue, rowData, filterParams) {
     // Aplica o filtro apenas a valores que não sejam null e que estejam definidos
-    if (rowValue !== null && rowValue !== undefined) {
+    if (rowValue !== null &amp;&amp; rowValue !== undefined) {
         if (headerValue.start !== "") {
             if (headerValue.end !== "") {
                 // Filtro para valores de min e max definidos
-                return rowValue >= parseFloat(headerValue.start) && rowValue <= parseFloat(headerValue.end);
+                return rowValue >= parseFloat(headerValue.start) &amp;&amp; rowValue &lt;= parseFloat(headerValue.end);
             } else {
                 // Filtro se apenas o valor de min estiver difinido
                 return rowValue >= parseFloat(headerValue.start);
@@ -109,7 +137,7 @@ var minMaxFilterFunction = function (headerValue, rowValue, rowData, filterParam
         } else {
             if (headerValue.end !== "") {
                 // Filtro se apenas o valor de max estiver difinido
-                return rowValue <= parseFloat(headerValue.end);
+                return rowValue &lt;= parseFloat(headerValue.end);
             }
         }
     }
@@ -141,18 +169,18 @@ var selcionarAula = function(cell, formatterParams, onRendered) {
                 horario = data;
 
                 horario.forEach((aula,index) => {
-                    if(aula.Curso === aulaAnterior.Curso &&
-                        aula.UC === aulaAnterior.UC &&
-                        aula.Turno === aulaAnterior.Turno &&
-                        aula.Turma === aulaAnterior.Turma &&
-                        aula["Inscritos no Turno"] === aulaAnterior["Inscritos no Turno"] &&
-                        aula["Dia da Semana"] === aulaAnterior["Dia da Semana"] &&
-                        aula["Hora Inicio da Aula"] === aulaAnterior["Hora Inicio da Aula"] &&
-                        aula["Hora Fim da Aula"] === aulaAnterior["Hora Fim da Aula"] &&
-                        aula["Data da aula"] === aulaAnterior["Data da aula"] &&
-                        aula["Semana do ano"] === aulaAnterior["Semana do ano"] &&
-                        aula["Semana do semestre"] === aulaAnterior["Semana do semestre"] &&
-                        aula["Caracteristicas da sala pedida para a aula"] === aulaAnterior["Caracteristicas da sala pedida para a aula"] &&
+                    if(aula.Curso === aulaAnterior.Curso &amp;&amp;
+                        aula.UC === aulaAnterior.UC &amp;&amp;
+                        aula.Turno === aulaAnterior.Turno &amp;&amp;
+                        aula.Turma === aulaAnterior.Turma &amp;&amp;
+                        aula["Inscritos no Turno"] === aulaAnterior["Inscritos no Turno"] &amp;&amp;
+                        aula["Dia da Semana"] === aulaAnterior["Dia da Semana"] &amp;&amp;
+                        aula["Hora Inicio da Aula"] === aulaAnterior["Hora Inicio da Aula"] &amp;&amp;
+                        aula["Hora Fim da Aula"] === aulaAnterior["Hora Fim da Aula"] &amp;&amp;
+                        aula["Data da aula"] === aulaAnterior["Data da aula"] &amp;&amp;
+                        aula["Semana do ano"] === aulaAnterior["Semana do ano"] &amp;&amp;
+                        aula["Semana do semestre"] === aulaAnterior["Semana do semestre"] &amp;&amp;
+                        aula["Caracteristicas da sala pedida para a aula"] === aulaAnterior["Caracteristicas da sala pedida para a aula"] &amp;&amp;
                         aula["Sala atribuida a aula"] === aulaAnterior["Sala atribuida a aula"]) {
                             horario.splice(index, 1);
                             horario.push(novaAula);
@@ -244,3 +272,26 @@ function downloadCSVJSON(horario){
     a1.click();
     window.URL.revokeObjectURL(url1);
   }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#convertJsonToCsv">convertJsonToCsv</a></li><li><a href="global.html#downloadCSVJSON">downloadCSVJSON</a></li><li><a href="global.html#minMaxFilterEditor">minMaxFilterEditor</a></li><li><a href="global.html#minMaxFilterFunction">minMaxFilterFunction</a></li><li><a href="global.html#toggleColumn">toggleColumn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 20 2024 20:11:43 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="../scripts/linenumber.js"> </script>
+</body>
+</html>
