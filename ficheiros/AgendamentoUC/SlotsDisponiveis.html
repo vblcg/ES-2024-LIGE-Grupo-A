@@ -6,9 +6,103 @@
     <title>Exemplo de uso do Tabulator</title>
     <link rel="stylesheet" type="text/css" href="HorárioStyleSheet.css">
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 </head>
 <body>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Alterar aula</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+    
+            <!-- Modal Body -->
+            <div class="modal-body">
+            <!-- Form -->
+                <form>
+                    <div class="form-group">
+                        <p class="first_label_input">Horário Preferencial:</p>
+                        <p>Semana do semestre (obrigatório):</p>
+                        <select class="form-select" id="semanaPref" aria-label="Default select example" required>
+                            <option selected>Semana a selecionar</option>
+                            <option value="1">1ª Semana</option>
+                            <option value="2">2ª Semana</option>
+                            <option value="3">3ª Semana</option>
+                            <option value="4">4ª Semana</option>
+                            <option value="5">5ª Semana</option>
+                            <option value="6">6ª Semana</option>
+                            <option value="7">7ª Semana</option>
+                            <option value="8">8ª Semana</option>
+                            <option value="9">9ª Semana</option>
+                            <option value="10">10ª Semana</option>
+                            <option value="11">11ª Semana</option>
+                            <option value="12">12ª Semana</option>
+                            <option value="13">13ª Semana</option>
+                            <option value="14">14ª Semana</option>
+                            <option value="15">15ª Semana</option>
+                            <option value="16">16ª Semana</option>
+                            <option value="17">17ª Semana</option>
+                            <option value="18">18ª Semana</option>
+                            <option value="19">19ª Semana</option>
+                            <option value="20">20ª Semana</option>
+                            <option value="21">21ª Semana</option>
+                        </select>
+                        <p>Dia da semana (obrigatório):</p>
+                        <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example" required>
+                            <option selected>Dia da semana a selecionar</option>
+                            <option value="Seg">Segunda-feira</option>
+                            <option value="Ter">Terça-feira</option>
+                            <option value="Qua">Quarta-feira</option>
+                            <option value="Qui">Quinta-feira</option>
+                            <option value="Sex">Sexta-feira</option>
+                        </select>
+                        <p>Altura do dia (obrigatório):</p>
+                        <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example" required>
+                            <option selected>Altura do dia a selecionar</option>
+                            <option value="8,13">Manhã (8:00 - 13:00)</option>
+                            <option value="13,18">Tarde (13:00 - 18:00)</option>
+                            <option value="18,23">Noite (18:00 - 23:00)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <p class="label_input">Preferência de sala</p>
+                        <div id="preferencias-container">
+                            <p>Preferência nº1:</p>
+                            <select class="form-select" id="preferenciaSala1" aria-label="Default select example">
+                                <option selected>Escolha uma preferência</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addPreferenceBtn">Adicionar Preferência</button>
+                        
+                    </div>
+                    <div class="form-group">
+                        <div id="salasInaceitaveis-container">
+                        <p>Salas Inaceitáveis:</p>
+                        <select class="form-select" id='salasInaceitaveis' aria-label="Default select example">
+                            <option selected>Indique as salas inaceitáveis</option>
+                        </select>
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addSalaInaceitavel">Adicionar salas inaceitáveis</button>
+                    </div>
+                
+            </div>
+    
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="guardarButton">Guardar</button>
+            </div>
+                </form>
+
+        </div>
+        </div>
+    </div>
     <div id="tabela-dados"></div>
     <script type="text/javascript" src="visualizacaoSlots.js"></script>
     <button type="submit" id="gravarJSON">GRAVAR JSON</button>´

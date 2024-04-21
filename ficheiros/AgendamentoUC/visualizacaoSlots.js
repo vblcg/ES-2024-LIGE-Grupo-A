@@ -215,9 +215,9 @@ document.addEventListener("DOMContentLoaded", function () {
               var cursoData = JSON.parse(localStorage.getItem('slotsData'));
               // Verifica se o valor da célula corresponde a alguma UC em cursoData
               if (cursoData && cursoData.some(item => item.UC === cell.getRow().getData().UC)) {
-                var acceptBtn = "<button class='accept-btn'>Accept</button>";
-                var modifyBtn = "<button class='modify-btn'>Modify</button>";
-                var deleteBtn = "<button class='delete-btn'>Delete</button>";
+                var acceptBtn = "<button class='accept-btn'>Aceitar</button>";
+                var modifyBtn = "<button class='modify-btn'>Alterar</button>";
+                var deleteBtn = "<button class='delete-btn'>Eliminar</button>";
                 return acceptBtn + modifyBtn + deleteBtn;
               } else {
                 return "";
@@ -231,7 +231,8 @@ document.addEventListener("DOMContentLoaded", function () {
                   cell.getElement().innerHTML = "";
                 }
               } else if (e.target.classList.contains("modify-btn")) {
-                getPreferences();
+                  aulaAMudar = cell.getRow().getData();
+                  $('#myModal').modal('show');
               } else if (e.target.classList.contains("delete-btn")) {
                 var confirmacao = confirm("Tem a certeza que quer apagar a aula? Não há volta a dar depois se der merda já bateste");
                 if (confirmacao) {
