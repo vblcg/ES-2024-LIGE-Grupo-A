@@ -297,36 +297,7 @@ fetch(pathJsonSalas)
             }
         });
 
-        /** 
-        addButtonSalasIn.addEventListener('click', function () {
-            if(inaceitavelCount <= 2) {
-                inaceitavelCount++;
-
-                // Adiciona um novo input para as salas inaceitáveis
-                const inaceitavelDiv = document.createElement('div');
-                inaceitavelDiv.classList.add('form-group');
-                inaceitavelDiv.innerHTML = `
-                    <p>Sala inaceitável nº${inaceitavelCount}:</p>
-                    <select class="form-select" id="salaInaceitavel${inaceitavelCount}" aria-label="Default select example">
-                        <option selected>Escolha uma sala inaceitável</option>
-                    </select>
-                `;
-
-                inaceitavelCointainer.appendChild(inaceitavelDiv);
-
-                const novaInaceitavel = document.getElementById(`salaInaceitavel${inaceitavelCount}`);
-
-                // Adiciona as opções de tipo de sala ao novo input criado
-                tiposDeSala.forEach(tipoDeSala => {
-                    const optionTipoSala = document.createElement('option');
-                    optionTipoSala.textContent = tipoDeSala;
-                    novaInaceitavel.appendChild(optionTipoSala);
-                })
-            } else {
-                alert('Não pode indicar mais de 3 salas salas inaceitáveis');
-            }
-        });
-        */
+        
     });
 
 
