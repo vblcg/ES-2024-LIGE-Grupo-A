@@ -333,14 +333,4 @@ document.addEventListener("DOMContentLoaded", function () {
       window.URL.revokeObjectURL(url);
     }
   });
-  document.getElementById("acceptAll").addEventListener("click", function () {
-    var confirmacao = confirm("Tem a certeza que quer aceitar?");
-                if (confirmacao) {
-    table.getRows().forEach(function(row) {
-        var cell = row.getCell("Alterar aula");
-        cell.getElement().innerHTML = ""; 
-    });
-    allAccepted = 0; 
-  }
-});
 });
