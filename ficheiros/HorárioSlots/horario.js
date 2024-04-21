@@ -1293,6 +1293,7 @@ fetch(pathJsonSalas)
 
         localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
         localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
+        console.log("CHEGOU AQUI");
         window.open('../MudarAula/slotsASelecionar.html', "_blank");
 
     }
@@ -1342,7 +1343,7 @@ fetch(pathJsonSalas)
         
         const slots = [];
         salasAvailableInput.forEach(aula => {
-            console.log(aula);
+            //console.log(aula);
             const vetor = [];
             vetor.push(array[0]); //curso
             vetor.push(array[1]); //uc
@@ -1481,9 +1482,3 @@ fetch(pathJsonSalas)
             return 0; // Retorna 0 para tratar o erro
         }
     }
-    
-        
-
-
-        
-        

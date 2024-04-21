@@ -226,8 +226,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     var min = decimalParaHora(8.0 + (aulas*1.3));
                     var max = decimalParaHora(9.30 + (aulas*1.3));
                 } else {
-                    console.log(parseFloat(periodos[0].split("-")[0]));
-                    var min = decimalParaHora(parseFloat(periodos[0].split("-")[0]) + (aulas*1.3));
+                    var min = parseFloat(periodos[0].split("-")[0]);
+                    min = decimalParaHora(min + (aulas*1.3));
+                    console.log(min);
                     //var max = parseFloat(decimalParaHora(periodos[0].split("-")[1]));
                    // console.log(min);
                     var countPeriodosInput = 1;
@@ -266,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             max = parseFloat(periodos[countPeriodosInput].split("-")[1]);
                             countPeriodosInput ++;
                             diaSemanaNumero ++;
-                        } else if(countPeriodosInput >= periodos.length){
+                        } else if(countPeriodosInput > periodos.length){
                             min = parseFloat(periodos[0].split("-")[0]);
                             max = parseFloat(periodos[0].split("-")[1]);
                             if(diasSemanaInput != null && diaSemanaNumero < inputsDias) {

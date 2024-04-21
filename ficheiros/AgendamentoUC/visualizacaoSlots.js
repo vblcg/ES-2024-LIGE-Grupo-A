@@ -1,4 +1,7 @@
+
+
 var jsonData;
+var allAccepted;
 var minMaxFilterFunction = function (
   headerValue,
   rowValue,
@@ -59,10 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then((data) => {
       horario = data;
-      console.log(cursoData);
-      console.log(horario);
+      allAccepted = cursoData.length;
       horario = cursoData.concat(horario);
-      console.log(horario);
 
       table = new Tabulator("#tabela-dados", {
         height: "650px",
@@ -226,10 +227,11 @@ document.addEventListener("DOMContentLoaded", function () {
               if (e.target.classList.contains("accept-btn")) {
                 var confirmacao = confirm("Tem a certeza que quer aceitar?");
                 if (confirmacao) {
+                  allAccepted -= 1;
                   cell.getElement().innerHTML = "";
                 }
               } else if (e.target.classList.contains("modify-btn")) {
-              
+                getPreferences();
               } else if (e.target.classList.contains("delete-btn")) {
                 var confirmacao = confirm("Tem a certeza que quer apagar a aula? Não há volta a dar depois se der merda já bateste");
                 if (confirmacao) {
@@ -252,26 +254,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   document.getElementById("gravarJSON").addEventListener("click", function () {
-    var data = JSON.stringify(horario);
-    var blob = new Blob([data], { type: "application/json" });
-    var url = window.URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = "SlotsAtribuidos.json";
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+    if(allAccepted == 0) {
+      var data = JSON.stringify(horario);
+      var blob = new Blob([data], { type: "application/json" });
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "SlotsAtribuidos.json";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   });
 
   document.getElementById("gravarCSV").addEventListener("click", function () {
-    var csvContent = convertJsonToCsv(horario);
-    var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-    var url = window.URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = "SlotsAtribuidos.csv";
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+    if(allAccepted == 0) {
+      var csvContent = convertJsonToCsv(horario);
+      var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "SlotsAtribuidos.csv";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   });
 });
