@@ -2,6 +2,7 @@
 
 var jsonData;
 var allAccepted;
+const pathJsonSalas = "../Salas/CaracterizacaoDasSalas.json"; 
 var minMaxFilterFunction = function (
   headerValue,
   rowValue,
@@ -211,7 +212,6 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           {
             title: "Alterar aula", field: "Alterar aula", headerSort: false,
-            
             formatter: function (cell, formatterParams, onRendered) {
               var cursoData = JSON.parse(localStorage.getItem('slotsData'));
               // Verifica se o valor da célula corresponde a alguma UC em cursoData
@@ -244,6 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   localStorage.setItem('slotsData', JSON.stringify(cursoData)); 
                   alert("Aula excluída com sucesso!");
                 }
+
               }
             },
           }
@@ -252,6 +253,57 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch((error) => {
       console.error(`Error loading ${"../Horário.json"}:`, error);
+    });
+
+    fetch(pathJsonSalas)
+    .then(response => {
+        // Verificar se o request foi bem sucedido
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${pathJsonSalas}: ${response.statusText}`);
+        }
+
+        // Parse the JSON data
+        return response.json();
+    })
+
+    .then(data => {
+
+
+        salas = data;
+        nomesSalas = salas.map(sala => sala['Nome sala']);
+        
+
+        /**
+         * Adiciona tanto os tipos de sala como as próprias salas, específicados no documento
+         * json da caracterização das salas ao primeiro input de preferência de sala e de 
+         * salas inaceitáveis.
+        */
+        function initializeSelectOptionsSalas() {
+            tiposDeSala = Object.keys(salas[1]).slice(5);
+
+            const preferenciaSala1 = document.getElementById('preferenciaSala1');
+            const salasInaceitaveis = document.getElementById('salasInaceitaveis');
+
+            // Adicionar cada tipo de sala existente aos respetivos inputs
+            tiposDeSala.forEach(tipoDeSala => {
+                const optionTipoSala = document.createElement('option');
+                optionTipoSala.textContent = tipoDeSala;
+                preferenciaSala1.appendChild(optionTipoSala);
+
+                const OptionTipoSalaInaceitavel = document.createElement('option');
+                OptionTipoSalaInaceitavel.textContent = tipoDeSala;
+                salasInaceitaveis.appendChild(OptionTipoSalaInaceitavel);
+            });
+
+            
+        }
+
+    initializeSelectOptionsSalas();
+
+
+    })
+    .catch(error => {
+        console.error(`Error loading ${pathJsonSalas}:`, error);
     });
 
   document.getElementById("gravarJSON").addEventListener("click", function () {
@@ -281,16 +333,4 @@ document.addEventListener("DOMContentLoaded", function () {
       window.URL.revokeObjectURL(url);
     }
   });
-
-
-  document.getElementById("acceptAll").addEventListener("click", function () {
-    var confirmacao = confirm("Tem a certeza que quer aceitar?");
-                if (confirmacao) {
-    table.getRows().forEach(function(row) {
-        var cell = row.getCell("Alterar aula");
-        cell.getElement().innerHTML = ""; 
-    });
-    allAccepted = 0; 
-  }
-});
 });
