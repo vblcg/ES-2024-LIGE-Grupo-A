@@ -1,5 +1,5 @@
 
-
+let salas;
 var jsonData;
 var allAccepted;
 const pathJsonSalas = "../Salas/CaracterizacaoDasSalas.json"; 
@@ -386,17 +386,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-document.getElementById("acceptAll").addEventListener("click", function () {
-  var confirmacao = confirm("Tem a certeza que quer aceitar?");
-              if (confirmacao) {
-  table.getRows().forEach(function(row) {
-      var cell = row.getCell("Alterar aula");
-      cell.getElement().innerHTML = ""; 
-  });
-  allAccepted = 0; 
-}
-});
-
 document.addEventListener('click', function () {
   const guardarButton = document.getElementById('guardarButton');
 
@@ -407,7 +396,6 @@ document.addEventListener('click', function () {
   
 });
 
-var salas;
 var tiposDeSala;
 var aulaAMudar;
 // Variável que contém todas as salas possíveis
@@ -667,7 +655,7 @@ function getPreferences(horario){
   
   // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
   if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
-          caracteristaDasSalas.forEach(function(item) {
+            caracteristaDasSalas.forEach(function(item) {
               var condicao = item[preferenciaSala1Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas);
 
               if (condicao){
@@ -731,7 +719,7 @@ function getPreferences(horario){
   
               });
 
-          });
+            });
 
 
           if(salasAvailable.length !== 0){
@@ -743,7 +731,6 @@ function getPreferences(horario){
 
           if(salasAvailable.length === 0 && preferenciaSala2Value !== undefined){
               caracteristaDasSalas.forEach(function(item) {
-
 
                   var condicao2 = item[preferenciaSala2Value] === 1 && item['Capacidade Normal'] >= inscritos_no_turno && !(item['Nome sala'] in aggregatedsalasOcupadas); 
 
@@ -894,7 +881,8 @@ function getPreferences(horario){
           }
 
           if (salasAvailable.length === 0) {
-              alert("Não exite nenhuma vaga para as salas preferidas indicadas");
+              console.log("hello")
+              
               return;
           }
 
