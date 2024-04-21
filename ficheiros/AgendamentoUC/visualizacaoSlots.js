@@ -317,6 +317,8 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
+    }else{
+      alert("Tem de ter tudo aceite");
     }
   });
 
@@ -331,6 +333,8 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
+    }else{
+      alert("Tem de ter tudo aceite");
     }
   });
   document.getElementById("acceptAll").addEventListener("click", function () {
