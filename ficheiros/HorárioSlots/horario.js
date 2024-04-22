@@ -1,5 +1,5 @@
 const pathJsonHorario = '../Horário.json';
-const pathJsonSalas = '../CaracterizacaoDasSalas.json';
+const pathJsonSalas = './CaracterizacaoDasSalas.json';
 var table; // Declarar a variável da tabela
 var salas;
 var tiposDeSala;
@@ -195,7 +195,7 @@ document.addEventListener('click', function(event) {
 
 })
 .catch(error => {
-    console.error(`Error loading ${pathJson}:`, error);
+    console.error(`Error loading ${pathJsonHorario}:`, error);
 });
 
 fetch(pathJsonSalas)
@@ -1265,7 +1265,7 @@ fetch(pathJsonSalas)
         localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
         localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
         console.log("CHEGOU AQUI");
-        window.open('../MudarAula/slotsASelecionar.html', "_blank");
+        window.open('../slotsASelecionar.html', "_blank");
 
     }
 

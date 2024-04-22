@@ -3,7 +3,7 @@ var aulaAnterior = JSON.parse(localStorage.getItem('aulaAMudar'));
 
 let horario = [];
 
-const pathJsonHorario = '../ficheiros/Horário.json';
+const pathJsonHorario = '../Horário.json';
 
 
 /**
