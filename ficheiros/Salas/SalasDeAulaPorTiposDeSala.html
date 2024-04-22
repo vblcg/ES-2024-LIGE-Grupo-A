@@ -57,6 +57,12 @@
     </select>
   </div>
 
+  <body>
+    <button type="submit" id="gravarJSON2">GRAVAR JSON</button>
+    <button type="submit" id="gravarCSV1">GRAVAR CSV</button>
+    
+</body>
+
   <div id="table-horario">
     <script type="text/javascript">
       const pathJson = "http://localhost/CaracterizacaoDasSalas.json";
@@ -481,6 +487,20 @@
             ],
           });
 
+          function convertJsonToCsv(data) {
+              var headers = Object.keys(data[0]);
+              var csvContent = "data:text/csv;charset=utf-8,";
+              csvContent += headers.join(",") + "\n";
+              data.forEach(function (row) {
+                var values = headers.map(function (header) {
+                  return row[header];
+                });
+                csvContent += values.join(",") + "\n";
+              });
+
+              return csvContent;
+            }
+
           document
             .getElementById("location-filter")
             .addEventListener("change", function () {
@@ -512,6 +532,32 @@
               filter = filterDate(day, timeslot);
               table.setFilter("Nome sala", "in", filter);
             }
+          });
+
+          document.getElementById("gravarJSON2").addEventListener("click", function () {
+            var filteredData = JSON.stringify(table.getData("visible")); // Get filtered data
+            var blob = new Blob([filteredData], { type: "application/json" });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "SalasFiltradas.json";
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+          });
+
+          document.getElementById("gravarCSV1").addEventListener("click", function () {
+
+              var filteredData = table.getData("visible"); // Get filtered data
+              var csvContent = convertJsonToCsv(filteredData);
+              var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+              var url = window.URL.createObjectURL(blob);
+              var a = document.createElement("a");
+              a.href = url;
+              a.download = "SalasFiltradas.csv";
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
           });
 
 
