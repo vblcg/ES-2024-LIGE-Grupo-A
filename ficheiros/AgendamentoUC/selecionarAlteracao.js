@@ -5,7 +5,7 @@ var cursoData = JSON.parse(localStorage.getItem('cursoData'));
 
 let horario = [];
 
-const pathJsonHorario = '../HorárioSlots/Horário.json';
+const pathJsonHorario = '../Horário.json';
 
 
 /**
