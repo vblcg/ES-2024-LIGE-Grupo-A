@@ -1,5 +1,5 @@
 const pathJsonHorario = '../Horário.json';
-const pathJsonSalas = '../Salas/CaracterizacaoDasSalas.json';
+const pathJsonSalas = '../CaracterizacaoDasSalas.json';
 var table; // Declarar a variável da tabela
 var salas;
 var tiposDeSala;
