@@ -25,7 +25,7 @@ public class App {
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/SlotsDisponiveis.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/visualizacaoSlots.js"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/HorárioSlots/horario.js"));
-        XamppFileManager.saveToFileRoot(new File("ficheiros/HorárioSlots/HoráriioStyleSheet.css"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/HorárioSlots/HorárioStyleSheet.css"));
 
 
         uploadFile.setVisible(true); 
