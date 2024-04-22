@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Qua: "Quarta-feira",
                 Qui: "Quinta-feira",
                 Sex: "Sexta-feira",
-                Sab: "Sábado",
+                Sáb: "Sábado",
                 Dom: "Domingo",
               },
             },
