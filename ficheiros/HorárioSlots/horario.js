@@ -407,7 +407,7 @@ fetch(pathJsonSalas)
 
 
         // Obrigar o utilizador a preencher os 3 primeiros inputs
-        if (semanaPrefValue === 'Semana a selecionar' || diaDaSemanaPrefValue === 'Sia da semana a selecionar' || alturaDoDiaPrefValue.value === 'Altura do dia a selecionar') {
+        if (semanaPrefValue === 'Semana a selecionar' || diaDaSemanaPrefValue === 'Dia da semana a selecionar' || alturaDoDiaPrefValue.value === 'Altura do dia a selecionar') {
             alert('Por favor, preencha todos os campos obrigatórios.');
             return;
         }
