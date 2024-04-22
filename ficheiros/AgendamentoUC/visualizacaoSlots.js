@@ -2,7 +2,7 @@
 let salas;
 var jsonData;
 var allAccepted;
-const pathJsonSalas = "../Salas/CaracterizacaoDasSalas.json"; 
+const pathJsonSalas = "./CaracterizacaoDasSalas.json"; 
 
 let guardarButtonListenerAttached = false;
 
