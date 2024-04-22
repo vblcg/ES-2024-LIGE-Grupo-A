@@ -2,7 +2,7 @@
 let salas;
 var jsonData;
 var allAccepted;
-const pathJsonSalas = "../Salas/CaracterizacaoDasSalas.json"; 
+const pathJsonSalas = "./CaracterizacaoDasSalas.json"; 
 
 let guardarButtonListenerAttached = false;
 
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Qua: "Quarta-feira",
                 Qui: "Quinta-feira",
                 Sex: "Sexta-feira",
-                Sab: "Sábado",
+                Sáb: "Sábado",
                 Dom: "Domingo",
               },
             },
@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   aulaAMudar = cell.getRow().getData();
                   $('#myModal').modal('show');
               } else if (e.target.classList.contains("delete-btn")) {
-                var confirmacao = confirm("Tem a certeza que quer apagar a aula? Não há volta a dar depois se der merda já bateste");
+                var confirmacao = confirm("Tem a certeza que quer apagar a aula?");
                 if (confirmacao) {
                   var rowData = cell.getRow().getData(); 
                   var rowIndex = cell.getRow().getIndex(); 
@@ -480,7 +480,7 @@ function getPreferences(horario){
 
 
   // Obrigar o utilizador a preencher os 3 primeiros inputs
-  if (semanaPrefValue === 'Semana a selecionar' || diaDaSemanaPrefValue === 'Sia da semana a selecionar' || alturaDoDiaPrefValue.value === 'Altura do dia a selecionar') {
+  if (semanaPrefValue === 'Semana a selecionar' || diaDaSemanaPrefValue === 'Dia da semana a selecionar' || alturaDoDiaPrefValue.value === 'Altura do dia a selecionar') {
       alert('Por favor, preencha todos os campos obrigatórios.');
       return;
   }
