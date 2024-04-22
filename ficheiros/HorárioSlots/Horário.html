@@ -34,7 +34,7 @@
                 <form>
                     <div class="form-group">
                         <p class="first_label_input">Horário Preferencial:</p>
-                        <p>Semana do semestre (obrigatório):</p>
+                        <p><span class="mandatory">*</span> Semana do semestre: </p>
                         <select class="form-select" id="semanaPref" aria-label="Default select example" required>
                             <option selected>Semana a selecionar</option>
                             <option value="1">1ª Semana</option>
@@ -59,7 +59,7 @@
                             <option value="20">20ª Semana</option>
                             <option value="21">21ª Semana</option>
                         </select>
-                        <p>Dia da semana (obrigatório):</p>
+                        <p><span class="mandatory">*</span> Dia da semana: </p>
                         <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example" required>
                             <option selected>Dia da semana a selecionar</option>
                             <option value="Seg">Segunda-feira</option>
@@ -68,7 +68,7 @@
                             <option value="Qui">Quinta-feira</option>
                             <option value="Sex">Sexta-feira</option>
                         </select>
-                        <p>Altura do dia (obrigatório):</p>
+                        <p><span class="mandatory">*</span> Altura do dia: </p>
                         <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example" required>
                             <option selected>Altura do dia a selecionar</option>
                             <option value="8,13">Manhã (8:00 - 13:00)</option>
@@ -96,6 +96,10 @@
                         </div>
                     </div>
                 
+            </div>
+
+            <div class="mandatory">
+                <p style="margin-left: 15px;"><strong>* Campo obrigatório</strong></p>
             </div>
     
             <!-- Modal Footer -->
