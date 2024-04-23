@@ -761,13 +761,15 @@ fetch(pathJsonSalas)
 
                     });
 
-                }
-
                 if(salasAvailable.length !== 0){
-                    salasAvailable.forEach(sala => {
+                        salasAvailable.forEach(sala => {
                         sala['caracteristica'] = preferenciaSala2Value;
                     })
                 }
+
+                }
+
+                
 
 
                 if(salasAvailable.length === 0 && preferenciaSala3Value !== undefined){
@@ -1342,7 +1344,6 @@ fetch(pathJsonSalas)
         
         const slots = [];
         salasAvailableInput.forEach(aula => {
-            console.log(aula);
             const vetor = [];
             vetor.push(array[0]); //curso
             vetor.push(array[1]); //uc
