@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +22,7 @@ import com.google.gson.GsonBuilder;
 /**
  * Esta classe tem com funcionalidade ler o ficheiro CSV que contem o horario das aulas e converte-lo num ficheiro com formato JSON
  */
-public class extract{
+public class Extract{
     private String outputFile;
     private File[] inputFile;
     private File outputJsonFile;
@@ -32,7 +33,7 @@ public class extract{
      * @param inputFile String que representa o ficheiro CSV de input.
      * @param outputFile String que representa o ficheiro de output.
      */
-    public extract(File[] inputFile, String outputFile) {
+    public Extract(File[] inputFile, String outputFile) {
         this.outputFile = outputFile;
         this.inputFile = inputFile;
         this.outputJsonFile = new File(outputFile);

@@ -19,7 +19,7 @@ public class ExtractTest {
         File[] file = new File[1];
         file[0] = new File(inputFile);
         
-        extract extract = new extract(file, outputFile);
+        Extract extract = new Extract(file, outputFile);
 
         assertEquals(inputFile, extract.getInputFile());
         assertEquals(outputFile, extract.getOutputFile());
@@ -33,7 +33,7 @@ public class ExtractTest {
         File[] file = new File[1];
         file[0] = new File(inputFile);
         
-        extract extract = new extract(file, outputFile);
+        Extract extract = new Extract(file, outputFile);
 
         // Datas de teste
         String[] dates = {"01/01/2024", "15/06/2025", "31/12/2022"};
@@ -55,7 +55,7 @@ public class ExtractTest {
         File[] file = new File[1];
         file[0] = new File(inputFile);
         
-        extract extract = new extract(file, outputFile);
+        Extract extract = new Extract(file, outputFile);
         // Datas de teste
        
         String[] dates = {"09/09/2022", "09/12/2022", "15/03/2023"};
@@ -79,7 +79,7 @@ public class ExtractTest {
         file[0] = new File(inputFile);
         
 
-        extract testExtractor = new extract(file, outputFileS);
+        Extract testExtractor = new Extract(file, outputFileS);
         testExtractor.readCsvUsingBufferReader();
 
         File directory = new File(directoryPath);

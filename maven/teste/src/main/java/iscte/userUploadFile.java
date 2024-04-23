@@ -23,7 +23,7 @@ import java.awt.event.*;
  * Classe para permitir o carregamento de arquivos pelo usuario.
  * Estende JFrame e implementa FileCallback.
  */
-public class userUploadFile extends JFrame implements FileCallback{
+public class UserUploadFile extends JFrame implements FileCallback{
 
     private FileCallback callback;
     private File[] fileholder;
@@ -37,12 +37,12 @@ public class userUploadFile extends JFrame implements FileCallback{
      * @param fileholder Array de arquivos para armazenar o arquivo selecionado pelo usuário.
      * @param jsonFile    Nome do arquivo JSON.
      */
-    public userUploadFile(File[] fileholder, String jsonFile) {
+    public UserUploadFile(File[] fileholder, String jsonFile) {
         this.fileholder =  fileholder;
         this.callback = new FileCallback() {
             public void onFileSelected(File selectedFile) {
                 fileholder[0] = selectedFile;
-                extract extractorCsvToJson = new extract(fileholder, jsonFile);
+                Extract extractorCsvToJson = new Extract(fileholder, jsonFile);
                 extractorCsvToJson.readCsvUsingBufferReader();
                 XamppFileManager.saveToFileRoot(extractorCsvToJson.getOutputJsonFile());
                 return;
@@ -123,9 +123,9 @@ public class userUploadFile extends JFrame implements FileCallback{
         button.setBounds(20,20,250,50);  
 	    buttonAllocate.addActionListener(new ActionListener(){  	
 			public void actionPerformed(ActionEvent e){ 
-                if(!uploaded) {
-                    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
-                } else {
+                //if(!uploaded) {
+                //    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
+                //} else {
                     Desktop desk = Desktop.getDesktop(); 
                     try {
                         desk.browse(new URI("http://localhost/AgendamentoDeAulas.html"));
@@ -134,7 +134,7 @@ public class userUploadFile extends JFrame implements FileCallback{
                     } catch (URISyntaxException e1) {
                         e1.printStackTrace();
                     }
-                }
+                //}
 			}
         });
 
