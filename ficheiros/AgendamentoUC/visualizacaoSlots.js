@@ -1,26 +1,18 @@
 var jsonData;
-var minMaxFilterFunction = function (
-  headerValue,
-  rowValue,
-  rowData,
-  filterParams
-) {
-  // Aplica o filtro apenas a valores que não sejam null e que estejam definidos
+
+var minMaxFilterFunction = function (headerValue,rowValue) {
   if (rowValue !== null && rowValue !== undefined) {
     if (headerValue.start !== "") {
       if (headerValue.end !== "") {
-        // Filtro para valores de min e max definidos
         return (
           rowValue >= parseFloat(headerValue.start) &&
           rowValue <= parseFloat(headerValue.end)
         );
       } else {
-        // Filtro se apenas o valor de min estiver difinido
         return rowValue >= parseFloat(headerValue.start);
       }
     } else {
       if (headerValue.end !== "") {
-        // Filtro se apenas o valor de max estiver difinido
         return rowValue <= parseFloat(headerValue.end);
       }
     }
@@ -212,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
             title: "Alterar aula", field: "Alterar aula", headerSort: false,
             formatter: function (cell, formatterParams, onRendered) {
               var cursoData = JSON.parse(localStorage.getItem('slotsData'));
-              // Verifica se o valor da célula corresponde a alguma UC em cursoData
               if (cursoData && cursoData.some(item => item.UC === cell.getRow().getData().UC)) {
                 var acceptBtn = "<button class='accept-btn'>Accept</button>";
                 var modifyBtn = "<button class='modify-btn'>Modify</button>";

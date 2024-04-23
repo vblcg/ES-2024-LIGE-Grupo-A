@@ -54,9 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function initializeSelectOptionsSalas() {
-        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD (Bring Your Own Device)', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
-        let nomesSalas = salas.map(room => room['Nome sala']);
-    
+        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD (Bring Your Own Device)', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];    
         const preferenciaSala1 = document.getElementById('preferenciaSala1');
         const salasInaceitaveis = document.getElementById('salasInaceitaveis');
     
@@ -79,11 +77,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             return response.json();
         })
-    
         .then(data => {
-    
             salas = data;
-    
             initializeSelectOptionsSalas();
     })
     .catch(error => {
@@ -99,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
         else return decimal;
     }
     
-
     //testado
     function initParametrosSemana(diasSemanaInput) {
         const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
@@ -294,16 +288,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('userInputForm').addEventListener('submit', function(event) {
         event.preventDefault();
-            console.log("Entrou");
-            //alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
             let inputs = [];
-        
-            //nome uc 0
             inputs.push(document.getElementById('UC').value);
-            //numero aulas 1
             inputs.push(document.getElementById('nmrAulas').value);
         
-            //periodos possiveis 2
             const checkboxes1 = document.querySelectorAll('input[name="periodoPossivel"]');
             const selectedValues1 = [];
             let selectedAny = false;
@@ -318,7 +306,6 @@ document.addEventListener('DOMContentLoaded', function () {
             else
                 inputs.push(null);
         
-            //dias da semana possiveis 3
             const checkboxes2 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
             const selectedValues2 = [];
             let selectedAnyDay = false;
@@ -333,26 +320,18 @@ document.addEventListener('DOMContentLoaded', function () {
             else
                 inputs.push(null);
         
-            //preferencia sala 4
             const preferenciaSalaSelect = document.getElementById("preferenciaSala1");
             const selectedOptions = preferenciaSalaSelect.selectedOptions;
+
             inputs.push(Array.from(selectedOptions).map(option => option.value));
-        
-            //salas inaceitaveis 5
+
             const salasInaceitaveis = document.getElementById('salasInaceitaveis');
             const selectedOptionsInaceitaveis = salasInaceitaveis.selectedOptions;
+
             inputs.push(Array.from(selectedOptionsInaceitaveis).map(option => option.value));
-        
-            //numero alunos 6
             inputs.push(document.getElementById('nmrAlunos').value);
-        
-            //nome curso 7
             inputs.push(document.getElementById('Licenciatura').value)
-
-            //semana semestre começo 8
             inputs.push(document.getElementById('semanaSemestre').value);
-
-            //número de aulas por semana 9
             inputs.push(document.getElementById('nmrAulasSemana').value);
         
             let slots = adicionarAulas(inputs);
@@ -360,16 +339,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem('slotsData', JSON.stringify(slots));
                 window.open('SlotsDisponiveis.html', "_blank");
             }
-  
-
     });
 
     fetch('Horário.json')
         .then(response => response.json()) // Convertendo a resposta para JSON
         .then(data => {
-            // Armazenando os dados do JSON em uma variável
             jsonData = data;
-
         })
         .catch(error => {
             console.error('Ocorreu um erro ao carregar o arquivo JSON:', error);
