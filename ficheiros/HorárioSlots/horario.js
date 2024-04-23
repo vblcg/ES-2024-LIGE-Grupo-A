@@ -665,6 +665,7 @@ fetch(pathJsonSalas)
                 
 
                 if(salasAvailable.length === 0 && preferenciaSala2Value !== undefined){
+                    
                     caracteristaDasSalas.forEach(function(item) {
 
 
@@ -1265,7 +1266,7 @@ fetch(pathJsonSalas)
         localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
         localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
         console.log("CHEGOU AQUI");
-        window.open('../MudarAula/slotsASelecionar.html', "_blank");
+        window.open('../slotsASelecionar.html', "_blank");
 
     }
 
