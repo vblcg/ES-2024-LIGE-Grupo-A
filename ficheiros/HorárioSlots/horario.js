@@ -187,6 +187,31 @@ fetch(pathJsonHorario)
     ],
 }); 
 
+document.getElementById("gravarJSON3").addEventListener("click", function () {
+    var filteredData = JSON.stringify(table.getData("visible")); // Get filtered data
+    var blob = new Blob([filteredData], { type: "application/json" });
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "HorarioFiltrado.json";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+});
+
+document.getElementById("gravarCSV3").addEventListener("click", function () {
+var filteredData = table.getData("visible"); // Get filtered data
+var csvContent = convertJsonToCsv(filteredData);
+var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+var url = window.URL.createObjectURL(blob);
+var a = document.createElement("a");
+a.href = url;
+a.download = "HorarioFiltrado.csv";
+document.body.appendChild(a);
+a.click();
+window.URL.revokeObjectURL(url);
+});
+
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('alterar-aula-button')) {
         $('#myModal').modal('show');
@@ -258,6 +283,21 @@ fetch(pathJsonSalas)
      *  salas existentes no ficheiro json da caracterização das salas.
      *  
     */
+
+    function convertJsonToCsv(data) {
+        var headers = Object.keys(data[0]);
+        var csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += headers.join(",") + "\n";
+        data.forEach(function (row) {
+          var values = headers.map(function (header) {
+            return row[header];
+          });
+          csvContent += values.join(",") + "\n";
+        });
+
+        return csvContent;
+      }
+
     document.addEventListener('DOMContentLoaded', function () {
         const addButton = document.getElementById('addPreferenceBtn');
         //const addButtonSalasIn =  document.getElementById('addSalaInaceitavel');;
