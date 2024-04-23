@@ -1265,7 +1265,7 @@ fetch(pathJsonSalas)
         localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
         localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
         console.log("CHEGOU AQUI");
-        window.open('../slotsASelecionar.html', "_blank");
+        window.open('../MudarAula/slotsASelecionar.html', "_blank");
 
     }
 
