@@ -54,9 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function initializeSelectOptionsSalas() {
-        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD (Bring Your Own Device)', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
-        let nomesSalas = salas.map(room => room['Nome sala']);
-    
+        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD (Bring Your Own Device)', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];    
         const preferenciaSala1 = document.getElementById('preferenciaSala1');
         const salasInaceitaveis = document.getElementById('salasInaceitaveis');
     
@@ -79,11 +77,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             return response.json();
         })
-    
         .then(data => {
-    
             salas = data;
-    
             initializeSelectOptionsSalas();
     })
     .catch(error => {
@@ -99,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
         else return decimal;
     }
     
-
     //testado
     function initParametrosSemana(diasSemanaInput) {
         const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
@@ -132,52 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return hour.toString() + ":00:00";
     }
 
-    function parseDay(dia) {
-        if(dia == "Seg")
-            return 1;
-        else if(dia == "Ter")
-            return 2;
-        else if(dia == "Qua")
-            return 3;
-        else if(dia == "Qui")
-            return 4;
-        else if(dia == "Sex")
-            return 5;
-        else if(dia == "Sab")
-            return 6;
-        return null;
-    }
-
-    function calcularDiaDoAno(ano, semana, diaDaSemana) {
-        diaDaSemana = parseDay(diaDaSemana);
-        var primeiraDataDoAno = new Date(ano, 0, 1);
-        var primeiroDiaDaSemana = primeiraDataDoAno.getDay();        
-        var deslocamento = diaDaSemana - primeiroDiaDaSemana;
-        
-        if (deslocamento < 0) {
-            deslocamento += 7;
-        }
-        
-        var diasDesdePrimeiroDia = (semana - 1) * 7 + deslocamento;
-        var dataFinal = new Date(ano, 0, 1);
-        dataFinal.setDate(dataFinal.getDate() + diasDesdePrimeiroDia);
-        
-        var dia = dataFinal.getDate();
-        var mes = dataFinal.getMonth() + 1; // Adicionando 1 porque os meses em JavaScript são indexados a partir de zero
-        var anoString = dataFinal.getFullYear();
-        
-        if (dia < 10) {
-            dia = '0' + dia;
-        }
-        if (mes < 10) {
-            mes = '0' + mes;
-        }
-        var dataFormatada = anoString + '/' + mes + '/' + dia;
-        return dataFormatada;
-    }
-    
-
-    function criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, diaSemana, semanaAno, semanaSemestre, preferencia, salaAlocada) {
+    function criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, max, semanaAno, semanaSemestre, preferencia, salaAlocada) {
         const novaAula = {
             "Curso": nomeCurso,
             "UC": UC,
@@ -186,8 +135,8 @@ document.addEventListener('DOMContentLoaded', function () {
             "Inscritos no Turno": parseInt(numeroAlunos),
             "Dia da Semana": diaSemanaString,
             "Hora Inicio da Aula": parseHour(min),
-            "Hora Fim da Aula": max,
-            "Data da aula": diaSemana,
+            "Hora Fim da Aula": (max),
+            "Data da aula": "",
             "Semana do ano": semanaAno,
             "Semana do semestre": semanaSemestre,
             "Caracteristicas da sala pedida para a aula": preferencia,
@@ -216,21 +165,18 @@ document.addEventListener('DOMContentLoaded', function () {
         var diaSemanaString = results[1];
         var inputsDias = results[2];
 
-        for(let aulas = 0; aulas < aulasSemana; aulas++) {
+        for(let aulas = 0; aulas < numeroAulas; aulas++) {
             var semanaSemestre = parseInt(inputs[8]); 
             var filteredJson = jsonData;
-            for(let semana = 0; semana < numeroAulas; semana++) {
+            for(let semana = 0; semana < aulasSemana; semana++) {
                 var exist = false;
                 var horaCount = 1;
                 if(periodos == null) {
-                    var min = decimalParaHora(8.0 + (aulas*1.3));
-                    var max = decimalParaHora(9.30 + (aulas*1.3));
+                    var min = decimalParaHora(8.0 + (semana*1.3));
+                    var max = decimalParaHora(9.30 + (semana*1.3));
                 } else {
                     var min = parseFloat(periodos[0].split("-")[0]);
-                    min = decimalParaHora(min + (aulas*1.3));
-                    console.log(min);
-                    //var max = parseFloat(decimalParaHora(periodos[0].split("-")[1]));
-                   // console.log(min);
+                    var max = parseFloat(periodos[0].split("-")[1]);
                     var countPeriodosInput = 1;
                 }
                 while(!exist) {
@@ -267,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             max = parseFloat(periodos[countPeriodosInput].split("-")[1]);
                             countPeriodosInput ++;
                             diaSemanaNumero ++;
-                        } else if(countPeriodosInput > periodos.length){
+                        } else if(countPeriodosInput >= periodos.length){
                             min = parseFloat(periodos[0].split("-")[0]);
                             max = parseFloat(periodos[0].split("-")[1]);
                             if(diasSemanaInput != null && diaSemanaNumero < inputsDias) {
@@ -320,11 +266,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                 return;
                             }
                         } else {
-                            preferencia = "Sala de Aulas normal";
                             var salaAlocada = filteredSalas[0];
                         }
                         let semanaAno = jsonData.filter(entry => entry['Semana do semestre'] == semanaSemestre)[0];
-                        const novaAula = criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, parseHour(decimalParaHora(min+1.3)), calcularDiaDoAno(2022, semanaAno['Semana do ano'], diaSemanaString), semanaAno['Semana do ano'], semanaSemestre, preferencia, salaAlocada);
+                        console.log(semanaAno['Semana do ano'])
+                        const novaAula = criarDocumentoSlot(nomeCurso, UC, numeroAlunos, diaSemanaString, min, parseHour(decimalParaHora(min+1.3)),semanaAno['Semana do ano'], semanaSemestre, preferencia, salaAlocada);
                         slots.push(novaAula);
                         jsonData.push(novaAula);
                         exist = true;
@@ -342,15 +288,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('userInputForm').addEventListener('submit', function(event) {
         event.preventDefault();
-            //alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
             let inputs = [];
-        
-            //nome uc 0
             inputs.push(document.getElementById('UC').value);
-            //numero aulas 1
             inputs.push(document.getElementById('nmrAulas').value);
         
-            //periodos possiveis 2
             const checkboxes1 = document.querySelectorAll('input[name="periodoPossivel"]');
             const selectedValues1 = [];
             let selectedAny = false;
@@ -365,7 +306,6 @@ document.addEventListener('DOMContentLoaded', function () {
             else
                 inputs.push(null);
         
-            //dias da semana possiveis 3
             const checkboxes2 = document.querySelectorAll('input[name="diaDaSemanaPref"]');
             const selectedValues2 = [];
             let selectedAnyDay = false;
@@ -380,26 +320,18 @@ document.addEventListener('DOMContentLoaded', function () {
             else
                 inputs.push(null);
         
-            //preferencia sala 4
             const preferenciaSalaSelect = document.getElementById("preferenciaSala1");
             const selectedOptions = preferenciaSalaSelect.selectedOptions;
+
             inputs.push(Array.from(selectedOptions).map(option => option.value));
-        
-            //salas inaceitaveis 5
+
             const salasInaceitaveis = document.getElementById('salasInaceitaveis');
             const selectedOptionsInaceitaveis = salasInaceitaveis.selectedOptions;
+
             inputs.push(Array.from(selectedOptionsInaceitaveis).map(option => option.value));
-        
-            //numero alunos 6
             inputs.push(document.getElementById('nmrAlunos').value);
-        
-            //nome curso 7
             inputs.push(document.getElementById('Licenciatura').value)
-
-            //semana semestre começo 8
             inputs.push(document.getElementById('semanaSemestre').value);
-
-            //número de aulas por semana 9
             inputs.push(document.getElementById('nmrAulasSemana').value);
         
             let slots = adicionarAulas(inputs);
@@ -407,16 +339,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem('slotsData', JSON.stringify(slots));
                 window.open('SlotsDisponiveis.html', "_blank");
             }
-  
-
     });
 
     fetch('Horário.json')
         .then(response => response.json()) // Convertendo a resposta para JSON
         .then(data => {
-            // Armazenando os dados do JSON em uma variável
             jsonData = data;
-
         })
         .catch(error => {
             console.error('Ocorreu um erro ao carregar o arquivo JSON:', error);
