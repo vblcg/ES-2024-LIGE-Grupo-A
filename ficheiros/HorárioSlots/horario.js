@@ -1061,13 +1061,15 @@ fetch(pathJsonSalas)
 
                 });
 
+                if(salasAvailable.length !== 0){
+                    salasAvailable.forEach(sala => {
+                        sala['caracteristica'] = preferenciaSala2Value;
+                    })
+                }
+
             }
 
-            if(salasAvailable.length !== 0){
-                salasAvailable.forEach(sala => {
-                    sala['caracteristica'] = preferenciaSala2Value;
-                })
-            }
+            
 
 
             if(salasAvailable.length === 0 && preferenciaSala3Value !== undefined){
