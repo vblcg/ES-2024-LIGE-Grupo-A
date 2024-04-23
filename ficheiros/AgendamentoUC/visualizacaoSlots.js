@@ -51,10 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then((data) => {
       horario = data;
-      console.log(cursoData);
-      console.log(horario);
       horario = cursoData.concat(horario);
-      console.log(horario);
 
       table = new Tabulator("#tabela-dados", {
         height: "700px",
@@ -220,9 +217,9 @@ document.addEventListener("DOMContentLoaded", function () {
                   cell.getElement().innerHTML = "";
                 }
               } else if (e.target.classList.contains("modify-btn")) {
-              
+                
               } else if (e.target.classList.contains("delete-btn")) {
-                var confirmacao = confirm("Tem a certeza que quer apagar a aula? Não há volta a dar depois se der merda já bateste");
+                var confirmacao = confirm("Tem a certeza que quer apagar a aula?");
                 if (confirmacao) {
                   var rowData = cell.getRow().getData(); 
                   var rowIndex = cell.getRow().getIndex(); 

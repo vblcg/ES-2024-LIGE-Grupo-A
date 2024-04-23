@@ -38,7 +38,7 @@ public class UserUploadFileTest {
         }
 
 
-        UserUploadFile userUploadFile = new UserUploadFile(new File[1], "ficheiros/Horário.json");
+        userUploadFile userUploadFile = new userUploadFile(new File[1], "ficheiros/Horário.json");
         userUploadFile.downloadFileFromGitHub(githubFileUrl);
         File file = userUploadFile.getFileholder()[0];
 
@@ -49,7 +49,7 @@ public class UserUploadFileTest {
 
     @Test
     public void testCheckCsvStructure () throws IOException {
-        UserUploadFile userUploadFile = new UserUploadFile(new File[1], "ficheiros/Horário.json");
+        userUploadFile userUploadFile = new userUploadFile(new File[1], "ficheiros/Horário.json");
 
         String githubFileUrl = "https://raw.githubusercontent.com/vblcg/ES-2024-LIGE-Grupo-A/main/ficheiros/HorarioDeExemplo.csv";
         String fileName = githubFileUrl.substring(githubFileUrl.lastIndexOf('/') + 1);
