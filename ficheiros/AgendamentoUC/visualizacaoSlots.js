@@ -974,21 +974,21 @@ function getPreferences(horario){
           return;
       }
 
-      // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
-      filteredSalasAvailable = salasAvailable.filter(sala => {
+    //   // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
+    //   filteredSalasAvailable = salasAvailable.filter(sala => {
   
-          let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+    //       let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
       
-          let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+    //       let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
 
-          return capacidadeNormal >= inscritos_no_turno;
+    //       return capacidadeNormal >= inscritos_no_turno;
 
-      });
+    //   });
 
-      if (filteredSalasAvailable.length === 0) {
-          alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
-          return;
-      }
+    //   if (filteredSalasAvailable.length === 0) {
+    //       alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+    //       return;
+    //   }
 
 
   // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
