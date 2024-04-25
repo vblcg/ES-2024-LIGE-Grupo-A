@@ -614,8 +614,6 @@ fetch(pathJsonSalas)
             }
         });
 
-
-
         
         // Condição quando o utilizador indica os inputs obrigatórios e o de preferências
         if (preferenciaSala1Value !== "Escolha uma preferência" && salasInaceitaveisValue === "Indique as salas inaceitáveis"){
@@ -625,6 +623,7 @@ fetch(pathJsonSalas)
                     if (condicao){
                         salasPreferidas.push(item['Nome sala']);
                     }
+
 
                     salasPreferidas.forEach(room => {
                         if(!salasAvailable.some(record => record.sala === room)){
@@ -847,12 +846,21 @@ fetch(pathJsonSalas)
 
                 }
 
-                if (salasAvailable.length === 0) {
+                
+                filteredSalasAvailable = salasAvailable.filter(sala => {
+        
+                    let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+                
+                    let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+        
+                    return capacidadeNormal >= inscritos_no_turno;
+    
+                });
+
+                if (filteredSalasAvailable.length === 0) {
                     alert("Não exite nenhuma vaga para as salas preferidas indicadas");
                     return;
                 }
-
-                filteredSalasAvailable = salasAvailable;
 
 
         // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
@@ -1172,10 +1180,20 @@ fetch(pathJsonSalas)
 
             }
 
-
-            filteredSalasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));  
+            filteredSalasAvailable = salasAvailable.filter(sala => {
+        
+                let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
             
-            if (salasAvailable.length === 0) {
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+    
+                return capacidadeNormal >= inscritos_no_turno;
+
+            });
+
+
+            filteredSalasAvailable = filteredSalasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));  
+            
+            if (filteredSalasAvailable.length === 0) {
                 alert("Não exite nenhum slot disponível para as preferências indicadas");
                 return;
             }
