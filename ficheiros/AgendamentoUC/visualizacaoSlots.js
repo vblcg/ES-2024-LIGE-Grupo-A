@@ -892,6 +892,11 @@ function getPreferences(horario){
 
         }
 
+        if (salasAvailable.length === 0) {
+            alert("Não exite nenhum slot disponível para as preferências indicadas");
+            return;
+        }
+
         filteredSalasAvailable = salasAvailable.filter(sala => {
         
             let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
@@ -903,7 +908,7 @@ function getPreferences(horario){
         });
 
         if (filteredSalasAvailable.length === 0) {
-            alert("Não exite nenhuma vaga para as salas preferidas indicadas");
+            alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
             return;
         }
 
@@ -1238,6 +1243,11 @@ function getPreferences(horario){
 
     });
 
+    if (filteredSalasAvailable.length === 0) {
+        alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+        return;
+    }
+
 
     filteredSalasAvailable = filteredSalasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));
 
@@ -1306,21 +1316,26 @@ function getPreferences(horario){
 
       });
 
-      // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
-      filteredSalasAvailable = salasAvailable.filter(sala => {
-  
-          let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-      
-          let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+      if (salasAvailable.length === 0) {
+        alert("Não exite nenhum slot disponível para as preferências indicadas");
+        return;
+    }
 
-          return capacidadeNormal >= inscritos_no_turno;
+    // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
+    filteredSalasAvailable = salasAvailable.filter(sala => {
 
-      });
+        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
 
-      if (filteredSalasAvailable.length === 0) {
-          alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
-          return;
-      }
+        let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+
+        return capacidadeNormal >= inscritos_no_turno;
+
+    });
+
+    if (filteredSalasAvailable.length === 0) {
+        alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+        return;
+    }
       
   }
 

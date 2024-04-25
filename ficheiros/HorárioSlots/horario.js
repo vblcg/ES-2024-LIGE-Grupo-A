@@ -869,6 +869,11 @@ function getPreferences() {
 
         }
 
+        if (salasAvailable.length === 0) {
+            alert("Não exite nenhum slot disponível para as preferências indicadas");
+            return;
+        }
+
         filteredSalasAvailable = salasAvailable.filter(sala => {
         
             let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
@@ -880,7 +885,7 @@ function getPreferences() {
         });
 
         if (filteredSalasAvailable.length === 0) {
-            alert("Não exite nenhuma vaga para as salas preferidas indicadas");
+            alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
             return;
         }
 
@@ -1214,6 +1219,11 @@ function getPreferences() {
 
         });
 
+        if (filteredSalasAvailable.length === 0) {
+            alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+            return;
+        }
+
 
         filteredSalasAvailable = filteredSalasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));
 
@@ -1280,6 +1290,11 @@ function getPreferences() {
             }
 
         });
+
+        if (salasAvailable.length === 0) {
+            alert("Não exite nenhum slot disponível para as preferências indicadas");
+            return;
+        }
 
         // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
         filteredSalasAvailable = salasAvailable.filter(sala => {
