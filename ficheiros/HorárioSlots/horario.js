@@ -869,12 +869,20 @@ function getPreferences() {
 
         }
 
-        if (salasAvailable.length === 0) {
+        filteredSalasAvailable = salasAvailable.filter(sala => {
+        
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+        
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+
+            return capacidadeNormal >= inscritos_no_turno;
+
+        });
+
+        if (filteredSalasAvailable.length === 0) {
             alert("Não exite nenhuma vaga para as salas preferidas indicadas");
             return;
         }
-
-        filteredSalasAvailable = salasAvailable;
 
 
         // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
@@ -951,7 +959,7 @@ function getPreferences() {
         }
 
         // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
-        filteredSalasAvailable = salasAvailable.filter(sala => {
+        filteredSalasAvailable = filteredSalasAvailable.filter(sala => {
 
             let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
 
@@ -1196,10 +1204,20 @@ function getPreferences() {
 
         }
 
+        filteredSalasAvailable = salasAvailable.filter(sala => {
+        
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+        
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
 
-        filteredSalasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));
+            return capacidadeNormal >= inscritos_no_turno;
 
-        if (salasAvailable.length === 0) {
+        });
+
+
+        filteredSalasAvailable = filteredSalasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));
+
+        if (filteredSalasAvailable.length === 0) {
             alert("Não exite nenhum slot disponível para as preferências indicadas");
             return;
         }
