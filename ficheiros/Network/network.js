@@ -10,16 +10,14 @@ fetch(pathHorario)
 .then(response => response.json())
 .then(data => {
 
+        
         jsonData = data;
         data.forEach(item => {
             const cursoList = item['Curso'].split(',').map(curso => curso.trim());
             cursoList.forEach(curso => cursos.add(curso));
 
-            nodes.push({
-                id: item.Curso + ' ' + item['Turno'], // Identificador único do nó
-                aulaData: item // Informações sobre a aula
-            });
         });
+
         cursos = Array.from(cursos);
 
         ucs = [...new Set(data.map(item => item['UC']))];
@@ -39,8 +37,6 @@ fetch(pathHorario)
           option.text = uc;
           ucDropdown.add(option);
         });
-        
-        links = createLinks(nodes);
 
     })
 .catch(error => {
@@ -49,36 +45,51 @@ fetch(pathHorario)
 
 
 function updateGraph() {
-    const selectedCurso = document.getElementById('curso').value;
-    const filteredData = jsonData.filter(item => item['Curso'] === selectedCurso);
-    const svg = d3.select("#graph");
 
+    const width = 600;
+    const height = 400;
+
+    // Create the SVG element
+    const svg = d3.select("#graph")
+        .attr("width", width)
+        .attr("height", height);
 
     // Set up the D3 force simulation
     const simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id).distance(50))
-        .force("charge", d3.forceManyBody().strength(-200))
-        .force("center", d3.forceCenter(500, 300));
+    .force("link", d3.forceLink(links).id(d => d.id))
+    .force("charge", d3.forceManyBody().strength(-100))
+    .force("center", d3.forceCenter(width / 2, height / 2));
 
-    // Update links
-    const link = svg.selectAll(".link")
+    // Add links
+    const link = svg.append("g")
+        .selectAll("line")
         .data(links)
-        .join("line")
-        .attr("class", "link")
-        .style("stroke-width", 2);
+        .enter()
+        .append("line")
+        .attr("stroke", "black")
+        .attr("stroke-width", 2);
 
-    // Update nodes
-    const node = svg.selectAll(".node")
+    // Add nodes
+    const node = svg.append("g")
+        .selectAll("circle")
         .data(nodes)
-        .join("circle")
-        .attr("class", "node")
-        .attr("r", 10)
-        .style("fill", d => isConflict(d, filteredData) ? "red" : "#66a3ff") 
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
+        .enter()
+        .append("circle")
+        .attr("r", 20)
+        .attr("fill", "skyblue");
 
+    // Add labels to nodes
+    const label = svg.append("g")
+        .selectAll("text")
+        .data(nodes)
+        .enter()
+        .append("text")
+        .text(d => d.name)
+        .attr("font-size", "12px")
+        .attr("dx", 25)
+        .attr("dy", 5);
+
+    // Define tick function for simulation
     simulation.on("tick", () => {
         link.attr("x1", d => d.source.x)
             .attr("y1", d => d.source.y)
@@ -87,28 +98,10 @@ function updateGraph() {
 
         node.attr("cx", d => d.x)
             .attr("cy", d => d.y);
+
+        label.attr("x", d => d.x)
+            .attr("y", d => d.y);
     });
-
-    // Function to handle drag start
-    function dragstarted(event, d) {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-    }
-
-    // Function to handle drag
-    function dragged(event, d) {
-        d.fx = event.x;
-        d.fy = event.y;
-    }
-
-    // Function to handle drag end
-    function dragended(event, d) {
-        if (!event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-    }
-
 }
 
 
@@ -118,26 +111,23 @@ function updateGraph() {
  * @param {*} aula
  * @returns 
  */
-function isConflict(node, filteredData) {
-    const aula = node.aulaData;
-    for (let other of filteredData) {
-        if (aula !== other && aula['Dia da Semana'] === other['Dia da Semana']) {
-            const horaInicioAula1 = new Date('2024-01-01T' + aula['Hora Inicio da Aula']);
-            const horaFimAula1 = new Date('2024-01-01T' + aula['Hora Fim da Aula']);
-            const horaInicioAula2 = new Date('2024-01-01T' + other['Hora Inicio da Aula']);
-            const horaFimAula2 = new Date('2024-01-01T' + other['Hora Fim da Aula']);
+function isConflict(aula1, aula2) {
 
-            if ((horaInicioAula1 < horaFimAula2 && horaFimAula1 > horaInicioAula2) || 
-                (horaInicioAula2 < horaFimAula1 && horaFimAula2 > horaInicioAula1)) {
-                return true;
-            }
-        }
+    const dia = "2024-01-01"; 
+
+    const horaInicioAula1 = new Date(dia + 'T'+ aula1['Hora Inicio da Aula']);
+    const horaFimAula1 = new Date(dia + 'T' + aula1['Hora Fim da Aula']);
+    const horaInicioAula2 = new Date(dia + 'T' + aula2['Hora Inicio da Aula']);
+    const horaFimAula2 = new Date(dia + 'T' + aula2['Hora Fim da Aula']);
+
+    if ((horaInicioAula1 < horaFimAula2 && horaFimAula1 > horaInicioAula2) || 
+        (horaInicioAula2 < horaFimAula1 && horaFimAula2 > horaInicioAula1)) {
+        return true;
     }
     return false;
 }
 
 function createLinks(nodes) {
-    const links = [];
     for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
             const aula1 = nodes[i].aulaData;
@@ -147,15 +137,54 @@ function createLinks(nodes) {
             }
         }
     }
-    return links;
 }
 
 
 
 // Variável que verifica se o curso mudou
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('curso').addEventListener('change', updateGraph);
+    const button = document.getElementById('submit');
+
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        
+        const cursoInput = document.getElementById('curso').value;
+        const ucInput = document.getElementById('uc').value;
+        const data_inicioInput  = document.getElementById('data_inicio').value;
+        const data_fimInput  = document.getElementById('data_fim').value;
+
+        const dataInicioDate = new Date(data_inicioInput);
+        const dataFimDate = new Date(data_fimInput);        
+
+        const filteredData = jsonData.filter(item => {
+            const itemData = new Date(item['Data da aula']);
+
+    
+            return (
+                item['Curso'].includes(cursoInput) &&
+                item['UC'] === ucInput &&
+                itemData >= dataInicioDate &&
+                itemData <= dataFimDate
+            );
+        });
+
+        filteredData.forEach(aula => {
+            nodes.push({
+                id: aula.Curso + ' ' + aula['Turno'], // Identificador único do nó
+                aulaData: aula // Informações sobre a aula
+            });
+        });
+
+
+        createLinks(nodes);
+
+        updateGraph()
+    
+    });
+        
+
 });
+
 
 
 

@@ -24,26 +24,29 @@
     <script type="text/javascript" src="network.js"></script>
     <div class="container">
         <div class="row mb-3">
-        <div class="col">
-            <label for="curso" class="form-label">Curso:</label>
-            <select id="curso" class="form-select">
-                <option value="" disabled selected>Selecione o curso</option>
-            </select>
-        </div>
-        <div class="col">
-            <label for="uc" class="form-label">UC:</label>
-            <select id="uc" class="form-select">
-                <option value="" disabled selected>Selecione a UC</option>
-            </select>
-        </div>
-        <div class="col">
-            <label for="start-date" class="form-label">Data de início:</label>
-            <input type="date" id="start-date" class="form-control">
-        </div>
-        <div class="col">
-            <label for="end-date" class="form-label">Data final:</label>
-            <input type="date" id="end-date" class="form-control">
-        </div>
+            <div class="col">
+                <label for="curso" class="form-label">Curso:</label>
+                <select id="curso" class="form-select">
+                    <option value="" disabled selected>Selecione o curso</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="uc" class="form-label">UC:</label>
+                <select id="uc" class="form-select">
+                    <option value="" disabled selected>Selecione a UC</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="data_inicio" class="form-label">Data de início:</label>
+                <input type="date" id="data_inicio" class="form-control">
+            </div>
+            <div class="col">
+                <label for="data_fim" class="form-label">Data final:</label>
+                <input type="date" id="data_fim" class="form-control">
+            </div>
+            <div class="col">
+                <button type="submit" id='submit' name='submit' class="btn btn-primary">Submit</button>
+            </div>
         </div>
     </div>
     <svg id="graph"></svg>
