@@ -1,24 +1,6 @@
 
 let salas;
 var jsonData;
-var allAccepted;
-const pathJsonSalas = "./CaracterizacaoDasSalas.json"; 
-
-let guardarButtonListenerAttached = false;
-
-document.addEventListener('click', function () {
-    if (!guardarButtonListenerAttached) {
-        const guardarButton = document.getElementById('guardarButton');
-        
-        guardarButton.addEventListener('click', function (event) {
-            event.preventDefault(); 
-            getPreferences(horario);
-        });
-        
-        guardarButtonListenerAttached = true;
-    }
-});
-
 var minMaxFilterFunction = function (
   headerValue,
   rowValue,
