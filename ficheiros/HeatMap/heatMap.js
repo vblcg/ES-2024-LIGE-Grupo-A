@@ -1,6 +1,21 @@
 let horario;
 let salas;
 
+/**
+ * Função para que apareçam os tipos de sala para o utilizador filtrar.
+ * @param {*} keys 
+ */
+function createRooms(keys, roomTypeSelect) {
+    keys.forEach(sala => {
+        if(sala != "Nome sala" && sala != "Capacidade Normal" && sala != "Capacidade Exame" && sala != "Nº características" && sala != "Edifício") {
+            const option = document.createElement("option");
+            option.value = sala; 
+            option.textContent = sala; 
+            roomTypeSelect.appendChild(option);
+        }  
+    });
+}
+
 fetch('CaracterizacaoDasSalas.json')
 .then(response => response.json())
 .then(data => {
@@ -11,16 +26,7 @@ fetch('CaracterizacaoDasSalas.json')
 
     const firstSala = data[0];
     const keys = Object.keys(firstSala);
-
-    keys.forEach(sala => {
-        if(sala != "Nome sala" && sala != "Capacidade Normal" && sala != "Capacidade Exame" && sala != "Nº características" && sala != "Edifício") {
-            const option = document.createElement("option");
-            option.value = sala; 
-            option.textContent = sala; 
-            roomTypeSelect.appendChild(option);
-        }
-         
-    });
+    createRooms(keys, roomTypeSelect);
 })
 .catch(error => {
     console.error('Ocorreu um erro ao carregar o arquivo JSON:', error);
@@ -61,13 +67,11 @@ fetch('Horário.json')
         slots.forEach((slot) => {
             const salasOcupadas = [];
             const valor = horarioFiltered.filter((item) => item["Dia da Semana"] === dia && item["Hora Inicio da Aula"] === slot);
-
             valor.forEach((sala) => {
                 if (!salasOcupadas.includes(sala["Sala atribuida a aula"]) && salasFiltered.includes(sala["Sala atribuida a aula"])) {
                     salasOcupadas.push(sala["Sala atribuida a aula"]);
                 }
             });
-
             const cor = salasOcupadas.length != null ? colorScale(salasOcupadas.length) : "#0000ff";
             row.append("div")
                 .attr("class", "heatmap-cell")
@@ -77,6 +81,13 @@ fetch('Horário.json')
     });
 });
 
+/**
+ * Função que filtra o horário e as salas, de acordo com os inputs do utilizador.
+ * @param {*} inputs 
+ * @param {*} horario 
+ * @param {*} salas 
+ * @returns 
+ */
 function handleInputs(inputs, horario, salas) {
     const tipoSala = inputs[0];
     const capacidade = parseInt(inputs[1], 10);
@@ -92,6 +103,12 @@ function handleInputs(inputs, horario, salas) {
     return [salasFiltered.map((item) => item["Nome sala"]), horarioFiltered];
 }
 
+
+/**
+ * Função para mudar o formato de data, passando para yyyy/mm/dd.
+ * @param {*} dateString 
+ * @returns 
+ */
 function parseDate(dateString) {
     const parts = dateString.split("/");
     const year = parseInt(parts[0], 10);
@@ -99,3 +116,4 @@ function parseDate(dateString) {
     const day = parseInt(parts[2], 10);
     return new Date(year, month, day);
 }});
+

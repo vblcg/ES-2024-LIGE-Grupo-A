@@ -1,5 +1,6 @@
 const {decimalParaHora, initParametrosSemana, filterCapacidade, parseHour, adicionarAulas} = require('./functionsToTest');
 const {checkIfEmpty, createJsonEntry} = require('./functionsToTestHorario');
+const {parseDate,handleInputs} = require("./heatMap.js");
 
 let salas = [
     {
@@ -114,6 +115,48 @@ let salas = [
       "Átrio": ""
     },]
 
+let horario = [{
+    "Curso": "ME",
+    "UC": "Teoria dos Jogos e dos Contratos",
+    "Turno": "01789TP01",
+    "Turma": "MEA1",
+    "Inscritos no Turno": "30",
+    "Dia da Semana": "Sex",
+    "Hora Inicio da Aula": "13:00:00",
+    "Hora Fim da Aula": "14:30:00",
+    "Data da aula": "2022/12/02",
+    "Semana do ano": 48,
+    "Semana do semestre": 14,
+    "Caracteristicas da sala pedida para a aula": "Sala Aulas Mestrado",
+    "Sala atribuida a aula": "AA2.25"
+  },
+  {
+    "Curso": "ME",
+    "UC": "Teoria dos Jogos e dos Contratos",
+    "Turno": "01789TP01",
+    "Turma": "MEA1",
+    "Inscritos no Turno": "30",
+    "Dia da Semana": "Qua",
+    "Hora Inicio da Aula": "13:00:00",
+    "Hora Fim da Aula": "14:30:00",
+    "Data da aula": "2022/11/23",
+    "Semana do ano": 47,
+    "Semana do semestre": 12,
+    "Caracteristicas da sala pedida para a aula": "Sala Aulas Mestrado",
+    "Sala atribuida a aula": "AA2.25"
+  },]
+
+describe('Testes para a função parseDate', () => {
+    test('Data', () => {
+        expect(parseDate("2023/01/12")).toStrictEqual(new Date(2023, 0, 12));
+    });   
+});
+
+describe('Testes para a função handleInputs', () => {
+    test('Data', () => {
+        expect(handleInputs(["Arq1", 80, "01/12/2012", "02/12/2012"])).toBe(["", ""]);
+    });   
+});
 
 describe('Testes para a função decimalParaHora', () => {
     test('Teste de hora', () => {
