@@ -8,11 +8,18 @@ fetch('CaracterizacaoDasSalas.json')
     const roomTypeSelect = document.getElementById("room-type");
     const defaultOption = document.createElement("option");
     defaultOption.value = "any";
-    salas.forEach(sala => {
-        const option = document.createElement("option");
-        option.value = sala; // Define o valor da opção
-        option.textContent = sala["Nome sala"]; // Define o texto visível
-        roomTypeSelect.appendChild(option); // Adiciona ao <select>
+
+    const firstSala = data[0];
+    const keys = Object.keys(firstSala);
+
+    keys.forEach(sala => {
+        if(sala != "Nome sala" && sala != "Capacidade Normal" && sala != "Capacidade Exame" && sala != "Nº características" && sala != "Edifício") {
+            const option = document.createElement("option");
+            option.value = sala; 
+            option.textContent = sala; 
+            roomTypeSelect.appendChild(option);
+        }
+         
     });
 })
 .catch(error => {
@@ -79,8 +86,8 @@ function handleInputs(inputs, horario, salas) {
     var horarioFiltered = horario.filter((item) => parseDate(item["Data da aula"]).getTime() >= dataInicio.getTime() && parseDate(item["Data da aula"]).getTime() <= dataFim.getTime());
     if(capacidade != null)
         var salasFiltered = salas.filter((item) => item["Capacidade Normal"] >= capacidade);
-    
-    //salasFiltered = salasFiltered.filter(item => item["Nome sala"] === tipoSala);
+    if(tipoSala != "any")
+        salasFiltered = salasFiltered.filter(item => item[tipoSala] == 1);
 
     return [salasFiltered.map((item) => item["Nome sala"]), horarioFiltered];
 }

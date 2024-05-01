@@ -16,7 +16,7 @@ h1 {
 }
 
 input[type="text"] {
-    width: 100%;
+    width: 10%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -24,7 +24,7 @@ input[type="text"] {
 }
 
 input[type="number"] {
-    width: 100%;
+    width: 10%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
