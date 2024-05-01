@@ -16,13 +16,13 @@
         }
         #graph {
             width: 100vw;
-            height: calc(100vh - 200px); /* Subtrai 200px para acomodar os filtros */
+            height: calc(100vh); 
         }
     </style>
 </head>
 <body>
     <script type="text/javascript" src="network.js"></script>
-    <div class="container">
+    <div class="container mt-2">
         <div class="row mb-3">
             <div class="col">
                 <label for="curso" class="form-label">Curso:</label>
@@ -44,11 +44,13 @@
                 <label for="data_fim" class="form-label">Data final:</label>
                 <input type="date" id="data_fim" class="form-control">
             </div>
-            <div class="col">
-                <button type="submit" id='submit' name='submit' class="btn btn-primary">Submit</button>
+            <div class="col d-flex align-items-end">
+                <button type="submit" id="submit" name="submit" class="btn btn-primary mt-4">Submit</button>
             </div>
         </div>
     </div>
-    <svg id="graph"></svg>
+    <div class="">
+        <svg id="graph"></svg>
+    </div>
 </body>
 </html>

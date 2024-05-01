@@ -43,72 +43,127 @@ fetch(pathHorario)
     console.error('Ocorreu um erro ao carregar o arquivo JSON:', error);
 });
 
-
+/**
+ * Cria a network graph tendo por base os inputs do utilizador
+ */
 function updateGraph() {
+    var svg = d3.select("#graph")
+        .append("svg")
+        .style("width", "100%")
+        .attr("height", "100%");
 
-    const width = 600;
-    const height = 400;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var margin = 50;
 
-    // Create the SVG element
-    const svg = d3.select("#graph")
-        .attr("width", width)
-        .attr("height", height);
+    var bbox = {
+        x1: margin,
+        y1: margin,
+        x2: width - margin,
+        y2: height - margin
+    };
 
-    // Set up the D3 force simulation
-    const simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id(d => d.id))
-    .force("charge", d3.forceManyBody().strength(-100))
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    nodes.forEach(function(node) {
+        var minDistance = 50; 
 
-    // Add links
-    const link = svg.append("g")
+        do {
+            node.x = Math.random() * width;
+            node.y = Math.random() * height;
+
+            var hasCollision = nodes.some(function(otherNode) {
+                if (otherNode !== node) {
+                    var dx = otherNode.x - node.x;
+                    var dy = otherNode.y - node.y;
+                    var distance = Math.sqrt(dx * dx + dy * dy);
+                    return distance < minDistance;
+                }
+                return false;
+            });
+        } while (hasCollision);
+    });
+
+    var force = d3.forceSimulation(nodes)
+        .force("link", d3.forceLink(links).distance(100).strength(0.1))
+        .force("charge", d3.forceManyBody().strength(-30))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("x", d3.forceX().strength(0.05).x(d => Math.max(margin, Math.min(width - margin, d.x))))
+        .force("y", d3.forceY().strength(0.05).y(d => Math.max(margin, Math.min(height - margin, d.y))))
+        .on("tick", ticked);
+
+    var link = svg.append("g")
+        .attr("class", "links")
         .selectAll("line")
         .data(links)
         .enter()
         .append("line")
-        .attr("stroke", "black")
-        .attr("stroke-width", 2);
+        .attr("class", "link");
 
-    // Add nodes
-    const node = svg.append("g")
+    var node = svg.append("g")
+        .attr("class", "nodes")
         .selectAll("circle")
         .data(nodes)
         .enter()
         .append("circle")
-        .attr("r", 20)
-        .attr("fill", "skyblue");
+        .attr("r", 15)
+        .attr("fill", "orange")
+        .call(d3.drag()
+            .on("start", dragStarted)
+            .on("drag", dragging)
+            .on("end", dragEnded));
 
-    // Add labels to nodes
-    const label = svg.append("g")
+    var text = svg.append("g")
+        .attr("class", "texts")
         .selectAll("text")
         .data(nodes)
         .enter()
         .append("text")
-        .text(d => d.name)
-        .attr("font-size", "12px")
-        .attr("dx", 25)
-        .attr("dy", 5);
+        .text(d => d.name  + d.aulaData["Dia da Semana"]) 
+        .attr("x", 0)
+        .attr("y", -20)
+        .style("text-anchor", "middle") 
+        .style("font-size", "12px") 
+        .style("fill", "black"); 
 
-    // Define tick function for simulation
-    simulation.on("tick", () => {
-        link.attr("x1", d => d.source.x)
+    function ticked() {
+        node
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+
+        link
+            .attr("x1", d => d.source.x)
             .attr("y1", d => d.source.y)
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y);
 
-        node.attr("cx", d => d.x)
-            .attr("cy", d => d.y);
-
-        label.attr("x", d => d.x)
+        text
+            .attr("x", d => d.x)
             .attr("y", d => d.y);
-    });
+    }
+
+    function dragStarted(event, d) {
+        if (!event.active) force.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragging(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+    }
+
+    function dragEnded(event, d) {
+        if (!event.active) force.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+    }
 }
 
 
+
 /**
- * Verifica se uma aula está em conflito com a outra
- * @param {*} aula 
- * @param {*} aula
+ * Verifica se uma aula está em conflito com a outra.
+ * @param {*} aula1 - Aula a ser comparada.
+ * @param {*} aula2- Aula a ser comparada.
  * @returns 
  */
 function isConflict(aula1, aula2) {
@@ -127,6 +182,12 @@ function isConflict(aula1, aula2) {
     return false;
 }
 
+
+/**
+ * Verifica as aulas que colidem, cria os links entre as mesmas e .
+ * adiciona os mesmos à variável "links".
+ * @param {*} nodes - Aulas.
+ */
 function createLinks(nodes) {
     for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
@@ -141,157 +202,133 @@ function createLinks(nodes) {
 
 
 
-// Variável que verifica se o curso mudou
 document.addEventListener('DOMContentLoaded', function() {
     const button = document.getElementById('submit');
+    const cursoInput = document.getElementById('curso');
+    const ucInput = document.getElementById('uc');
+    const data_inicioInput = document.getElementById('data_inicio');
+    const data_fimInput = document.getElementById('data_fim');
+
+    function enableButton() {
+        button.disabled = false;
+    }
+
+    function clearGraph() {
+        d3.select("#graph").select("svg").remove();
+        nodes = [];
+        links = [];
+    }
+
+    cursoInput.addEventListener('input', function() {
+        enableButton();
+        clearGraph();
+    });
+    ucInput.addEventListener('input', function() {
+        enableButton();
+        clearGraph();
+    });
+    data_inicioInput.addEventListener('input', function() {
+        enableButton();
+        clearGraph();
+    });
+    data_fimInput.addEventListener('input', function() {
+        enableButton();
+        clearGraph();
+    });
 
     button.addEventListener('click', function(event) {
         event.preventDefault();
-        
-        const cursoInput = document.getElementById('curso').value;
-        const ucInput = document.getElementById('uc').value;
-        const data_inicioInput  = document.getElementById('data_inicio').value;
-        const data_fimInput  = document.getElementById('data_fim').value;
 
-        const dataInicioDate = new Date(data_inicioInput);
-        const dataFimDate = new Date(data_fimInput);        
+        const cursoValue = cursoInput.value;
+        const ucValue = ucInput.value;
+        const dataInicioValue = data_inicioInput.value;
+        const dataFimValue = data_fimInput.value;
 
-        const filteredData = jsonData.filter(item => {
-            const itemData = new Date(item['Data da aula']);
+        const dataInicioDate = new Date(dataInicioValue);
+        const dataFimDate = new Date(dataFimValue);
 
-    
-            return (
-                item['Curso'].includes(cursoInput) &&
-                item['UC'] === ucInput &&
-                itemData >= dataInicioDate &&
-                itemData <= dataFimDate
-            );
-        });
+        let filteredData = [];
 
-        filteredData.forEach(aula => {
-            nodes.push({
-                id: aula.Curso + ' ' + aula['Turno'], // Identificador único do nó
-                aulaData: aula // Informações sobre a aula
+        if (ucValue == '' && cursoValue != '' && dataInicioValue != '' && dataFimValue != '') {
+            filteredData = jsonData.filter(item => {
+                const itemData = new Date(item['Data da aula']);
+
+                return (
+                    item['Curso'].includes(cursoValue) &&
+                    itemData >= dataInicioDate &&
+                    itemData <= dataFimDate
+                );
+
+                
             });
-        });
 
+            createNodes(filteredData, 'UC');
+            
+        } else if (cursoValue == '' && ucValue != '' && dataInicioValue != '' && dataFimValue != '') {
+            filteredData = jsonData.filter(item => {
+                const itemData = new Date(item['Data da aula']);
+
+                return (
+                    item['UC'] === ucValue &&
+                    itemData >= dataInicioDate &&
+                    itemData <= dataFimDate
+                );
+            });
+
+            createNodes(filteredData, 'Curso');
+
+        } else if (dataInicioValue != '' && dataFimValue != '' && cursoValue != '' && ucValue != '') {
+            filteredData = jsonData.filter(item => {
+                const itemData = new Date(item['Data da aula']);
+
+                return (
+                    item['Curso'].includes(cursoValue) &&
+                    item['UC'] === ucValue &&
+                    itemData >= dataInicioDate &&
+                    itemData <= dataFimDate
+                );
+            });
+
+            createNodes(filteredData, '');
+        } else {
+            alert("Preencha os campos obrigatórios e indique o Curso e/ou a UC");
+        }
+
+        button.disabled = true;
+
+
+        console.log(nodes);
 
         createLinks(nodes);
 
-        updateGraph()
-    
+        updateGraph();
     });
-        
 
 });
 
 
-
-
-/** 
-
-// Função para verificar se duas aulas têm conflito (sobreposição de horário)
-function aulasConflitantes(aula1, aula2) {
-    return (
-        aula1["Semana do ano"] === aula2["Semana do ano"] &&
-        aula1["Dia da Semana"] === aula2["Dia da Semana"] &&
-        (
-            (aula1["Hora Inicio da Aula"] < aula2["Hora Fim da Aula"]) &&
-            (aula1["Hora Fim da Aula"] > aula2["Hora Inicio da Aula"])
-        )
-    );
-}
-
-// Criar nós e arestas
-var nodes = jsonData.map((aula, index) => ({
-    id: index,
-    name: aula["UC"] + " (" + aula["Turma"] + ")"
-}));
-
-var links = [];
-
-for (var i = 0; i < jsonData.length; i++) {
-    for (var j = i + 1; j < jsonData.length; j++) {
-        if (aulasConflitantes(jsonData[i], jsonData[j])) {
-            links.push({ source: i, target: j });
-        }
+/**
+ * Cria nós com base nos dados fornecidos e no nome do nó. Preenche a variável "nodes".
+ * @param {Array} filteredData - Array com as aulas filtradas, tendo em conta a escolha do utilizador.
+ * @param {string} nameNode - O nome do atributo necessário para o preenchimento do nome do nó.
+ */
+function createNodes(filteredData, nameNode){
+    if (nameNode != ''){
+        filteredData.forEach(aula => {
+            nodes.push({
+                id: aula.Curso + ' ' + aula['Turno'], 
+                aulaData: aula, 
+                name: aula[nameNode] + ' - '
+            });
+        });
+    } else {
+        filteredData.forEach(aula => {
+            nodes.push({
+                id: aula.Curso + ' ' + aula['Turno'], 
+                aulaData: aula, 
+                name: ''
+            });
+        });
     }
 }
 
-// Configurar o gráfico com D3.js
-var svg = d3.select("#graph")
-    .append("svg")
-    .attr("width", 600)
-    .attr("height", 400);
-
-var force = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).distance(100).strength(0.1))
-    .force("charge", d3.forceManyBody().strength(-30))
-    .force("center", d3.forceCenter(300, 200))
-    .on("tick", ticked);
-
-var link = svg.append("g")
-    .attr("class", "links")
-    .selectAll("line")
-    .jsonData(links)
-    .enter()
-    .append("line")
-    .attr("class", "link");
-
-var node = svg.append("g")
-    .attr("class", "nodes")
-    .selectAll("circle")
-    .jsonData(nodes)
-    .enter()
-    .append("circle")
-    .attr("r", 10)
-    .attr("fill", "#3498db")
-    .call(d3.drag()
-        .on("start", dragStarted)
-        .on("drag", dragging)
-        .on("end", dragEnded));
-
-var text = svg.append("g")
-    .attr("class", "texts")
-    .selectAll("text")
-    .jsonData(nodes)
-    .enter()
-    .append("text")
-    .text(d => d.name)
-    .attr("x", -10)
-    .attr("y", 3);
-
-function ticked() {
-    node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
-
-    link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-
-    text
-        .attr("x", d => d.x)
-        .attr("y", d => d.y);
-}
-
-function dragStarted(event, d) {
-    if (!event.active) force.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-}
-
-function dragging(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
-}
-
-function dragEnded(event, d) {
-    if (!event.active) force.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-}
-
-*/
