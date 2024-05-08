@@ -1,24 +1,6 @@
 
 let salas;
 var jsonData;
-var allAccepted;
-const pathJsonSalas = "./CaracterizacaoDasSalas.json"; 
-
-let guardarButtonListenerAttached = false;
-
-document.addEventListener('click', function () {
-    if (!guardarButtonListenerAttached) {
-        const guardarButton = document.getElementById('guardarButton');
-        
-        guardarButton.addEventListener('click', function (event) {
-            event.preventDefault(); 
-            getPreferences(horario);
-        });
-        
-        guardarButtonListenerAttached = true;
-    }
-});
-
 var minMaxFilterFunction = function (
   headerValue,
   rowValue,
@@ -805,6 +787,7 @@ function getPreferences(horario){
 
             });
 
+<<<<<<< HEAD
             if(salasAvailable.length !== 0){
                 salasAvailable.forEach(sala => {
                     sala['caracteristica'] = preferenciaSala2Value;
@@ -816,6 +799,17 @@ function getPreferences(horario){
         
 
         
+=======
+        }
+        
+
+        if(salasAvailable.length !== 0){
+            salasAvailable.forEach(sala => {
+                sala['caracteristica'] = preferenciaSala2Value;
+            })
+        }
+
+>>>>>>> parent of 066f8a8 (Merge branch 'ponto9')
 
         if(salasAvailable.length === 0 && preferenciaSala3Value !== undefined){
             caracteristaDasSalas.forEach(function(item) {
@@ -893,6 +887,7 @@ function getPreferences(horario){
         }
 
         if (salasAvailable.length === 0) {
+<<<<<<< HEAD
             alert("Não exite nenhum slot disponível para as preferências indicadas");
             return;
         }
@@ -911,6 +906,14 @@ function getPreferences(horario){
             alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
             return;
         }
+=======
+            alert("Não exite nenhuma vaga para as salas preferidas indicadas");
+            return;
+        }
+
+
+        filteredSalasAvailable = salasAvailable;
+>>>>>>> parent of 066f8a8 (Merge branch 'ponto9')
 
 
   // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
@@ -987,6 +990,7 @@ function getPreferences(horario){
       }
 
       // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
+<<<<<<< HEAD
       filteredSalasAvailable = filteredSalasAvailable.filter(sala => {
 
         let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
@@ -1001,6 +1005,22 @@ function getPreferences(horario){
         alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
         return;
     }
+=======
+      filteredSalasAvailable = salasAvailable.filter(sala => {
+  
+          let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+      
+          let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+
+          return capacidadeNormal >= inscritos_no_turno;
+
+      });
+
+      if (filteredSalasAvailable.length === 0) {
+          alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+          return;
+      }
+>>>>>>> parent of 066f8a8 (Merge branch 'ponto9')
 
 
   // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
@@ -1147,6 +1167,7 @@ function getPreferences(horario){
 
           });
 
+<<<<<<< HEAD
           if(salasAvailable.length !== 0){
             salasAvailable.forEach(sala => {
                 sala['caracteristica'] = preferenciaSala2Value;
@@ -1156,6 +1177,15 @@ function getPreferences(horario){
       }
 
       
+=======
+      }
+
+      if(salasAvailable.length !== 0){
+          salasAvailable.forEach(sala => {
+              sala['caracteristica'] = preferenciaSala2Value;
+          })
+      }
+>>>>>>> parent of 066f8a8 (Merge branch 'ponto9')
 
 
       if(salasAvailable.length === 0 && preferenciaSala3Value !== undefined){
@@ -1233,6 +1263,7 @@ function getPreferences(horario){
       }
 
 
+<<<<<<< HEAD
     filteredSalasAvailable = salasAvailable.filter(sala => {
         
         let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
@@ -1256,6 +1287,14 @@ function getPreferences(horario){
         return;
     }
 
+=======
+      filteredSalasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));  
+      
+      if (salasAvailable.length === 0) {
+          alert("Não exite nenhum slot disponível para as preferências indicadas");
+          return;
+      }
+>>>>>>> parent of 066f8a8 (Merge branch 'ponto9')
 
   // Condição quando o utilizador apenas indica os inputs obrigatórios
   } else {
@@ -1316,6 +1355,7 @@ function getPreferences(horario){
 
       });
 
+<<<<<<< HEAD
       if (salasAvailable.length === 0) {
         alert("Não exite nenhum slot disponível para as preferências indicadas");
         return;
@@ -1336,6 +1376,23 @@ function getPreferences(horario){
         alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
         return;
     }
+=======
+      // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
+      filteredSalasAvailable = salasAvailable.filter(sala => {
+  
+          let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+      
+          let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+
+          return capacidadeNormal >= inscritos_no_turno;
+
+      });
+
+      if (filteredSalasAvailable.length === 0) {
+          alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+          return;
+      }
+>>>>>>> parent of 066f8a8 (Merge branch 'ponto9')
       
   }
 
@@ -1584,4 +1641,10 @@ if (container) {
 } else {
   return 0; // Retorna 0 para tratar o erro
 }
+<<<<<<< HEAD
 }
+=======
+}
+
+
+>>>>>>> parent of 066f8a8 (Merge branch 'ponto9')
