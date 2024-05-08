@@ -138,13 +138,55 @@ public class UserUploadFile extends JFrame implements FileCallback{
 			}
         });
 
+
+        JButton buttonNetwork = new JButton("Network Graph");
+        button.setBounds(20,20,250,50);  
+	    buttonAllocate.addActionListener(new ActionListener(){  	
+			public void actionPerformed(ActionEvent e){ 
+                if(!uploaded) {
+                    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    Desktop desk = Desktop.getDesktop(); 
+                    try {
+                        desk.browse(new URI("http://localhost/AgendamentoDeAulas.html"));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (URISyntaxException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+			}
+        });
+
+
+        JButton buttonHeatMap = new JButton("Heat Map");
+        button.setBounds(20,20,250,50);  
+	    buttonAllocate.addActionListener(new ActionListener(){  	
+			public void actionPerformed(ActionEvent e){ 
+                if(!uploaded) {
+                    JOptionPane.showMessageDialog(panel,"Ainda não carregou nenhum horário!", "Erro", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    Desktop desk = Desktop.getDesktop(); 
+                    try {
+                        desk.browse(new URI("http://localhost/AgendamentoDeAulas.html"));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (URISyntaxException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+			}
+        });
+
         panel = new JPanel();
         panel.add(buttonSchedule);
         panel.add(button);
         panel.add(buttonGitHub);
         panel.add(buttonWebBrowser);
         panel.add(buttonAllocate);
-       
+        panel.add(buttonNetwork);
+        panel.add(buttonHeatMap);
+
 
         add(panel);
     }
