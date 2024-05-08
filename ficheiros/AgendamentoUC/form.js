@@ -57,9 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD (Bring Your Own Device)', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
         let nomesSalas = salas.map(room => room['Nome sala']);
     
-        tiposDeSala = ['Anfiteatro', 'Arquitetura', 'BYOD (Bring Your Own Device)', 'Focus Group', 'Laboratório de Arquitetura de Computadores', 'Laboratório de Bases de Engenharia', 'Laboratório de Electrónica', 'Laboratório de Informática', 'Laboratório de Jornalismo', 'Laboratório de Redes de Computadores', 'Laboratório de Telecomunicações', 'Sala Aulas Mestrado', 'Sala Aulas Mestrado Plus', 'Sala NEE', 'Sala Provas', 'Sala Reunião', 'Sala de Arquitectura', 'Sala de Aulas normal', 'videoconferência', 'Átrio'];
-        let nomesSalas = salas.map(room => room['Nome sala']);
-    
         const preferenciaSala1 = document.getElementById('preferenciaSala1');
         const salasInaceitaveis = document.getElementById('salasInaceitaveis');
     
@@ -345,7 +342,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('userInputForm').addEventListener('submit', function(event) {
         event.preventDefault();
-            console.log("Entrou");
             //alert("O formulário foi enviado com sucesso!"); // Exibe um alerta
             let inputs = [];
         
