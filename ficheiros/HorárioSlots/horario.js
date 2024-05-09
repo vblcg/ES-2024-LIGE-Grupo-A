@@ -1316,40 +1316,13 @@ function getPreferences() {
 
     var slotsProxHTML = generateSlots(arrayParaFunc, filteredSalasAvailable);
 
-    // VERIFICAR SE O CURSO JÁ ESTÁ A TER AULA NAQUELE DIA
+    console.log(slotsProxHTML);
 
-    /** 
+    slotsProxHTML = verificaAulaADecorrer(slotsProxHTML);
 
-    horario.forEach(slot => {
+    console.log(slotsProxHTML);
 
-        slotsProxHTML.forEach((generatedSlot, index) => {
-        
-            //const generatedTurmas = generatedSlot.Turma.split(',').map(turma => turma.trim());
-            //const slotTurmas = slot.Turma.split(',').map(turma => turma.trim());
-
-            // Verificar se pelo menos uma das turmas já está a ter aula
-            //const turmaATerAula = slotTurmas.some(turma => generatedTurmas.includes(turma));
-
-            // Verificar se o curso já está a ter aula maquele dia
-            if (
-                generatedSlot.Curso === slot.Curso &&
-                //turmaATerAula &&
-                
-                // Faz sentido validar o turno também?
-                //generatedSlot.Turno === slot.Turno &&
-                generatedSlot["Hora Inicio da Aula"] === slot["Hora Inicio da Aula"] &&
-                generatedSlot["Data da aula"] === slot["Data da aula"]
-            ) {
-                // Remover no caso de o curso já estar a ter aulas naquele dia
-                slotsProxHTML.splice(index, 1);
-            }
-
-        });
-
-    });
-
-    */
-
+    
     localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
     localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
     console.log("CHEGOU AQUI");
@@ -1540,4 +1513,42 @@ function checkContainerLength(containerId) {
     } else {
         return 0; // Retorna 0 para tratar o erro
     }
+}
+
+
+function verificaAulaADecorrer(slotsRecebidos) {
+
+    let slotsDisponiveis = [];
+
+    var firstRecord = slotsRecebidos[0];
+
+    var cursoSlot = firstRecord['Curso'];
+    var turmaSlot = firstRecord['Turma'];
+    var diaSlot = firstRecord['Data da aula'];
+    
+    slotsRecebidos.forEach(slot => {
+        var horaInicioSlot = slot['Hora Inicio da Aula']
+        var horaFimSlot = slot['Hora Fim da Aula']
+
+        var notOverlapped = horario.some(horarioSlot => {
+            var horaInicioHorario = horarioSlot['Hora Inicio da Aula'];
+            var horaFimHorario = horarioSlot['Hora Fim da Aula'];
+            var curso = horarioSlot['Curso'];
+            var turma = horarioSlot['Turma'];
+            var dia = horarioSlot['Data da aula'];
+
+            return !((horaInicioSlot >= horaInicioHorario && horaInicioSlot < horaFimHorario) ||
+                   (horaFimSlot > horaInicioHorario && horaFimSlot <= horaFimHorario) ||
+                   (horaInicioSlot <= horaInicioHorario && horaFimSlot >= horaFimHorario) &&
+                   cursoSlot == curso && turmaSlot == turma && diaSlot == dia);
+        });
+
+        if (notOverlapped) {
+            slotsDisponiveis.push(slot);
+            console.log(slotsDisponiveis);
+        }
+    });
+
+    return slotsDisponiveis;
+
 }
