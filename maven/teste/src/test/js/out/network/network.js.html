@@ -1,4 +1,32 @@
-const pathHorario = "../Horário.json";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: network.js</title>
+
+    <script src="../scripts/prettify/prettify.js"> </script>
+    <script src="../scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="../styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: network.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const pathHorario = "../Horário.json";
 
 let jsonData = [];
 let ucs = [];
@@ -75,7 +103,7 @@ function updateGraph() {
                     var dx = otherNode.x - node.x;
                     var dy = otherNode.y - node.y;
                     var distance = Math.sqrt(dx * dx + dy * dy);
-                    return distance < minDistance;
+                    return distance &lt; minDistance;
                 }
                 return false;
             });
@@ -175,8 +203,8 @@ function isConflict(aula1, aula2) {
     const horaInicioAula2 = new Date(dia + 'T' + aula2['Hora Inicio da Aula']);
     const horaFimAula2 = new Date(dia + 'T' + aula2['Hora Fim da Aula']);
 
-    if ((horaInicioAula1 < horaFimAula2 && horaFimAula1 > horaInicioAula2) || 
-        (horaInicioAula2 < horaFimAula1 && horaFimAula2 > horaInicioAula1)) {
+    if ((horaInicioAula1 &lt; horaFimAula2 &amp;&amp; horaFimAula1 > horaInicioAula2) || 
+        (horaInicioAula2 &lt; horaFimAula1 &amp;&amp; horaFimAula2 > horaInicioAula1)) {
         return true;
     }
     return false;
@@ -189,8 +217,8 @@ function isConflict(aula1, aula2) {
  * @param {*} nodes - Aulas.
  */
 function createLinks(nodes) {
-    for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
+    for (let i = 0; i &lt; nodes.length; i++) {
+        for (let j = i + 1; j &lt; nodes.length; j++) {
             const aula1 = nodes[i].aulaData;
             const aula2 = nodes[j].aulaData;
             if (isConflict(aula1, aula2)) {
@@ -249,14 +277,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let filteredData = [];
 
-        if (ucValue == '' && cursoValue != '' && dataInicioValue != '' && dataFimValue != '') {
+        if (ucValue == '' &amp;&amp; cursoValue != '' &amp;&amp; dataInicioValue != '' &amp;&amp; dataFimValue != '') {
             filteredData = jsonData.filter(item => {
                 const itemData = new Date(item['Data da aula']);
 
                 return (
-                    item['Curso'].includes(cursoValue) &&
-                    itemData >= dataInicioDate &&
-                    itemData <= dataFimDate
+                    item['Curso'].includes(cursoValue) &amp;&amp;
+                    itemData >= dataInicioDate &amp;&amp;
+                    itemData &lt;= dataFimDate
                 );
 
                 
@@ -264,28 +292,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
             createNodes(filteredData, 'UC');
             
-        } else if (cursoValue == '' && ucValue != '' && dataInicioValue != '' && dataFimValue != '') {
+        } else if (cursoValue == '' &amp;&amp; ucValue != '' &amp;&amp; dataInicioValue != '' &amp;&amp; dataFimValue != '') {
             filteredData = jsonData.filter(item => {
                 const itemData = new Date(item['Data da aula']);
 
                 return (
-                    item['UC'] === ucValue &&
-                    itemData >= dataInicioDate &&
-                    itemData <= dataFimDate
+                    item['UC'] === ucValue &amp;&amp;
+                    itemData >= dataInicioDate &amp;&amp;
+                    itemData &lt;= dataFimDate
                 );
             });
 
             createNodes(filteredData, 'Curso');
 
-        } else if (dataInicioValue != '' && dataFimValue != '' && cursoValue != '' && ucValue != '') {
+        } else if (dataInicioValue != '' &amp;&amp; dataFimValue != '' &amp;&amp; cursoValue != '' &amp;&amp; ucValue != '') {
             filteredData = jsonData.filter(item => {
                 const itemData = new Date(item['Data da aula']);
 
                 return (
-                    item['Curso'].includes(cursoValue) &&
-                    item['UC'] === ucValue &&
-                    itemData >= dataInicioDate &&
-                    itemData <= dataFimDate
+                    item['Curso'].includes(cursoValue) &amp;&amp;
+                    item['UC'] === ucValue &amp;&amp;
+                    itemData >= dataInicioDate &amp;&amp;
+                    itemData &lt;= dataFimDate
                 );
             });
 
@@ -332,3 +360,26 @@ function createNodes(filteredData, nameNode){
     }
 }
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#createLinks">createLinks</a></li><li><a href="global.html#createNodes">createNodes</a></li><li><a href="global.html#isConflict">isConflict</a></li><li><a href="global.html#updateGraph">updateGraph</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu May 09 2024 11:49:36 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="../scripts/linenumber.js"> </script>
+</body>
+</html>
