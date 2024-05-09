@@ -875,13 +875,14 @@ function getPreferences() {
         }
 
         filteredSalasAvailable = salasAvailable.filter(sala => {
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
         
-            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-        
-            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-            return capacidadeNormal >= inscritos_no_turno;
-
+            if (salaInfo) {
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+                return capacidadeNormal >= inscritos_no_turno;
+            } else {
+                return false;
+            }
         });
 
         if (filteredSalasAvailable.length === 0) {
@@ -965,13 +966,14 @@ function getPreferences() {
 
         // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
         filteredSalasAvailable = filteredSalasAvailable.filter(sala => {
-
-            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-
-            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-            return capacidadeNormal >= inscritos_no_turno;
-
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+        
+            if (salaInfo) {
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+                return capacidadeNormal >= inscritos_no_turno;
+            } else {
+                return false;
+            }
         });
 
         if (filteredSalasAvailable.length === 0) {
@@ -1210,13 +1212,14 @@ function getPreferences() {
         }
 
         filteredSalasAvailable = salasAvailable.filter(sala => {
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
         
-            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-        
-            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-            return capacidadeNormal >= inscritos_no_turno;
-
+            if (salaInfo) {
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+                return capacidadeNormal >= inscritos_no_turno;
+            } else {
+                return false;
+            }
         });
 
         if (filteredSalasAvailable.length === 0) {
@@ -1296,15 +1299,18 @@ function getPreferences() {
             return;
         }
 
+        console.log(caracteristaDasSalas);
+
         // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
         filteredSalasAvailable = salasAvailable.filter(sala => {
-
-            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-
-            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-            return capacidadeNormal >= inscritos_no_turno;
-
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+        
+            if (salaInfo) {
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+                return capacidadeNormal >= inscritos_no_turno;
+            } else {
+                return false;
+            }
         });
 
         if (filteredSalasAvailable.length === 0) {
@@ -1316,16 +1322,11 @@ function getPreferences() {
 
     var slotsProxHTML = generateSlots(arrayParaFunc, filteredSalasAvailable);
 
-    console.log(slotsProxHTML);
-
     slotsProxHTML = verificaAulaADecorrer(slotsProxHTML);
-
-    console.log(slotsProxHTML);
 
     
     localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
     localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
-    console.log("CHEGOU AQUI");
     window.open('../slotsASelecionar.html', "_blank");
 
 }
@@ -1515,40 +1516,37 @@ function checkContainerLength(containerId) {
     }
 }
 
-
+/**
+ * Evitar sobreposição de aulas das mesma turma
+ * @param {*} slotsRecebidos Possíveis slots para alocar a aula
+ * @returns Os slots filtrados sem sobreposições
+ */
 function verificaAulaADecorrer(slotsRecebidos) {
-
-    let slotsDisponiveis = [];
 
     var firstRecord = slotsRecebidos[0];
 
     var cursoSlot = firstRecord['Curso'];
     var turmaSlot = firstRecord['Turma'];
     var diaSlot = firstRecord['Data da aula'];
-    
-    slotsRecebidos.forEach(slot => {
-        var horaInicioSlot = slot['Hora Inicio da Aula']
-        var horaFimSlot = slot['Hora Fim da Aula']
 
-        var notOverlapped = horario.some(horarioSlot => {
-            var horaInicioHorario = horarioSlot['Hora Inicio da Aula'];
-            var horaFimHorario = horarioSlot['Hora Fim da Aula'];
-            var curso = horarioSlot['Curso'];
-            var turma = horarioSlot['Turma'];
-            var dia = horarioSlot['Data da aula'];
+    var horarioTurma = horario.filter(aula => 
+        aula['Turma'] == turmaSlot &&
+        aula['Curso'] == cursoSlot &&
+        aula['Data da aula'] == diaSlot
+    );
 
-            return !((horaInicioSlot >= horaInicioHorario && horaInicioSlot < horaFimHorario) ||
-                   (horaFimSlot > horaInicioHorario && horaFimSlot <= horaFimHorario) ||
-                   (horaInicioSlot <= horaInicioHorario && horaFimSlot >= horaFimHorario) &&
-                   cursoSlot == curso && turmaSlot == turma && diaSlot == dia);
-        });
 
-        if (notOverlapped) {
-            slotsDisponiveis.push(slot);
-            console.log(slotsDisponiveis);
-        }
+    horarioTurma.forEach(horarioSlot => {
+        var horaInicioHorario = horarioSlot['Hora Inicio da Aula'];
+        var horaFimHorario = horarioSlot['Hora Fim da Aula'];
+
+        slotsRecebidos = slotsRecebidos.filter(slot => !((slot['Hora Inicio da Aula'] < horaInicioHorario && slot['Hora Fim da Aula'] > horaInicioHorario) || 
+                                                        (slot['Hora Inicio da Aula'] >= horaInicioHorario && slot['Hora Fim da Aula'] <= horaFimHorario) ||
+                                                        (slot['Hora Inicio da Aula'] < horaFimHorario && slot['Hora Fim da Aula'] > horaFimHorario)));
+
     });
 
-    return slotsDisponiveis;
+    
+    return slotsRecebidos;
 
 }

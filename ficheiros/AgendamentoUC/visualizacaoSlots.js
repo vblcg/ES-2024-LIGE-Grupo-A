@@ -898,13 +898,14 @@ function getPreferences(horario){
         }
 
         filteredSalasAvailable = salasAvailable.filter(sala => {
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
         
-            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-        
-            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-            return capacidadeNormal >= inscritos_no_turno;
-
+            if (salaInfo) {
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+                return capacidadeNormal >= inscritos_no_turno;
+            } else {
+                return false;
+            }
         });
 
         if (filteredSalasAvailable.length === 0) {
@@ -988,13 +989,14 @@ function getPreferences(horario){
 
       // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
       filteredSalasAvailable = filteredSalasAvailable.filter(sala => {
-
-        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-
-        let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-        return capacidadeNormal >= inscritos_no_turno;
-
+        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+    
+        if (salaInfo) {
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+            return capacidadeNormal >= inscritos_no_turno;
+        } else {
+            return false;
+        }
     });
 
     if (filteredSalasAvailable.length === 0) {
@@ -1233,14 +1235,15 @@ function getPreferences(horario){
       }
 
 
-    filteredSalasAvailable = salasAvailable.filter(sala => {
-        
-        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
+      filteredSalasAvailable = salasAvailable.filter(sala => {
+        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
     
-        let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-        return capacidadeNormal >= inscritos_no_turno;
-
+        if (salaInfo) {
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+            return capacidadeNormal >= inscritos_no_turno;
+        } else {
+            return false;
+        }
     });
 
     if (filteredSalasAvailable.length === 0) {
@@ -1323,13 +1326,14 @@ function getPreferences(horario){
 
     // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
     filteredSalasAvailable = salasAvailable.filter(sala => {
-
-        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-
-        let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
-
-        return capacidadeNormal >= inscritos_no_turno;
-
+        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+    
+        if (salaInfo) {
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+            return capacidadeNormal >= inscritos_no_turno;
+        } else {
+            return false;
+        }
     });
 
     if (filteredSalasAvailable.length === 0) {
@@ -1341,39 +1345,6 @@ function getPreferences(horario){
 
   var slotsProxHTML = generateSlots(arrayParaFunc,filteredSalasAvailable);
 
-  // VERIFICAR SE O CURSO JÁ ESTÁ A TER AULA NAQUELE DIA
-
-  /** 
-
-  horario.forEach(slot => {
-
-      slotsProxHTML.forEach((generatedSlot, index) => {
-      
-          //const generatedTurmas = generatedSlot.Turma.split(',').map(turma => turma.trim());
-          //const slotTurmas = slot.Turma.split(',').map(turma => turma.trim());
-
-          // Verificar se pelo menos uma das turmas já está a ter aula
-          //const turmaATerAula = slotTurmas.some(turma => generatedTurmas.includes(turma));
-
-          // Verificar se o curso já está a ter aula maquele dia
-          if (
-              generatedSlot.Curso === slot.Curso &&
-              //turmaATerAula &&
-              
-              // Faz sentido validar o turno também?
-              //generatedSlot.Turno === slot.Turno &&
-              generatedSlot["Hora Inicio da Aula"] === slot["Hora Inicio da Aula"] &&
-              generatedSlot["Data da aula"] === slot["Data da aula"]
-          ) {
-              // Remover no caso de o curso já estar a ter aulas naquele dia
-              slotsProxHTML.splice(index, 1);
-          }
-
-      });
-
-  });
-
-  */
 
   localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
   localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
