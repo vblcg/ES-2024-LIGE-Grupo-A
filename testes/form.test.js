@@ -1,5 +1,6 @@
 const {decimalParaHora, initParametrosSemana, filterCapacidade, parseHour, adicionarAulas} = require('./functionsToTest');
 const {checkIfEmpty, createJsonEntry} = require('./functionsToTestHorario');
+const {isConflict, createNodes} = require('./functionsToTestNetwork');
 
 let salas = [
     {
@@ -238,3 +239,75 @@ describe('Testes para a função createJsonEntry', () => {
         expect(createJsonEntry(inputArray)).toEqual(jsonArray);
     });
 }); 
+
+describe('Testes para a função isConflict', () => { 
+    const aula1 = {
+        'Hora Inicio da Aula': '09:00',
+        'Hora Fim da Aula': '10:30'
+    };
+
+    const aula2 = {
+        'Hora Inicio da Aula': '10:00',
+        'Hora Fim da Aula': '11:00'
+    };
+
+    const aula3 = {
+        'Hora Inicio da Aula': '12:00',
+        'Hora Fim da Aula': '13:30'
+    }; 
+
+    test('Teste com valor errado', () => {
+        expect(isConflict(aula1, aula3)).toEqual(false);
+    });
+    test('Teste com o valor correto', () => {
+        expect(isConflict(aula1, aula2)).toEqual(true);    
+    });
+}); 
+
+describe('Testes para a função createNodes', () => { 
+    const filteredData = [
+        { 
+            "Curso": "ME",
+            "UC": "Teoria dos Jogos e dos Contratos",
+            "Turno": "01789TP01",
+            "Turma": "MEA1",
+            "Inscritos no Turno": "30",
+            "Dia da Semana": "Sex",
+            "Hora Início da Aula": "13:00:00",
+            "Hora Fim da Aula": "14:30:00",
+            "Data da aula": "2022/12/02",
+            "Caracteristicas da sala pedida para a aula": "Sala Aulas Mestrado",
+            "Sala atribuida a aula": "AA2.25",
+            "Semana do ano": 48,
+            "Semana do semestre": 14
+        }
+    ];
+
+    test('Teste com Curso como nome do nó', () => {
+        const nodes = [];
+        const nameNode = 'Curso';
+        createNodes(filteredData, nameNode, nodes);
+        
+        expect(nodes).toEqual([
+            { 
+                id: 'ME 01789TP01', 
+                aulaData: { 
+                    "Curso": "ME",
+                    "UC": "Teoria dos Jogos e dos Contratos",
+                    "Turno": "01789TP01",
+                    "Turma": "MEA1",
+                    "Inscritos no Turno": "30",
+                    "Dia da Semana": "Sex",
+                    "Hora Início da Aula": "13:00:00",
+                    "Hora Fim da Aula": "14:30:00",
+                    "Data da aula": "2022/12/02",
+                    "Caracteristicas da sala pedida para a aula": "Sala Aulas Mestrado",
+                    "Sala atribuida a aula": "AA2.25",
+                    "Semana do ano": 48,
+                    "Semana do semestre": 14
+                }, 
+                name: 'ME - ' 
+            }
+        ]);
+    });
+});
