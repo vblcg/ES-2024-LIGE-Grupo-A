@@ -22,7 +22,7 @@ import java.awt.event.*;
  * Classe para permitir o carregamento de arquivos pelo usuario.
  * Estende JFrame e implementa FileCallback.
  */
-public class UserUploadFile extends JFrame implements FileCallback {
+public class userUploadFile extends JFrame implements FileCallback {
 
     private FileCallback callback;
     private File[] fileholder;
@@ -38,7 +38,7 @@ public class UserUploadFile extends JFrame implements FileCallback {
      *                   usuário.
      * @param jsonFile   Nome do arquivo JSON.
      */
-    public UserUploadFile(File[] fileholder, String jsonFile) {
+    public userUploadFile(File[] fileholder, String jsonFile) {
         this.fileholder = fileholder;
         this.callback = new FileCallback() {
             public void onFileSelected(File selectedFile) {

@@ -210,6 +210,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const diasDaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
         var slots = [];
 
+        console.log(salasInaceitaveis);
+
         //INICIALIZAÇÃO PARAMETROS SEMANA -> diaSemanaString ex: "Seg", diaSemanaNumero -> para aceder aos arrays, inputsDias -> para verificar se já se viram todos os dias de input
         let results = initParametrosSemana(diasSemanaInput); //Testado
         var diaSemanaNumero = results[0];
@@ -286,12 +288,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         }  
                     } 
 
+                    
                     //FILTRO CAPACIDADE -> Testado
                     var filteredSalas = filterCapacidade(salas, numeroAlunos);
     
                     //FILTRO SALAS INACEITAVEIS
-                    filteredSalas = filteredSalas.filter(entry => !salasInaceitaveis.includes(entry['Caracteristicas da sala pedida para a aula']));
-                    
+                    for(let pref = 0; pref < salasInaceitaveis.length; pref ++) {
+                        if(preferencias[pref] != null && filteredSalas.filter(entry => entry[salasInaceitaveis[pref]] == 1).length > 0) {
+                            filteredSalas = filteredSalas.filter(entry => !entry[salasInaceitaveis[pref]] == 1);
+                        }
+                    }                    
+                    console.log(filteredSalas);
                     //FILTRO DIA DA SEMANA
                     filteredJson = jsonData.filter(entry => diaSemanaString == entry['Dia da Semana']);
                     
@@ -305,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     filteredSalas = filteredSalas.filter(entry => !salasOcupadas.includes(entry['Nome sala']));
     
                     if(filteredSalas.length > 0) {
+                        console.log(filteredSalas)
                         //PREFERÊNCIA SALAS
                         if(preferencias[0] != "Escolha uma Preferência") {
                             for(let pref = 0; pref < preferencias.length; pref ++) {
@@ -320,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 return;
                             }
                         } else {
-                            preferencia = "Sala de Aulas normal";
+                            preferencia = "Sem preferências";
                             var salaAlocada = filteredSalas[0];
                         }
                         let semanaAno = jsonData.filter(entry => entry['Semana do semestre'] == semanaSemestre)[0];
@@ -389,6 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const salasInaceitaveis = document.getElementById('salasInaceitaveis');
             const selectedOptionsInaceitaveis = salasInaceitaveis.selectedOptions;
             inputs.push(Array.from(selectedOptionsInaceitaveis).map(option => option.value));
+            console.log(selectedOptionsInaceitaveis);
         
             //numero alunos 6
             inputs.push(document.getElementById('nmrAlunos').value);
