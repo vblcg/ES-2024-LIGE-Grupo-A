@@ -833,15 +833,17 @@ function getPreferences(horario){
 
             });
 
+            if(salasAvailable.length !== 0){
+                salasAvailable.forEach(sala => {
+                    sala['caracteristica'] = preferenciaSala2Value;
+                })
+            }
+    
+
         }
         
 
-        if(salasAvailable.length !== 0){
-            salasAvailable.forEach(sala => {
-                sala['caracteristica'] = preferenciaSala2Value;
-            })
-        }
-
+        
 
         if(salasAvailable.length === 0 &amp;&amp; preferenciaSala3Value !== undefined){
             caracteristaDasSalas.forEach(function(item) {
@@ -919,12 +921,25 @@ function getPreferences(horario){
         }
 
         if (salasAvailable.length === 0) {
-            alert("Não exite nenhuma vaga para as salas preferidas indicadas");
+            alert("Não exite nenhum slot disponível para as preferências indicadas");
             return;
         }
 
+        filteredSalasAvailable = salasAvailable.filter(sala => {
+            let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+        
+            if (salaInfo) {
+                let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+                return capacidadeNormal >= inscritos_no_turno;
+            } else {
+                return false;
+            }
+        });
 
-        filteredSalasAvailable = salasAvailable;
+        if (filteredSalasAvailable.length === 0) {
+            alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+            return;
+        }
 
 
   // Condição quando o utilizador indica os inputs obrigatórios e o das Salas Inaceitáveis
@@ -1001,20 +1016,21 @@ function getPreferences(horario){
       }
 
       // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
-      filteredSalasAvailable = salasAvailable.filter(sala => {
-  
-          let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-      
-          let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+      filteredSalasAvailable = filteredSalasAvailable.filter(sala => {
+        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+    
+        if (salaInfo) {
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+            return capacidadeNormal >= inscritos_no_turno;
+        } else {
+            return false;
+        }
+    });
 
-          return capacidadeNormal >= inscritos_no_turno;
-
-      });
-
-      if (filteredSalasAvailable.length === 0) {
-          alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
-          return;
-      }
+    if (filteredSalasAvailable.length === 0) {
+        alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+        return;
+    }
 
 
   // Condição quando o utilizador indica os inputs obrigatórios, o de salas preferidas e salas inaceitáveis
@@ -1161,13 +1177,15 @@ function getPreferences(horario){
 
           });
 
+          if(salasAvailable.length !== 0){
+            salasAvailable.forEach(sala => {
+                sala['caracteristica'] = preferenciaSala2Value;
+            })
+        }
+
       }
 
-      if(salasAvailable.length !== 0){
-          salasAvailable.forEach(sala => {
-              sala['caracteristica'] = preferenciaSala2Value;
-          })
-      }
+      
 
 
       if(salasAvailable.length === 0 &amp;&amp; preferenciaSala3Value !== undefined){
@@ -1245,12 +1263,30 @@ function getPreferences(horario){
       }
 
 
-      filteredSalasAvailable = salasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));  
-      
-      if (salasAvailable.length === 0) {
-          alert("Não exite nenhum slot disponível para as preferências indicadas");
-          return;
-      }
+      filteredSalasAvailable = salasAvailable.filter(sala => {
+        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+    
+        if (salaInfo) {
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+            return capacidadeNormal >= inscritos_no_turno;
+        } else {
+            return false;
+        }
+    });
+
+    if (filteredSalasAvailable.length === 0) {
+        alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+        return;
+    }
+
+
+    filteredSalasAvailable = filteredSalasAvailable.filter(record => !salasInaceitaveisSelec.includes(record.sala));
+
+    if (filteredSalasAvailable.length === 0) {
+        alert("Não exite nenhum slot disponível para as preferências indicadas");
+        return;
+    }
+
 
   // Condição quando o utilizador apenas indica os inputs obrigatórios
   } else {
@@ -1311,59 +1347,32 @@ function getPreferences(horario){
 
       });
 
-      // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
-      filteredSalasAvailable = salasAvailable.filter(sala => {
-  
-          let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] === sala['sala']);
-      
-          let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+      if (salasAvailable.length === 0) {
+        alert("Não exite nenhum slot disponível para as preferências indicadas");
+        return;
+    }
 
-          return capacidadeNormal >= inscritos_no_turno;
+    // Filtrar as salasDisponíveis apenas por aquelas que têm a capacidade necessária para a aula em questão
+    filteredSalasAvailable = salasAvailable.filter(sala => {
+        let salaInfo = caracteristaDasSalas.find(item => item['Nome sala'] == sala['sala']);
+    
+        if (salaInfo) {
+            let capacidadeNormal = parseInt(salaInfo['Capacidade Normal'], 10);
+            return capacidadeNormal >= inscritos_no_turno;
+        } else {
+            return false;
+        }
+    });
 
-      });
-
-      if (filteredSalasAvailable.length === 0) {
-          alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
-          return;
-      }
+    if (filteredSalasAvailable.length === 0) {
+        alert("Não exite nenhuma sala com capacidade suficiente para as preferências indicadas");
+        return;
+    }
       
   }
 
   var slotsProxHTML = generateSlots(arrayParaFunc,filteredSalasAvailable);
 
-  // VERIFICAR SE O CURSO JÁ ESTÁ A TER AULA NAQUELE DIA
-
-  /** 
-
-  horario.forEach(slot => {
-
-      slotsProxHTML.forEach((generatedSlot, index) => {
-      
-          //const generatedTurmas = generatedSlot.Turma.split(',').map(turma => turma.trim());
-          //const slotTurmas = slot.Turma.split(',').map(turma => turma.trim());
-
-          // Verificar se pelo menos uma das turmas já está a ter aula
-          //const turmaATerAula = slotTurmas.some(turma => generatedTurmas.includes(turma));
-
-          // Verificar se o curso já está a ter aula maquele dia
-          if (
-              generatedSlot.Curso === slot.Curso &amp;&amp;
-              //turmaATerAula &amp;&amp;
-              
-              // Faz sentido validar o turno também?
-              //generatedSlot.Turno === slot.Turno &amp;&amp;
-              generatedSlot["Hora Inicio da Aula"] === slot["Hora Inicio da Aula"] &amp;&amp;
-              generatedSlot["Data da aula"] === slot["Data da aula"]
-          ) {
-              // Remover no caso de o curso já estar a ter aulas naquele dia
-              slotsProxHTML.splice(index, 1);
-          }
-
-      });
-
-  });
-
-  */
 
   localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
   localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
@@ -1575,8 +1584,6 @@ if (container) {
   return 0; // Retorna 0 para tratar o erro
 }
 }
-
-
 </code></pre>
         </article>
     </section>
@@ -1593,7 +1600,7 @@ if (container) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 23 2024 20:25:30 GMT+0100 (Hora de verão da Europa Ocidental)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat May 11 2024 12:14:46 GMT+0100 (Hora de verão da Europa Ocidental)
 </footer>
 
 <script> prettyPrint(); </script>
