@@ -8,14 +8,14 @@ import java.io.File;
  * Depois, instancia o 'upload' de um ficheiro, atraves da interface grafica.
  */
 public class App {
-    
-    /** 
+
+    /**
      * @param args
      */
     public static void main(String[] args) {
-        File[] fileHolder = new File[1]; 
+        File[] fileHolder = new File[1];
         String jsonFile = "ficheiros/Horário.json";
-        UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile); 
+        UserUploadFile uploadFile = new UserUploadFile(fileHolder, jsonFile);
         XamppFileManager.saveToFileRoot(new File("ficheiros/Salas/SalasDeAulaPorTiposDeSala.html"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/AgendamentoUC/estilos.css"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/HorárioSlots/Horário.html"));
@@ -31,7 +31,14 @@ public class App {
         XamppFileManager.saveToFileRoot(new File("ficheiros/Salas/SalaDeAulaPorTiposDeSala.js"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/MudarAula/slotsASelecionar.js"));
         XamppFileManager.saveToFileRoot(new File("ficheiros/MudarAula/slotsASelecionar.html"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/Networks/network.js"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/Networks/NetworkGraph.html"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/HeatMap/heatmap.html"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/HeatMap/CaracterizacaoDasSalas.json"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/HeatMap/heatMap.js"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/HeatMap/Horário.json"));
+        XamppFileManager.saveToFileRoot(new File("ficheiros/HeatMap/estilos.css"));
 
-        uploadFile.setVisible(true); 
+        uploadFile.setVisible(true);
     }
 }
