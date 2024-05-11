@@ -285,9 +285,9 @@ document.addEventListener("DOMContentLoaded", function () {
               var cursoData = JSON.parse(localStorage.getItem('slotsData'));
               // Verifica se o valor da célula corresponde a alguma UC em cursoData
               if (cursoData && cursoData.some(item => item.UC === cell.getRow().getData().UC)) {
-                var acceptBtn = "<button class='accept-btn'>Aceitar</button>";
-                var modifyBtn = "<button class='modify-btn'>Alterar</button>";
-                var deleteBtn = "<button class='delete-btn'>Eliminar</button>";
+                var acceptBtn = "<button class='accept-btn' id='accept-btn-' " + cell.getRow().getIndex() + "'>Aceitar</button>";
+                var modifyBtn = "<button class='modify-btn' id='modify-btn-' " + cell.getRow().getIndex() + "'>Alterar</button>";
+                var deleteBtn = "<button class='delete-btn' id='delete-btn-" + cell.getRow().getIndex() + "'>Eliminar</button>";
                 return acceptBtn + modifyBtn + deleteBtn;
               } else {
                 return "";
@@ -405,18 +405,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  document.getElementById("gravarJSON").addEventListener("click", function () {
-    if(allAccepted == 0) {
-      var data = JSON.stringify(horario);
-      var blob = new Blob([data], { type: "application/json" });
-      var url = window.URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = "SlotsAtribuidos.json";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }
+  document.getElementById("aceitarTodos").addEventListener("click", function () {
+     allAccepted = 0;
+     console.log("entrei");
+     var acceptButtons = document.querySelectorAll('[id^="accept-btn-"]');
+     acceptButtons.forEach(function(button) {
+         button.remove();
+     });
+     var modifyButtons = document.querySelectorAll('[id^="modify-btn-"]');
+     modifyButtons.forEach(function(button) {
+         button.remove();
+     });
+     var deleteButtons = document.querySelectorAll('[id^="delete-btn-"]');
+     deleteButtons.forEach(function(button) {
+         button.remove();
+     });
+      
+    
   });
 
   document.getElementById("gravarCSV").addEventListener("click", function () {
