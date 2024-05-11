@@ -113,6 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 var cursoData = JSON.parse(localStorage.getItem('slotsData'));
+console.log(cursoData);
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -304,10 +306,26 @@ document.addEventListener("DOMContentLoaded", function () {
               } else if (e.target.classList.contains("delete-btn")) {
                 var confirmacao = confirm("Tem a certeza que quer apagar a aula?");
                 if (confirmacao) {
-                  var rowData = cell.getRow().getData(); 
-                  var rowIndex = cell.getRow().getIndex(); 
+                    allAccepted -=1
+                
+                  var dados = cell.getRow().getData();
+                  for (var i = 0; i < horario.length; i++) {
+                    // Compare each item with aulaAMudar, adjust the condition accordingly based on your JSON structure
+                    if (JSON.stringify(horario[i]) === JSON.stringify(dados)) {
+                        // Remove the item from the array
+                        horario.splice(i, 1);
+                        break; // Exit the loop once the item is found and removed
+                    }
+                }
+                for (var i = 0; i < cursoData.length; i++) {
+                    // Compare each item with aulaAMudar, adjust the condition accordingly based on your JSON structure
+                    if (JSON.stringify(cursoData[i]) === JSON.stringify(dados)) {
+                        // Remove the item from the array
+                        cursoData.splice(i, 1);
+                        break; // Exit the loop once the item is found and removed
+                    }
+                }
                   cell.getRow().delete(); 
-                  cursoData.splice(rowIndex, 1);
                   localStorage.setItem('slotsData', JSON.stringify(cursoData)); 
                   alert("Aula excluída com sucesso!");
                 }
@@ -372,6 +390,20 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(error => {
         console.error(`Error loading ${pathJsonSalas}:`, error);
     });
+
+  document.getElementById("gravarJSON").addEventListener("click", function () {
+    if(allAccepted == 0) {
+      var data = JSON.stringify(horario);
+      var blob = new Blob([data], { type: "application/json" });
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "SlotsAtribuidos.json";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  });
 
   document.getElementById("gravarJSON").addEventListener("click", function () {
     if(allAccepted == 0) {
