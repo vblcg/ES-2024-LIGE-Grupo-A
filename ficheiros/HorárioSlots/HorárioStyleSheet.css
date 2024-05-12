@@ -36,3 +36,7 @@
     transform: scale(0.8);
     margin-left: -17px;
 }
+
+.mandatory-info {
+    color: red;
+}

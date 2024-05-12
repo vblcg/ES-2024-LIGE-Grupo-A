@@ -11,30 +11,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="horario.js"></script>
-
     <link rel="stylesheet" href="HorárioStyleSheet.css">
 
 </head>
 
 <body>
 
-        <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
-            <!-- Modal Header -->
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Alterar aula</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
     
-            <!-- Modal Body -->
             <div class="modal-body">
-            <!-- Form -->
                 <form>
                     <div class="form-group">
+                        <p class="mandatory-info">* Campos obrigatórios</p><br>
                         <p class="first_label_input">Horário Preferencial:</p>
-                        <p>Semana do semestre (obrigatório):</p>
+                        <p><span class="mandatory-info">*</span> Semana do semestre: </p>
                         <select class="form-select" id="semanaPref" aria-label="Default select example" required>
                             <option selected>Semana a selecionar</option>
                             <option value="1">1ª Semana</option>
@@ -59,7 +55,7 @@
                             <option value="20">20ª Semana</option>
                             <option value="21">21ª Semana</option>
                         </select>
-                        <p>Dia da semana (obrigatório):</p>
+                        <p><span class="mandatory-info">*</span> Dia da semana: </p>
                         <select class="form-select" id="diaDaSemanaPref" aria-label="Default select example" required>
                             <option selected>Dia da semana a selecionar</option>
                             <option value="Seg">Segunda-feira</option>
@@ -68,7 +64,7 @@
                             <option value="Qui">Quinta-feira</option>
                             <option value="Sex">Sexta-feira</option>
                         </select>
-                        <p>Altura do dia (obrigatório):</p>
+                        <p><span class="mandatory-info">*</span> Altura do dia: </p>
                         <select class="form-select" id="alturaDoDiaPref" aria-label="Default select example" required>
                             <option selected>Altura do dia a selecionar</option>
                             <option value="8,13">Manhã (8:00 - 13:00)</option>
@@ -98,7 +94,6 @@
                 
             </div>
     
-            <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-primary" id="guardarButton">Guardar</button>

@@ -18,6 +18,9 @@
             width: 100vw;
             height: calc(100vh); 
         }
+        .mandatory-info {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -37,17 +40,18 @@
                 </select>
             </div>
             <div class="col">
-                <label for="data_inicio" class="form-label">Data de início:</label>
+                <label for="data_inicio" class="form-label"><span class="mandatory-info">*</span> Data de início:</label>
                 <input type="date" id="data_inicio" class="form-control">
             </div>
             <div class="col">
-                <label for="data_fim" class="form-label">Data final:</label>
+                <label for="data_fim" class="form-label"><span class="mandatory-info">*</span> Data final:</label>
                 <input type="date" id="data_fim" class="form-control">
             </div>
             <div class="col d-flex align-items-end">
                 <button type="submit" id="submit" name="submit" class="btn btn-primary mt-4">Submit</button>
             </div>
         </div>
+        <br><p style="margin-left: 60%;" class="mandatory-info">* Campos obrigatórios (em conjunto com um Curso e/ou UC)</p>
     </div>
     <div class="">
         <svg id="graph"></svg>

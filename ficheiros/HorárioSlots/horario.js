@@ -1324,10 +1324,14 @@ function getPreferences() {
 
     slotsProxHTML = verificaAulaADecorrer(slotsProxHTML);
 
-    
-    localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
-    localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
-    window.open('../slotsASelecionar.html', "_blank");
+    if (slotsProxHTML.length === 0){
+        alert("Não existem slots disponíveis.");
+        return;
+    } else {
+        localStorage.setItem('slotsData', JSON.stringify(slotsProxHTML));
+        localStorage.setItem('aulaAMudar', JSON.stringify(aulaAMudar));
+        window.open('../slotsASelecionar.html', "_blank");
+    }
 
 }
 
